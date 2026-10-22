@@ -1,0 +1,65 @@
+{
+  "measured": true,
+  "version": "v1.1",
+  "blind": false,
+  "date": "2026-10-22",
+  "corpus": {
+    "name": "corpus-heldout.json",
+    "source": "Written by a separate AI agent that never saw Tipoff’s rules, after the rules were frozen. Scam scripts follow FTC descriptions of real job scams.",
+    "items": 80,
+    "scams": 40,
+    "legit": 40
+  },
+  "scamsCaught": 34,
+  "scamsTotal": 40,
+  "scamsLikely": 12,
+  "legitFlagged": 1,
+  "legitLikely": 0,
+  "legitTotal": 40,
+  "recall": 0.85,
+  "precision": 0.971,
+  "playbookCorrect": 29,
+  "playbookTotal": 34,
+  "misses": [
+    {
+      "id": "h19",
+      "playbook": "Fake check",
+      "excerpt": "Hi Ethan, I'm the Operations Director for Lumenfield Events. We're bringing on remote event coordinators for our winter season at $1,150/week. Your first assignment would be coo…"
+    },
+    {
+      "id": "h43",
+      "playbook": "Pay for the job",
+      "excerpt": "Hi Nadia, thanks for connecting. We're staffing a large AI training data project and your background in linguistics is a great fit. Rate is $31/hr, fully remote, 20-40 hours a w…"
+    },
+    {
+      "id": "h45",
+      "playbook": "Identity harvest",
+      "excerpt": "Hi Corey, great speaking with you over chat this morning. I've shared your answers with our hiring lead and you're cleared to move ahead for the Remote Billing Associate role at…"
+    },
+    {
+      "id": "h60",
+      "playbook": "Pay for the job",
+      "excerpt": "Velocity Remote Jobs: Your registration is 90% complete. Pay the $29.99 membership to unlock 1,000+ verified work-from-home employers and guaranteed placement within 7 days. Fin…"
+    },
+    {
+      "id": "h70",
+      "playbook": "Pay for the job",
+      "excerpt": "Welcome to Arbor Translation Services! Your test translation scored 94% 🎉 Before assignment, every translator must be registered in our client database. Registration plus the v…"
+    },
+    {
+      "id": "h76",
+      "playbook": "Reshipping",
+      "excerpt": "Hi Gina, follow-up from Halden Returns: you have 3 parcels arriving tomorrow. Please inspect and ship them with the labels in your inbox before 5pm. Reminder: don't open the inn…"
+    }
+  ],
+  "falsePositives": [
+    {
+      "id": "h50",
+      "verdict": "Worth a closer look",
+      "excerpt": "Hi Jenna, Great news, the client wants to move forward with you for the Accounts Payable Specialist contract. Because they need someone quickly, we're targeting a start date of …",
+      "rules": [
+        "identity_request"
+      ]
+    }
+  ]
+}

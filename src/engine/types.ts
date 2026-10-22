@@ -32,6 +32,10 @@ export interface Rule {
   patterns: RegExp[];
   /** Legitimate-context ids that, when present in the same thread, soften this rule. */
   dampenedBy?: string[];
+  /** A match is ignored when its sentence also matches this (e.g. "we pay you via Zelle"). */
+  unlessSentence?: RegExp;
+  /** The rule only applies when the message also matches this (e.g. secrecy needs money talk). */
+  needsMessage?: RegExp;
 }
 
 export interface LegitContext {

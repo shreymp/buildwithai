@@ -155,6 +155,13 @@ test.describe('how it works', () => {
       await expect(page.getByTestId('accuracy')).toContainText(`${acc.scamsCaught} of ${acc.scamsTotal}`);
       await expect(page.getByTestId('accuracy')).toContainText(`${acc.legitFlagged} of ${acc.legitTotal}`);
     }
+    // A later rerun is shown only as a labeled, not-blind footnote to the blind result.
+    const rerun = JSON.parse(readFileSync('src/data/accuracy-rerun.json', 'utf8')) as { measured: boolean; version?: string; scamsCaught?: number; legitFlagged?: number };
+    const blind = acc as { version?: string };
+    if (rerun.measured && rerun.version !== blind.version) {
+      await expect(page.getByTestId('accuracy-rerun')).toContainText('isn’t blind');
+      await expect(page.getByTestId('accuracy-rerun')).toContainText(`${rerun.scamsCaught} of`);
+    }
   });
 
   test('table-of-contents links scroll to their section', async ({ page }) => {

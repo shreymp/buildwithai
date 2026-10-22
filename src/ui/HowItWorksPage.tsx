@@ -1,4 +1,5 @@
 import accuracyData from '../data/accuracy.json';
+import rerunData from '../data/accuracy-rerun.json';
 import { PLAYBOOKS, PLAYBOOK_ORDER, SHARED_STEPS, SOURCES } from '../engine/playbooks';
 import { LEGIT_CONTEXT, RULES } from '../engine/rules';
 import { lowerFirst } from '../lib/text';
@@ -6,6 +7,8 @@ import { IconExternal } from './icons';
 
 export interface Accuracy {
   measured: boolean;
+  version?: string;
+  blind?: boolean;
   date?: string;
   corpus?: { name: string; source: string; items: number; scams: number; legit: number };
   scamsCaught?: number;
@@ -23,6 +26,7 @@ export interface Accuracy {
 }
 
 const accuracy = accuracyData as Accuracy;
+const rerun = rerunData as Accuracy;
 const pct = (n: number) => `${Math.round(n * 100)}%`;
 
 const STEP_NAMES: Record<number, string> = { 1: SHARED_STEPS[1].label, 2: SHARED_STEPS[2].label, 3: SHARED_STEPS[3].label, 4: 'The setup', 5: 'The ask' };
@@ -135,6 +139,11 @@ export function HowItWorksPage() {
             <p>
               <strong>What it isn’t:</strong> a measure of real-world accuracy. The messages are synthetic. Real scams use wording these rules haven’t seen, which is why Tipoff never says a message is safe.
             </p>
+            {rerun.measured && rerun.version !== accuracy.version && (
+              <p data-testid="accuracy-rerun">
+                <strong>These are the {accuracy.version} results, from the first and only blind run.</strong> After later rule changes, {rerun.version} scores {rerun.scamsCaught} of {rerun.scamsTotal} scams flagged and {rerun.legitFlagged} of {rerun.legitTotal} genuine messages flagged on the same test ({rerun.date}). That rerun isn’t blind, because the results above had already been seen, so the blind numbers are the ones to trust.
+              </p>
+            )}
             {accuracy.misses && accuracy.misses.length > 0 && (
               <div className="misses">
                 <h3>Scams it missed in the test</h3>

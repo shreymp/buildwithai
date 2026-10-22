@@ -1,5 +1,7 @@
 {
   "measured": true,
+  "version": "v1.0",
+  "blind": true,
   "date": "2026-10-22",
   "corpus": {
     "name": "corpus-heldout.json",

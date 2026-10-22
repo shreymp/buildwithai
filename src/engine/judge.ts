@@ -8,7 +8,7 @@ import {
   CAUTION_PLAN, GENERIC_NEXT, GENERIC_STOP, PLAYBOOKS, PLAYBOOK_ORDER, VERIFY_PLAN, replyTemplate, stepCopy,
 } from './playbooks';
 import { LEGIT_CONTEXT, NEGATION_BEFORE, RULES } from './rules';
-import { parseThread } from './thread';
+import { looksLikeEmailChain, parseThread, withGreetedAsUser } from './thread';
 import type {
   AnalyzeOptions, Finding, LegitSignal, Message, NextMove, PlaybookId, Report, Step, StepView, Verdict,
 } from './types';
@@ -17,36 +17,87 @@ export const MAX_INPUT = 20_000;
 export const MIN_WORDS = 8;
 
 const STOPWORDS = new Set(
-  'the a an and or to of for in on at is are be you your we our i it this that with from have has will can as by not but if my me us they them their was were do just about what when how there here job work pay'.split(' '),
+  'the a an and or to of for in on at is are be you your we our i it this that with from have has will can as by not but if my me us they them their was were do just about what when how there here job work pay no now'.split(' '),
+);
+
+/** Very common words in other languages that use the Latin alphabet (Spanish, Portuguese, French, Italian, German, Indonesian). */
+const FOREIGN_STOPWORDS = new Set(
+  'el la los las que de del y en por para con una un es su al lo como más pero sus le ya o este sí porque esta entre cuando muy sin sobre también usted ustedes trabajo os não você uma com é em ao mais se das dos nas les et des est pour pas du dans il ne ce qui sur avec vous nous sont je une au der die und das ist nicht ich mit sie den zu ein eine auf für dem sich che di il per non sono da gli della yang dan di ini itu untuk dengan saya anda tidak kami'.split(' '),
 );
 
 function words(s: string): string[] {
   return s.toLowerCase().match(/[\p{L}']+/gu) ?? [];
 }
 
-/** True when the text is mostly not English (by script and by common-word share). */
+/**
+ * True when the text is mostly not English: mostly non-Latin letters, or clearly more
+ * common words from another Latin-alphabet language than from English. Terse English ad
+ * copy ("Earn $500 daily. No experience required.") has few common words of either kind,
+ * so it stays English.
+ */
 export function looksNonEnglish(text: string): boolean {
-  const letters = text.match(/\p{L}/gu) ?? [];
+  // Fold "𝗕𝗼𝗹𝗱" and full-width letters to plain ones first.
+  const folded = text.normalize('NFKC');
+  const letters = folded.match(/\p{L}/gu) ?? [];
   if (letters.length < 20) return false;
   const latin = letters.filter((c) => /[a-z]/i.test(c)).length;
   if (latin / letters.length < 0.6) return true;
-  const w = words(text);
+  const w = words(folded);
   if (w.length < 12) return false;
-  const common = w.filter((x) => STOPWORDS.has(x)).length;
-  return common / w.length < 0.08;
+  const english = w.filter((x) => STOPWORDS.has(x)).length / w.length;
+  const foreign = w.filter((x) => FOREIGN_STOPWORDS.has(x)).length / w.length;
+  return foreign >= 0.1 && foreign > english;
+}
+
+/** Phrases that contain "not"/"don't" but don't negate what follows. */
+const NOT_A_NEGATION = /\b(?:don't|dont|do not|never) (?:forget|hesitate|delay|worry|miss)\b|\bwithout (?:delay|fail)\b|\bnot only\b|\bif not\b/g;
+
+function negatedBefore(norm: string, index: number): boolean {
+  const before = norm.slice(Math.max(0, index - 40), index).replace(NOT_A_NEGATION, ' ');
+  return NEGATION_BEFORE.test(before);
+}
+
+/**
+ * Scam warnings ("We will never ask you to pay a training fee, buy from a vendor, or share
+ * your bank login") list the very phrases the rules look for. Matches inside such a
+ * sentence describe what a scammer would do, so they're ignored.
+ */
+const WARNING_START = /\b(?:(?:will|would|do|does|shall)\s(?:never|not)|won't|never)(?:,[^,.?!]{0,30},)?\s(?:ask|request|require|charge|contact)\w{0,2}\b|\b(?:beware|be (?:cautious|careful|wary|aware)) of\b|\bwatch out for\b|\b(?:recruitment |recruiting |hiring )?(?:fraud|scam) (?:alert|warning|notice)\b|\bsigns of a scam\b|\bscammers (?:may|might|often|will)\b/g;
+
+function warningSpans(norm: string): [number, number][] {
+  const spans: [number, number][] = [];
+  WARNING_START.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = WARNING_START.exec(norm))) {
+    const rest = norm.slice(m.index, m.index + 300);
+    const stop = rest.search(/[.?!](?:\s|$)/);
+    spans.push([m.index, m.index + (stop === -1 ? rest.length : stop + 1)]);
+  }
+  return spans;
+}
+
+/** The sentence around [start, end) in normalized text. */
+function sentenceAround(norm: string, start: number, end: number): string {
+  const from = Math.max(norm.lastIndexOf('.', start - 1), norm.lastIndexOf('?', start - 1), norm.lastIndexOf('!', start - 1)) + 1;
+  const after = norm.slice(end).search(/[.?!]/);
+  return norm.slice(from, after === -1 ? norm.length : end + after);
 }
 
 function findInMessage(message: Message): Finding[] {
   const n = normalize(message.text);
+  const warnings = warningSpans(n.norm);
   const found: Finding[] = [];
   for (const rule of RULES) {
+    if (rule.needsMessage && !new RegExp(rule.needsMessage.source, rule.needsMessage.flags.replace('g', '')).test(n.norm)) continue;
     for (const pattern of rule.patterns) {
       const re = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
       let m: RegExpExecArray | null;
       while ((m = re.exec(n.norm))) {
         if (m[0].length === 0) { re.lastIndex++; continue; }
-        const before = n.norm.slice(Math.max(0, m.index - 40), m.index);
-        if (rule.id !== 'secrecy' && NEGATION_BEFORE.test(before)) continue;
+        const mEnd = m.index + m[0].length;
+        if (rule.id !== 'secrecy' && negatedBefore(n.norm, m.index)) continue;
+        if (warnings.some(([a, b]) => m!.index >= a && m!.index < b)) continue;
+        if (rule.unlessSentence && new RegExp(rule.unlessSentence.source, rule.unlessSentence.flags.replace('g', '')).test(sentenceAround(n.norm, m.index, mEnd))) continue;
         const [start, end] = toOriginal(n, m.index, m.index + m[0].length);
         found.push({
           id: `${message.id}:${rule.id}:${start}`,
@@ -80,9 +131,10 @@ function legitInMessage(message: Message): LegitSignal[] {
   const out: LegitSignal[] = [];
   for (const ctx of LEGIT_CONTEXT) {
     for (const pattern of ctx.patterns) {
-      const re = new RegExp(pattern.source, pattern.flags);
-      re.lastIndex = 0;
-      const m = re.exec(n.norm);
+      const re = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
+      let m: RegExpExecArray | null;
+      // "There's no need for a video call" is not a sign of a real interview.
+      while ((m = re.exec(n.norm)) && ctx.id !== 'safety_warning' && negatedBefore(n.norm, m.index)) if (m[0].length === 0) re.lastIndex++;
       if (!m) continue;
       const [start, end] = toOriginal(n, m.index, m.index + m[0].length);
       out.push({ id: ctx.id, title: ctx.title, why: ctx.why, messageId: message.id, start, end, quote: message.text.slice(start, end) });
@@ -105,6 +157,8 @@ function pickPlaybook(active: Finding[]): { playbook: PlaybookId | null; scores:
   }
   let best: PlaybookId | null = null;
   for (const p of PLAYBOOK_ORDER) if (scores[p] > 0 && (best === null || scores[p] > scores[best])) best = p;
+  // A tie (say, a gift-card payment that fits three scripts equally) names no script.
+  if (best && PLAYBOOK_ORDER.filter((p) => scores[p] === scores[best!]).length > 1) best = null;
   return { playbook: best, scores };
 }
 
@@ -157,11 +211,26 @@ function emptyReport(status: Report['status'], messages: Message[], truncated: b
 export function analyze(rawInput: string, options: AnalyzeOptions = {}): Report {
   let input = rawInput ?? '';
   const truncated = input.length > MAX_INPUT;
-  if (truncated) input = input.slice(input.length - MAX_INPUT);
+  // Keep the most recent text: the end of a chat, but the top of an email chain.
+  if (truncated) input = looksLikeEmailChain(input) ? input.slice(0, MAX_INPUT) : input.slice(input.length - MAX_INPUT);
 
   if (!input.trim()) return emptyReport('empty', [], false, 'Paste a message to check it.');
 
   const messages = parseThread(input, options.meSpeakers ?? [], options.themSpeakers ?? []);
+  // Nobody marked as "Me": try the guess at who the user is, but keep whichever reading
+  // warns more. A wrong guess could otherwise hide the scammer's messages from scoring.
+  const guess = options.meSpeakers?.length || options.themSpeakers?.length ? null : withGreetedAsUser(messages);
+  if (guess) {
+    const guessed = judgeMessages(guess, truncated);
+    const plain = judgeMessages(messages, truncated);
+    return RANK[plain.verdict] > RANK[guessed.verdict] ? plain : guessed;
+  }
+  return judgeMessages(messages, truncated);
+}
+
+const RANK: Record<Verdict, number> = { none: 0, closer_look: 1, likely: 2 };
+
+function judgeMessages(messages: Message[], truncated: boolean): Report {
   const theirs = messages.filter((m) => m.side === 'them');
   const theirText = theirs.map((m) => m.text).join('\n');
 
@@ -184,7 +253,10 @@ export function analyze(rawInput: string, options: AnalyzeOptions = {}): Report 
 
   const active = findings.filter((f) => !f.dampened);
   const { verdict, score, steps } = verdictFor(active);
-  const { playbook, scores } = pickPlaybook(active);
+  const picked = pickPlaybook(active);
+  const scores = picked.scores;
+  // With no verdict there's no script to name.
+  const playbook = verdict === 'none' ? null : picked.playbook;
   const currentStep = (active.length ? Math.max(...active.map((f) => f.step)) : 0) as 0 | Step;
 
   const stepViews: StepView[] = ([1, 2, 3, 4, 5] as Step[]).map((s) => ({ step: s, ...stepCopy(s, playbook), seen: steps.has(s) }));

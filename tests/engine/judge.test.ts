@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { analyze, MAX_INPUT } from '../../src/engine/judge';
 import { RULES } from '../../src/engine/rules';
 import { SAMPLES, sampleText } from '../../src/data/samples';
+import { cutsWord } from './helpers';
 
 const demo = SAMPLES.find((s) => s.id === 'fake-check-thread')!;
 
@@ -62,7 +63,45 @@ describe('the demo thread: the prediction comes true', () => {
   });
 });
 
+describe('reshipping needs packages, not just the word "forward"', () => {
+  it('does not flag a recruiter forwarding a resume for a remote job', () => {
+    const r = analyze('Hi Sam, I’ve forwarded your resume to the hiring manager for the remote analyst role. You can work from home three days a week. Talk soon!');
+    expect(r.findings.map((f) => f.ruleId)).not.toContain('reship_out');
+    expect(r.verdict).toBe('none');
+  });
+});
+
+describe('guessing who the user is', () => {
+  const export_ = (lines: [string, string][]) => lines.map(([who, text], i) => `[10/18/26, 7:4${i}:00 PM] ${who}: ${text}`).join('\n');
+  it('takes the person greeted by name as the user', () => {
+    const r = analyze(export_([
+      ['Lisa HR', 'Hello Jordan, to finish payroll setup send your SSN and a photo of your driver’s license here today.'],
+      ['Jordan Lee', 'Is there a Workday or HR portal I can use instead?'],
+    ]));
+    expect(r.messages.filter((m) => m.side === 'me').map((m) => m.speaker)).toEqual(['Jordan Lee']);
+    expect(r.legitSignals).toHaveLength(0);
+    expect(r.verdict).not.toBe('none');
+  });
+  it('never lets a wrong guess hide the scammer: a victim greeting the scammer still gets a warning', () => {
+    const r = analyze(export_([
+      ['Jordan Lee', 'Hi Lisa, I saw your message about the remote job.'],
+      ['Lisa HR', 'Great! We will mail you a company check for $2,850 to buy your laptop from our approved vendor. Use mobile deposit, then send the rest to the vendor through Zelle.'],
+    ]));
+    expect(r.verdict).toBe('likely');
+    expect(r.messages.find((m) => m.speaker === 'Lisa HR')!.side).toBe('them');
+  });
+});
+
 describe('findings point at the exact original text', () => {
+  it('never cuts a word in half in any sample', () => {
+    for (const s of SAMPLES) {
+      const r = analyze(sampleText(s));
+      for (const f of r.findings) {
+        const m = r.messages.find((x) => x.id === f.messageId)!;
+        expect(cutsWord(m.text, f.start, f.end), `${s.id} ${f.ruleId}: «${f.quote}»`).toBe(false);
+      }
+    }
+  });
   it('quotes match message text at the reported offsets, including obfuscated input', () => {
     const r = analyze('Hi! Pls contact our HR on t e l e g r a m. You will need to pay a one-time tra1ning fee of $89 via Zelle ASAP.');
     for (const f of r.findings) {

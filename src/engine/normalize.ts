@@ -29,6 +29,7 @@ export interface Normalized {
   norm: string;
   /** map[i] = index in the original string of normalized char i. Length = norm.length + 1 (end sentinel). */
   map: number[];
+  original?: string;
 }
 
 /** Applies a regex replacement to `s` while keeping the offset map in sync. */
@@ -60,18 +61,28 @@ function rewrite(s: string, map: number[], re: RegExp, fn: (m: string) => string
 }
 
 export function normalize(original: string): Normalized {
-  // Pass 1: per-character cleanup (same length or deletion).
+  // Pass 1: per-character cleanup, one code point at a time (same length or deletion).
   let s = '';
   let map: number[] = [];
-  for (let i = 0; i < original.length; i++) {
-    let c = original[i];
-    if (INVISIBLE.test(c)) continue;
+  for (let i = 0; i < original.length; ) {
+    const cp = original.codePointAt(i)!;
+    const unit = cp > 0xffff ? 2 : 1;
+    let c = original.slice(i, i + unit);
+    if (INVISIBLE.test(c)) { i += unit; continue; }
     c = SAME_LENGTH[c] ?? CONFUSABLES[c] ?? c;
-    // Full-width ASCII (U+FF01–FF5E) → ASCII
-    const code = c.charCodeAt(0);
-    if (code >= 0xff01 && code <= 0xff5e) c = String.fromCharCode(code - 0xfee0);
-    s += c.toLowerCase().length === 1 ? c.toLowerCase() : c;
-    map.push(i);
+    if (cp > 0x7f && c.length === unit) {
+      // Compatibility forms: full-width "ｗｈａｔｓａｐｐ", math bold "𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽", circled letters,
+      // ligatures. Folded only when the result is plain ASCII, so accented letters stay put.
+      const k = c.normalize('NFKC');
+      if (k !== c && k.length <= 3 && /^[\x20-\x7e]+$/.test(k)) c = k;
+    }
+    // Push one map entry per UTF-16 unit added, so an emoji (two units) keeps the map aligned.
+    for (const ch of c) {
+      const out = ch.toLowerCase().length === ch.length ? ch.toLowerCase() : ch;
+      s += out;
+      for (let k = 0; k < out.length; k++) map.push(i + (out.length === unit ? k : 0));
+    }
+    i += unit;
   }
   map.push(original.length);
 
@@ -81,7 +92,8 @@ export function normalize(original: string): Normalized {
   // Pass 3: leetspeak inside words that contain at least one letter and don't look like money or times.
   // Only symbols with a letter on both sides are swapped ("tra1ning", "t3legram", "pa$$word"),
   // so prices ("$45"), times ("10am"), handles ("maria1990") and punctuation ("hi!") stay intact.
-  ({ s, map } = rewrite(s, map, /[a-z0-9@$!|]{3,40}/g, (w) => {
+  // An "@" followed by a domain is an email address, not a leet "a", so it ends the word.
+  ({ s, map } = rewrite(s, map, /(?:[a-z0-9$!|]|@(?![a-z0-9-]{1,63}\.[a-z]))(?:[a-z0-9$!|]|@(?![a-z0-9-]{1,63}\.[a-z])){2,39}/g, (w) => {
     if (!/[a-z]/.test(w) || !/[0-9@$!|]/.test(w)) return w;
     const chars = [...w];
     const isLetter = (c: string | undefined) => !!c && /[a-z]/.test(c);
@@ -98,12 +110,17 @@ export function normalize(original: string): Normalized {
   // Pass 4: common split brand words.
   ({ s, map } = rewrite(s, map, /\bwhats ?-?app\b|\btele ?-?gram\b|\bsig ?-?nal app\b/g, (m) => m.replace(/[ -]/g, '')));
 
-  return { norm: s, map };
+  return { norm: s, map, original };
 }
 
 /** Maps a [start, end) range in normalized text back to the original string. */
 export function toOriginal(n: Normalized, start: number, end: number): [number, number] {
   const a = n.map[start];
   const lastChar = n.map[Math.max(start, end - 1)];
-  return [a, lastChar + 1];
+  // A folded "𝗽" is two UTF-16 units in the original; never end between them.
+  return [a, n.original && isHighSurrogate(n.original.charCodeAt(lastChar)) ? lastChar + 2 : lastChar + 1];
+}
+
+function isHighSurrogate(code: number): boolean {
+  return code >= 0xd800 && code <= 0xdbff;
 }

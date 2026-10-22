@@ -44,6 +44,14 @@ describe('normalize', () => {
     expect(normalize(s).norm).toBe('send a gift card now');
     expect(span(s, 'gift card')).toBe('gi​ft card');
   });
+  it('keeps offsets right after an emoji and around folded bold letters', () => {
+    const s = 'Hello 😊 Simple tasks: rate hotels';
+    expect(normalize(s).map.length).toBe(normalize(s).norm.length + 1);
+    expect(span(s, 'simple tasks')).toBe('Simple tasks');
+    const bold = 'Add me on 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 now';
+    expect(normalize(bold).norm).toBe('add me on whatsapp now');
+    expect(span(bold, 'whatsapp')).toBe('𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽');
+  });
   it('joins split brand names', () => {
     expect(normalize('text me on whats app').norm).toContain('whatsapp');
     expect(normalize('our tele gram id').norm).toContain('telegram id');

@@ -48,7 +48,7 @@ npm run preview      # then open http://localhost:4173
 |---|---|
 | `npm test` | Engine unit tests: normalizer offsets, thread parsing, link inspector, every sample, the demo thread's predictions, hard genuine-recruiter regressions, edge states, performance on adversarial input, and dev-set regression |
 | `npm run e2e` | Playwright in Chromium at 1440 px and 390 px: the full journey, highlight-to-card linking, edge and error states, the keyboard-only flow, axe-core WCAG 2.2 AA in light and dark mode, target sizes, and **zero network requests while checking** |
-| `npm run eval` | Scores the rules on the held-out corpus (`eval/corpus-heldout.json`) and writes `src/data/accuracy.json`, which the How it works page displays |
+| `npm run eval` | Scores the rules on the held-out corpus (`eval/corpus-heldout.json`) and writes `src/data/accuracy-rerun.json`. The blind v1.0 result in `src/data/accuracy.json` is never overwritten |
 | `npm run typecheck` | TypeScript |
 
 `npm run e2e` needs a Playwright Chromium. If one isn't installed, run `npx playwright install chromium` first.
@@ -86,6 +86,8 @@ Blind result for v1.0 (the first and only run before any change, 2026-10-22):
 | Genuine messages flagged by mistake | 2 of 40, both "Worth a closer look" |
 | Genuine messages called "Likely scam" | 0 of 40 |
 | Flagged scams matched to the right script | 28 of 34 |
+
+After that run, a white-box adversarial test (46 cases written by a separate agent that read the engine and tried to break it) led to rule and parser fixes in v1.1. All 46 are now regression tests in `tests/engine/adversarial.test.ts`. The v1.1 rerun on the same held-out set gives 34 of 40 scams flagged and 1 of 40 genuine messages flagged. That rerun **isn't blind**, because the v1.0 results had already been seen, so the blind table above is the one to trust. Details: `docs/phase3/round1.md`.
 
 
 What this is not: a measure of real-world accuracy. The test messages are synthetic, and real scammers use wording these rules haven't seen. That's why Tipoff shows its evidence and never says a message is safe. Development history, including the blind first spike, is in `DECISIONS.md` and `PROGRESS.md`.
