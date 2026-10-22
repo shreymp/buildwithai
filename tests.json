@@ -1,0 +1,65 @@
+{
+  "_about": "Completion criteria from the approved proposal → the test that proves each → status. Updated after every verified run. Statuses: pass | fail | pending | manual.",
+  "criteria": [
+    {
+      "id": "C1",
+      "criterion": "A clean clone builds and runs from README steps (npm ci && npm run build && npm run preview), and tests pass",
+      "tests": ["npm ci", "npm run build", "npm test", "npm run e2e", "fresh-agent README walkthrough (Phase 3 verification)"],
+      "status": "pending"
+    },
+    {
+      "id": "C2",
+      "criterion": "Each scam sample: 'Worth a closer look' or 'Likely scam', ≥3 explained highlights, correct playbook; genuine samples not flagged",
+      "tests": ["tests/engine/judge.test.ts > samples", "tests/e2e/journey.spec.ts > each scam sample is flagged…"],
+      "status": "pass"
+    },
+    {
+      "id": "C3",
+      "criterion": "Demo thread: timeline advances; the step-2 prediction matches what the later message does (and step 3 → check, step 4 → pay vendor)",
+      "tests": ["tests/engine/judge.test.ts > the demo thread", "tests/e2e/journey.spec.ts > the demo conversation"],
+      "status": "pass"
+    },
+    {
+      "id": "C4",
+      "criterion": "Held-out corpus 2 (written after rule freeze by an agent that never saw rules): recall and precision at 'closer look+' reported publicly; target ≥ 0.85 each",
+      "tests": ["npm run eval", "src/data/accuracy.json", "How it works page"],
+      "status": "pending"
+    },
+    {
+      "id": "C5",
+      "criterion": "Zero network requests during analysis; CSP forbids connections",
+      "tests": ["tests/e2e/privacy.spec.ts"],
+      "status": "pass"
+    },
+    {
+      "id": "C6",
+      "criterion": "axe-core: 0 serious/critical on every screen and state (light + dark); keyboard-only core flow; 390 px and 1440 px",
+      "tests": ["tests/e2e/a11y.spec.ts"],
+      "status": "pass"
+    },
+    {
+      "id": "C7",
+      "criterion": "Every edge state renders its designed state without crashing: empty, too short, >20k, non-English, no match, engine timeout, worker failure",
+      "tests": ["tests/engine/judge.test.ts > states", "tests/e2e/journey.spec.ts > states"],
+      "status": "pass"
+    },
+    {
+      "id": "C8",
+      "criterion": "Never freezes: ≤300 ms on adversarial 20k inputs; no unbounded wildcards in rules",
+      "tests": ["tests/engine/judge.test.ts > performance and safety"],
+      "status": "pass"
+    },
+    {
+      "id": "C9",
+      "criterion": "Deployed to GitHub Pages",
+      "tests": ["GitHub API: pages build and deployment workflow run conclusion = success for latest gh-pages commit"],
+      "status": "pending"
+    },
+    {
+      "id": "C10",
+      "criterion": "Stage 1: devpost/scope.md, prd.md, spec.md present, from Skill Pack templates, status approved",
+      "tests": ["ls devpost/", "grep '^status: approved' devpost/*.md"],
+      "status": "pass"
+    }
+  ]
+}
