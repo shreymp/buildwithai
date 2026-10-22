@@ -1,0 +1,1349 @@
+{
+  "acct1.csv": [
+    {
+      "merchant": "Nimbusflix",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "NIMBUSFLIX.COM 8775550135 CA",
+        "NIMBUSFLIX.COM 877-555-0135 CA",
+        "NIMBUSFLIX.COM  877-555-0135  CA",
+        "NIMBUSFLIX.COM CA"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-15",
+      "last_date": "2026-09-14",
+      "amounts": [
+        15.49,
+        17.99
+      ]
+    },
+    {
+      "merchant": "Tunewave",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": true,
+      "occurrences": 26,
+      "descriptor_examples": [
+        "SP TUNEWAVE",
+        "SP TUNEWAVE 60074",
+        "SP TUNEWAVE 43200",
+        "SP TUNEWAVE 76982",
+        "TUNEWAVE.COM  FL",
+        "TUNEWAVE.COM  8445550105  FL",
+        "TUNEWAVE.COM 844-555-0105 FL",
+        "TUNEWAVE.COM FL"
+      ],
+      "descriptor_groups": [
+        [
+          "SP TUNEWAVE",
+          "SP TUNEWAVE 60074",
+          "SP TUNEWAVE 43200",
+          "SP TUNEWAVE 76982"
+        ],
+        [
+          "TUNEWAVE.COM  FL",
+          "TUNEWAVE.COM  8445550105  FL",
+          "TUNEWAVE.COM 844-555-0105 FL",
+          "TUNEWAVE.COM FL"
+        ]
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-08",
+      "last_date": "2026-09-21",
+      "amounts": [
+        10.99
+      ]
+    },
+    {
+      "merchant": "Ironhouse Fitness",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 12,
+      "descriptor_examples": [
+        "POS DEBIT - IRONHOUSE FITNESS BOSTON MA",
+        "DEBIT CARD PURCHASE IRONHOUSE FITNESS BOSTON MA"
+      ],
+      "trial": null,
+      "is_gym": true,
+      "first_date": "2025-10-02",
+      "last_date": "2026-09-07",
+      "amounts": [
+        39.95
+      ]
+    },
+    {
+      "merchant": "BlueFern Cloud",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "SQ *BLUEFERN CLOUD PORTLAND",
+        "SQ *BLUEFERN CLOUD OR",
+        "BLUEFERN CLOUD RECURRING PMT #625973",
+        "BLUEFERN CLOUD RECURRING PMT"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-30",
+      "last_date": "2026-09-30",
+      "amounts": [
+        2.99
+      ]
+    },
+    {
+      "merchant": "Quillpad",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "SQ *QUILLPAD MIAMI FL"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-17",
+      "last_date": "2026-09-15",
+      "amounts": [
+        47.99
+      ]
+    },
+    {
+      "merchant": "Cobalt Games Pass",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 7,
+      "descriptor_examples": [
+        "ACH DEBIT COBALT GAMES INC 03585345",
+        "SP COBALT GAMES",
+        "SP COBALT GAMES 23521",
+        "ACH DEBIT COBALT GAMES INC 01222253"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-10-01",
+      "last_date": "2026-04-01",
+      "amounts": [
+        9.99
+      ]
+    },
+    {
+      "merchant": "Fernway Razor Club",
+      "kind": "subscription",
+      "cadence": "quarterly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 5,
+      "descriptor_examples": [
+        "TST* FERNWAY RAZOR - LOS GATOS",
+        "TST* FERNWAY RAZOR 4666",
+        "TST* FERNWAY RAZOR",
+        "TST* FERNWAY RAZOR 9655"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-26",
+      "last_date": "2026-09-28",
+      "amounts": [
+        24
+      ]
+    },
+    {
+      "merchant": "Orchard Audio",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "ORCHARDAUDIO.COM  8775550130",
+        "ORCHARD AUDIO RECURRING PMT #402088",
+        "ORCHARDAUDIO.COM 8775550130 MN",
+        "ORCHARDAUDIO.COM 877-555-0130 MN"
+      ],
+      "trial": "zero_dollar_row",
+      "is_gym": false,
+      "first_date": "2025-09-26",
+      "last_date": "2026-09-28",
+      "amounts": [
+        14.95
+      ]
+    },
+    {
+      "merchant": "Harborview Apartments",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "ACH HARBORVIEW PROP MGMT RENT",
+        "HARBORVIEW APTS RENT PMT",
+        "HARBORVIEW APARTMENTS ONLINE PMT 016205",
+        "HARBORVIEW APARTMENTS ONLINE PMT 806946"
+      ],
+      "amount_varies": false,
+      "first_date": "2025-10-01",
+      "last_date": "2026-10-02"
+    },
+    {
+      "merchant": "CityLight Electric",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "CITYLIGHT ELECTRIC AUTOPAY",
+        "CITYLIGHT ELECTRIC BILL PAY 94801631",
+        "CITYLIGHT ELEC PMT ZC1CF0",
+        "CITYLIGHT ELECTRIC BILL PAY 08605133"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-09-17",
+      "last_date": "2026-09-17"
+    },
+    {
+      "merchant": "Skywire Broadband",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "SKYWIRE*BROADBAND 800-555-0181",
+        "SKYWIRE INTERNET 787290765",
+        "SKYWIRE*BROADBAND 800-555-0186",
+        "SKYWIRE*BROADBAND 800-555-0151"
+      ],
+      "amount_varies": false,
+      "first_date": "2025-09-05",
+      "last_date": "2026-09-07"
+    },
+    {
+      "merchant": "PayLater installment plan (ZoomArt order)",
+      "kind": "installment",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "plan_length": 4,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "PAYLATER INSTALLMENT 1 OF 4 ORDER 4687320",
+        "PAYLATER INSTALLMENT 2 OF 4 ORDER 4687363",
+        "PAYLATER INSTALLMENT 3 OF 4",
+        "PAYLATER INSTALLMENT 4 OF 4"
+      ],
+      "first_date": "2026-01-03",
+      "last_date": "2026-04-06"
+    }
+  ],
+  "acct2.csv": [
+    {
+      "merchant": "Kestrel News",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "WWW.KESTRELNEWS.COM PORTLAND OR J6ZG57",
+        "WWW.KESTRELNEWS.COM PORTLAND OR",
+        "WWW.KESTRELNEWS.COM PORTLAND OR FV2HYW",
+        "WWW.KESTRELNEWS.COM PORTLAND OR XVXUM6"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-10-01",
+      "last_date": "2026-09-30",
+      "amounts": [
+        4,
+        6
+      ]
+    },
+    {
+      "merchant": "Skylark Storage",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "SQ *SKYLARK STORAGE",
+        "SQ *SKYLARK STORAGE LOS GATOS CA",
+        "SQ *SKYLARK STORAGE LOS GATOS",
+        "SKYLARKSTORAGE.COM CA"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-15",
+      "last_date": "2026-09-15",
+      "amounts": [
+        1.99
+      ]
+    },
+    {
+      "merchant": "Marigold Meditation",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "MARIGOLDMEDITATION.COM CA",
+        "MARIGOLDMEDITATION.COM 8555550165 CA"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-30",
+      "last_date": "2026-09-30",
+      "amounts": [
+        69.99,
+        79.99
+      ]
+    },
+    {
+      "merchant": "Thistle Reads",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 8,
+      "descriptor_examples": [
+        "SP THISTLE READS",
+        "SP THISTLE READS 72875",
+        "SP THISTLE READS 97304",
+        "SP THISTLE READS 36237"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-24",
+      "last_date": "2026-04-23",
+      "amounts": [
+        9.99
+      ]
+    },
+    {
+      "merchant": "SummitClimb Gym",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "TST* SUMMITCLIMB GYM 1216",
+        "TST* SUMMITCLIMB GYM",
+        "TST* SUMMITCLIMB GYM 8077",
+        "TST* SUMMITCLIMB GYM 8993"
+      ],
+      "trial": null,
+      "is_gym": true,
+      "first_date": "2025-09-13",
+      "last_date": "2026-09-14",
+      "amounts": [
+        62
+      ]
+    },
+    {
+      "merchant": "Driftwood Podcasts+",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 12,
+      "descriptor_examples": [
+        "PAYPAL *DRIFTWO 4029358589",
+        "PAYPAL *DRIFTWOOD",
+        "PAYPAL *DRIFTWOOD 4029358589",
+        "PAYPAL *DRIFTWOODP 4029358589"
+      ],
+      "trial": "no_charge_before_first_paid",
+      "is_gym": false,
+      "first_date": "2025-10-31",
+      "last_date": "2026-10-03",
+      "amounts": [
+        5.99
+      ]
+    },
+    {
+      "merchant": "Vaultly VPN",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "SP VAULTLY VPN 27384",
+        "SP VAULTLY VPN"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-10",
+      "last_date": "2026-09-14",
+      "amounts": [
+        59.99
+      ]
+    },
+    {
+      "merchant": "Beacon Credit Watch",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "BEACONCREDIT*N2FCD3TS PORTLAND OR",
+        "BEACONCREDIT*FZ58QJBB PORTLAND OR",
+        "BEACON CREDIT RECURRING PMT #464868 OR",
+        "BEACON CREDIT RECURRING PMT #008222 OR"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-10-09",
+      "last_date": "2026-10-09",
+      "amounts": [
+        19.99
+      ]
+    },
+    {
+      "merchant": "CityLight Electric",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "CITYLIGHT ELECTRIC AUTOPAY",
+        "CITYLIGHT ELECTRIC BILL PAY 46220057",
+        "CITYLIGHT ELECTRIC BILL PAY 23855150",
+        "CITYLIGHT ELEC PMT Q359W1"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-09-20",
+      "last_date": "2026-09-18"
+    },
+    {
+      "merchant": "Northstar Wireless",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "NORTHSTAR WIRELESS AUTOPAY",
+        "NORTHSTAR WLS PMT MBAAU",
+        "NORTHSTAR WIRELESS 2947980932",
+        "NORTHSTAR WIRELESS 6928824183"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-10-10",
+      "last_date": "2026-10-06"
+    },
+    {
+      "merchant": "PayLater installment plan (SKYLINE FURNITURE)",
+      "kind": "installment",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "plan_length": 6,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "PAYLATER*SKYLINE FURNITURE INSTALLMENT 1 OF 6",
+        "PAYLATER*SKYLINE FURNITURE INSTALLMENT 2 OF 6 X2J6ZY",
+        "PAYLATER*SKYLINE FURNITURE INSTALLMENT 3 OF 6 XY5BPV",
+        "PAYLATER*SKYLINE FURNITURE INSTALLMENT 4 OF 6"
+      ],
+      "first_date": "2026-06-17",
+      "last_date": "2026-09-14"
+    }
+  ],
+  "acct3.csv": [
+    {
+      "merchant": "Tunewave",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "PURCHASE AUTHORIZED ON 09/27 TUNEWAVE.COM 800-555-0100 CO S282561238155660 CARD 5743",
+        "PURCHASE AUTHORIZED ON 01/25 TUNEWAVE.COM 800-555-0100 CO S298976790422479 CARD 5743",
+        "PURCHASE AUTHORIZED ON 05/26 TUNEWAVE.COM 800-555-0100 CO S835708672499199 CARD 5743",
+        "PURCHASE AUTHORIZED ON 09/27 TUNEWAVE.COM 800-555-0100 CO S840739037646048 CARD 5743"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-28",
+      "last_date": "2026-09-28",
+      "amounts": [
+        10.99,
+        11.99
+      ]
+    },
+    {
+      "merchant": "PawBox",
+      "kind": "subscription",
+      "cadence": "quarterly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 5,
+      "descriptor_examples": [
+        "TST* PAWBOX 4477",
+        "TST* PAWBOX 0948",
+        "ACH DEBIT PAWBOX INC 63545191",
+        "TST* PAWBOX"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-22",
+      "last_date": "2026-09-20",
+      "amounts": [
+        29.95
+      ]
+    },
+    {
+      "merchant": "Pinecone Learning",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "PAYPAL *PINECONELE 4029355512",
+        "PAYPAL *PINECONE 4029355512",
+        "PINECONELEARNING.COM  844-555-0198",
+        "PAYPAL *PINECONE"
+      ],
+      "trial": "zero_dollar_row",
+      "is_gym": false,
+      "first_date": "2025-09-17",
+      "last_date": "2026-09-17",
+      "amounts": [
+        29.99
+      ]
+    },
+    {
+      "merchant": "Cinder Coffee Club",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 6,
+      "descriptor_examples": [
+        "CINDERCOFFEE.COM  GA",
+        "CINDERCOFFEE.COM 8775550121 GA",
+        "CINDERCOFFEE.COM 877-555-0121",
+        "CINDERCOFFEE.COM 877-555-0121 GA"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-13",
+      "last_date": "2026-02-16",
+      "amounts": [
+        18
+      ]
+    },
+    {
+      "merchant": "Overland Maps Premium",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "TST* OVERLAND MAPS 2666",
+        "TST* OVERLAND MAPS 7853"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-29",
+      "last_date": "2026-09-28",
+      "amounts": [
+        19.99
+      ]
+    },
+    {
+      "merchant": "SummitClimb Gym",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "SUMMITCLIMBGYM*HPB5WB5JJS SALT LAKE CITY UT",
+        "SUMMITCLIMBGYM*M6ME3MFUR 888-555-0161",
+        "SUMMITCLIMBGYM*3PE07JK1P 8885550161",
+        "SUMMITCLIMBGYM*HS0GWTTH92"
+      ],
+      "trial": null,
+      "is_gym": true,
+      "first_date": "2025-10-08",
+      "last_date": "2026-10-11",
+      "amounts": [
+        45
+      ]
+    },
+    {
+      "merchant": "Skylark Storage",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": true,
+      "occurrences": 26,
+      "descriptor_examples": [
+        "POS DEBIT - SKYLARK STORAGE BOSTON MA",
+        "DEBIT CARD PURCHASE SKYLARK STORAGE BOSTON MA",
+        "PURCHASE AUTHORIZED ON 10/07 SKYLARKSTORAGE.COM 888-555-0146 MA S238426891676779 CARD 5743",
+        "SKYLARKSTORAGE*1EQQ5SWG BOSTON MA",
+        "PURCHASE AUTHORIZED ON 06/08 SKYLARKSTORAGE.COM 888-555-0146 MA S263166193881547 CARD 5743",
+        "PURCHASE AUTHORIZED ON 10/11 SKYLARKSTORAGE.COM 888-555-0146 MA S138793470533522 CARD 5743"
+      ],
+      "descriptor_groups": [
+        [
+          "POS DEBIT - SKYLARK STORAGE BOSTON MA",
+          "DEBIT CARD PURCHASE SKYLARK STORAGE BOSTON MA"
+        ],
+        [
+          "PURCHASE AUTHORIZED ON 10/07 SKYLARKSTORAGE.COM 888-555-0146 MA S238426891676779 CARD 5743",
+          "SKYLARKSTORAGE*1EQQ5SWG BOSTON MA",
+          "PURCHASE AUTHORIZED ON 06/08 SKYLARKSTORAGE.COM 888-555-0146 MA S263166193881547 CARD 5743",
+          "PURCHASE AUTHORIZED ON 10/11 SKYLARKSTORAGE.COM 888-555-0146 MA S138793470533522 CARD 5743"
+        ]
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-19",
+      "last_date": "2026-10-12",
+      "amounts": [
+        2.99
+      ]
+    },
+    {
+      "merchant": "Tandem Translate",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "WWW.TANDEMTRANSLATE.COM ATLANTA GA",
+        "WWW.TANDEMTRANSLATE.COM ATLANTA GA A3WGKS",
+        "WWW.TANDEMTRANSLATE.COM ATLANTA GA SDPK6V"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-10-10",
+      "last_date": "2026-10-07",
+      "amounts": [
+        7.99
+      ]
+    },
+    {
+      "merchant": "Maple Court Property Management",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "MAPLE COURT PROPERTY MGMT PPD ID 2181559740",
+        "MAPLE COURT PROPERTY MGMT PPD ID 9375873949",
+        "MAPLECOURT PM RENT ACH 2862342",
+        "MAPLECOURT PM RENT ACH 2008363"
+      ],
+      "amount_varies": false,
+      "first_date": "2025-10-03",
+      "last_date": "2026-10-05"
+    },
+    {
+      "merchant": "CityLight Electric",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "CITYLIGHT ELEC PMT 3LQ1Y7",
+        "CITYLIGHT ELECTRIC BILL PAY 54479887",
+        "CITYLIGHT ELECTRIC BILL PAY 04810992",
+        "CITYLIGHT ELECTRIC BILL PAY 76427656"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-09-22",
+      "last_date": "2026-09-23"
+    },
+    {
+      "merchant": "Riverbend Water & Sewer",
+      "kind": "recurring_bill",
+      "cadence": "quarterly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "RIVERBEND WATER & SEWER",
+        "RIVERBEND WATER UTIL 1266986"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-10-27",
+      "last_date": "2026-07-24"
+    },
+    {
+      "merchant": "PayLater installment plan (ZoomArt order)",
+      "kind": "installment",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "plan_length": 4,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "PAYLATER INSTALLMENT 1 OF 4 ORDER 1645929",
+        "PAYLATER INSTALLMENT 2 OF 4 ORDER 1645923",
+        "PAYLATER INSTALLMENT 3 OF 4",
+        "PAYLATER INSTALLMENT 4 OF 4"
+      ],
+      "first_date": "2026-04-15",
+      "last_date": "2026-07-16"
+    }
+  ],
+  "acct4.csv": [
+    {
+      "merchant": "Orchard Audio",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "POS DEBIT - ORCHARD AUDIO MIAMI FL",
+        "DEBIT CARD PURCHASE ORCHARD AUDIO MIAMI FL"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-26",
+      "last_date": "2026-09-28",
+      "amounts": [
+        14.95
+      ]
+    },
+    {
+      "merchant": "Nimbusflix",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "PAYPAL *NIMBUSFLIX 4029359614",
+        "NIMBUSFLIX.COM 844-555-0134 NY",
+        "NIMBUSFLIX.COM",
+        "PAYPAL *NIMBUSF 4029359614"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-15",
+      "last_date": "2026-09-14",
+      "amounts": [
+        8.99,
+        9.99
+      ]
+    },
+    {
+      "merchant": "Vaultly VPN",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "SQ *VAULTLY VPN SAN FRANCISCO",
+        "SQ *VAULTLY VPN"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-03",
+      "last_date": "2026-09-05",
+      "amounts": [
+        59.99
+      ]
+    },
+    {
+      "merchant": "ClearView Security",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "PAYPAL *CLEARVI 4029350096",
+        "PAYPAL *CLEARVIEWS 4029350096"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-16",
+      "last_date": "2026-09-13",
+      "amounts": [
+        39.99
+      ]
+    },
+    {
+      "merchant": "Ironhouse Fitness",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "SQ *IRONHOUSE FITNESS MINNEAPOLIS MN",
+        "ACH DEBIT IRONHOUSE FITNESS INC 24930843",
+        "ACH DEBIT IRONHOUSE FITNESS INC 36749372",
+        "SQ *IRONHOUSE FITNESS MN"
+      ],
+      "trial": null,
+      "is_gym": true,
+      "first_date": "2025-09-29",
+      "last_date": "2026-09-28",
+      "amounts": [
+        24.99,
+        29.99
+      ]
+    },
+    {
+      "merchant": "Beacon Credit Watch",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 9,
+      "descriptor_examples": [
+        "TST* BEACON CREDIT - BOSTON",
+        "TST* BEACON CREDIT",
+        "TST* BEACON CREDIT 5555"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-08",
+      "last_date": "2026-05-08",
+      "amounts": [
+        19.99
+      ]
+    },
+    {
+      "merchant": "Quillpad",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "QUILLPAD RECURRING PMT UT",
+        "PURCHASE AUTHORIZED ON 01/03 QUILLPAD.COM 877-555-0185 UT S751821741613894 CARD 3101",
+        "QUILLPAD RECURRING PMT #332649",
+        "PURCHASE AUTHORIZED ON 09/05 QUILLPAD.COM 877-555-0185 UT S344636110102318 CARD 3101"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-08",
+      "last_date": "2026-09-07",
+      "amounts": [
+        3.99
+      ]
+    },
+    {
+      "merchant": "BrightPath Languages",
+      "kind": "subscription",
+      "cadence": "weekly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 57,
+      "descriptor_examples": [
+        "PAYPAL *BRIGHTPAT 4029350964",
+        "PAYPAL *BRIGHTPA 4029350964",
+        "PAYPAL *BRIGHTPAT",
+        "BRIGHTPATH RECURRING PMT #901706"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-02",
+      "last_date": "2026-09-29",
+      "amounts": [
+        4.99
+      ]
+    },
+    {
+      "merchant": "Rent to D. Okafor (Zelle)",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 14,
+      "descriptor_examples": [
+        "ZELLE PAYMENT TO D OKAFOR RENT GXAE3DX8QS",
+        "ZELLE PAYMENT TO D OKAFOR RENT AV0EEAP87W",
+        "ZELLE PAYMENT TO D OKAFOR RENT NX1GGS85Z4",
+        "ZELLE PAYMENT TO D OKAFOR RENT RZTC6YHDUC"
+      ],
+      "amount_varies": false,
+      "first_date": "2025-09-03",
+      "last_date": "2026-09-30"
+    },
+    {
+      "merchant": "CityLight Electric",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "CITYLIGHT ELEC PMT WLSTB9",
+        "CITYLIGHT ELECTRIC BILL PAY 62327161",
+        "CITYLIGHT ELECTRIC BILL PAY 96144837",
+        "CITYLIGHT ELEC PMT H3BAGG"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-09-24",
+      "last_date": "2026-09-23"
+    },
+    {
+      "merchant": "Heartland Mutual Auto Insurance",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "HEARTLAND MUTUAL AUTO INS PREM 58284166",
+        "HEARTLAND MUTUAL AUTO INS PREM 46571197",
+        "HEARTLAND MUTUAL AUTO INS PREM 98253512",
+        "HEARTLAND MUTUAL AUTO INS PREM 44386322"
+      ],
+      "amount_varies": false,
+      "first_date": "2025-09-23",
+      "last_date": "2026-09-27"
+    },
+    {
+      "merchant": "PayLater installment plan (ZoomArt order)",
+      "kind": "installment",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "plan_length": 6,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "PAYLATER INSTALLMENT 1 OF 6 ORDER 8220957",
+        "PAYLATER INSTALLMENT 2 OF 6 ORDER 8220910",
+        "PAYLATER INSTALLMENT 3 OF 6 ORDER 8220963",
+        "PAYLATER INSTALLMENT 4 OF 6 ORDER 8220907"
+      ],
+      "first_date": "2026-06-05",
+      "last_date": "2026-09-05"
+    }
+  ],
+  "acct5.csv": [
+    {
+      "merchant": "Nimbusflix",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "NIMBUSFLIX RECURRING PMT #766161 UT",
+        "NIMBUSFLIX RECURRING PMT #251843",
+        "NIMBUSFLIX RECURRING PMT #434708",
+        "NIMBUSFLIX RECURRING PMT #526162 UT"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-10-01",
+      "last_date": "2026-10-01",
+      "amounts": [
+        15.49
+      ]
+    },
+    {
+      "merchant": "Tunewave",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": true,
+      "occurrences": 25,
+      "descriptor_examples": [
+        "WWW.TUNEWAVE.COM MIAMI FL MT26Q1",
+        "WWW.TUNEWAVE.COM MIAMI FL",
+        "WWW.TUNEWAVE.COM MIAMI FL 5DE50U",
+        "TUNEWAVE*5QSYHM3 MIAMI FL",
+        "TUNEWAVE*EL3Q9T3JD MIAMI FL",
+        "TUNEWAVE*P6VRC547AA MIAMI FL",
+        "TUNEWAVE*HGSPM15PAD MIAMI FL",
+        "TUNEWAVE*9W43FU96S 877-555-0197"
+      ],
+      "descriptor_groups": [
+        [
+          "WWW.TUNEWAVE.COM MIAMI FL MT26Q1",
+          "WWW.TUNEWAVE.COM MIAMI FL",
+          "WWW.TUNEWAVE.COM MIAMI FL 5DE50U",
+          "TUNEWAVE*5QSYHM3 MIAMI FL"
+        ],
+        [
+          "TUNEWAVE*EL3Q9T3JD MIAMI FL",
+          "TUNEWAVE*P6VRC547AA MIAMI FL",
+          "TUNEWAVE*HGSPM15PAD MIAMI FL",
+          "TUNEWAVE*9W43FU96S 877-555-0197"
+        ]
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-22",
+      "last_date": "2026-09-21",
+      "amounts": [
+        10.99
+      ]
+    },
+    {
+      "merchant": "Thistle Reads",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 14,
+      "descriptor_examples": [
+        "TST* THISTLE READS - NEW YORK",
+        "TST* THISTLE READS",
+        "TST* THISTLE READS 1316",
+        "TST* THISTLE READS 3743"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-08",
+      "last_date": "2026-10-07",
+      "amounts": [
+        9.99
+      ]
+    },
+    {
+      "merchant": "Cobalt Games Pass",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": true,
+      "duplicate": false,
+      "occurrences": 14,
+      "descriptor_examples": [
+        "ACH DEBIT COBALT GAMES INC 56677366",
+        "ACH DEBIT COBALT GAMES INC 80503304",
+        "ACH DEBIT COBALT GAMES INC 19495680",
+        "ACH DEBIT COBALT GAMES INC 38029427"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-09",
+      "last_date": "2026-10-07",
+      "amounts": [
+        9.99,
+        11.99
+      ]
+    },
+    {
+      "merchant": "StackWell",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "DEBIT CARD PURCHASE STACKWELL DENVER CO",
+        "POS DEBIT - STACKWELL DENVER CO"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-11",
+      "last_date": "2026-09-11",
+      "amounts": [
+        4
+      ]
+    },
+    {
+      "merchant": "PixelPod",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 5,
+      "descriptor_examples": [
+        "WWW.PIXELPOD.COM AUSTIN TX 650UE9",
+        "WWW.PIXELPOD.COM AUSTIN TX",
+        "WWW.PIXELPOD.COM AUSTIN TX VHNKZJ"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-10-06",
+      "last_date": "2026-02-05",
+      "amounts": [
+        2.99
+      ]
+    },
+    {
+      "merchant": "Ironhouse Fitness",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "SQ *IRONHOUSE FITNESS NEW YORK",
+        "SQ *IRONHOUSE FITNESS NEW YORK NY",
+        "SQ *IRONHOUSE FITNESS",
+        "SQ *IRONHOUSE FITNESS NY"
+      ],
+      "trial": null,
+      "is_gym": true,
+      "first_date": "2025-09-30",
+      "last_date": "2026-09-30",
+      "amounts": [
+        39.95
+      ]
+    },
+    {
+      "merchant": "Driftwood Podcasts+",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "POS DEBIT - DRIFTWOOD PODCASTS NEW YORK NY",
+        "DEBIT CARD PURCHASE DRIFTWOOD PODCASTS NEW YORK NY",
+        "DRIFTWOODPODCASTS*GZUSJAW2",
+        "DRIFTWOODPODCASTS*HA58JFC NEW YORK NY"
+      ],
+      "trial": "zero_dollar_row",
+      "is_gym": false,
+      "first_date": "2025-09-12",
+      "last_date": "2026-09-14",
+      "amounts": [
+        5.99
+      ]
+    },
+    {
+      "merchant": "Kestrel News",
+      "kind": "subscription",
+      "cadence": "annual",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 2,
+      "descriptor_examples": [
+        "PAYPAL *KESTRELNE 4029353963",
+        "PAYPAL *KESTRELN 4029353963"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-15",
+      "last_date": "2026-09-14",
+      "amounts": [
+        89
+      ]
+    },
+    {
+      "merchant": "Fernway Razor Club",
+      "kind": "subscription",
+      "cadence": "quarterly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 5,
+      "descriptor_examples": [
+        "FERNWAY RAZOR RECURRING PMT",
+        "FERNWAY RAZOR RECURRING PMT #709063",
+        "TST* FERNWAY RAZOR",
+        "FERNWAY RAZOR RECURRING PMT #792186"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-22",
+      "last_date": "2026-09-21",
+      "amounts": [
+        24
+      ]
+    },
+    {
+      "merchant": "Tandem Translate",
+      "kind": "subscription",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "WWW.TANDEMTRANSLATE.COM CHICAGO IL",
+        "WWW.TANDEMTRANSLATE.COM CHICAGO IL VTD8ZG",
+        "WWW.TANDEMTRANSLATE.COM CHICAGO IL Q2TRA1",
+        "WWW.TANDEMTRANSLATE.COM CHICAGO IL NDP2VW"
+      ],
+      "trial": null,
+      "is_gym": false,
+      "first_date": "2025-09-30",
+      "last_date": "2026-09-28",
+      "amounts": [
+        7.99
+      ]
+    },
+    {
+      "merchant": "Harborview Apartments",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "HARBORVIEW APARTMENTS ONLINE PMT 698815",
+        "ACH HARBORVIEW PROP MGMT RENT",
+        "HARBORVIEW APARTMENTS ONLINE PMT 659131",
+        "HARBORVIEW APARTMENTS ONLINE PMT 597594"
+      ],
+      "amount_varies": false,
+      "first_date": "2025-10-01",
+      "last_date": "2026-10-01"
+    },
+    {
+      "merchant": "CityLight Electric",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "CITYLIGHT ELEC PMT 166BG4",
+        "CITYLIGHT ELECTRIC AUTOPAY",
+        "CITYLIGHT ELECTRIC BILL PAY 92725270",
+        "CITYLIGHT ELEC PMT EQ2CXT"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-09-15",
+      "last_date": "2026-09-16"
+    },
+    {
+      "merchant": "Northstar Wireless",
+      "kind": "recurring_bill",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "occurrences": 13,
+      "descriptor_examples": [
+        "NORTHSTAR WLS PMT SWY2V",
+        "NORTHSTAR WIRELESS 6153495614",
+        "NORTHSTAR WIRELESS 3742901421",
+        "NORTHSTAR WIRELESS 4568833671"
+      ],
+      "amount_varies": true,
+      "first_date": "2025-09-09",
+      "last_date": "2026-09-09"
+    },
+    {
+      "merchant": "PayLater installment plan (ZoomArt order)",
+      "kind": "installment",
+      "cadence": "monthly",
+      "active": false,
+      "price_increase": false,
+      "duplicate": false,
+      "plan_length": 4,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "PAYLATER INSTALLMENT 1 OF 4",
+        "PAYLATER INSTALLMENT 2 OF 4",
+        "PAYLATER INSTALLMENT 3 OF 4 ORDER 3793701",
+        "PAYLATER INSTALLMENT 4 OF 4 ORDER 3793790"
+      ],
+      "first_date": "2025-12-14",
+      "last_date": "2026-03-16"
+    },
+    {
+      "merchant": "PayLater installment plan (TRAILHEAD OUTDOORS)",
+      "kind": "installment",
+      "cadence": "monthly",
+      "active": true,
+      "price_increase": false,
+      "duplicate": false,
+      "plan_length": 6,
+      "occurrences": 4,
+      "descriptor_examples": [
+        "PAYLATER*TRAILHEAD OUTDOORS INSTALLMENT 1 OF 6 F32RD9",
+        "PAYLATER*TRAILHEAD OUTDOORS INSTALLMENT 2 OF 6",
+        "PAYLATER*TRAILHEAD OUTDOORS INSTALLMENT 3 OF 6 M5WYNV",
+        "PAYLATER*TRAILHEAD OUTDOORS INSTALLMENT 4 OF 6 CYQS1Q"
+      ],
+      "first_date": "2026-07-07",
+      "last_date": "2026-10-05"
+    }
+  ]
+}
