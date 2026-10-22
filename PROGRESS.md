@@ -4,10 +4,10 @@ The resumable state of the build. If you start in a fresh context, first read th
 
 ## Current status
 
-- **Phase:** 2 (build), approaching v1.0
+- **Phase:** 2 complete (v1.0); Phase 3 improvement rounds next
 - **Live:** https://shreymp.github.io/buildwithai/ (gh-pages branch; GitHub's "pages build and deployment" workflow has succeeded)
 - **Tests:** `npm test` passes 60 engine tests; `npm run e2e` passes 40 (20 specs × desktop and mobile)
-- **Waiting on:** the held-out corpus (`eval/corpus-heldout.json`) and the adversarial findings (`eval/adversarial-findings.json`) from independent sub-agents
+- **Blind held-out result (v1.0):** 34/40 scams flagged, 2/40 genuine flagged (0 as likely), 28/34 right script. See DECISIONS.md §7.
 
 ## Log
 
@@ -25,6 +25,8 @@ Commit `bd8ee66`. See `docs/phase1/` and `DECISIONS.md` §0–4. The user approv
 5. E2E suite (journey, states, keyboard, axe, privacy), plus the deploy script and the first deploy.
 6. Rules frozen at commit `258f513` (`rules.ts` blob `5edf666`) before the held-out corpus was written.
 
+7. Held-out corpus written by an independent sub-agent (80 items, validated: 8 per script, 40 genuine, unique ids). The three background agents (corpus, adversarial tester, design critic) hit the session usage limit; the corpus file had been written in full before that and was validated before use. The adversarial and design critiques did **not** run and are re-run in Phase 3.
+8. Blind eval on the frozen rules → `src/data/accuracy.json`. Title-casing fix (`lowerFirst`, so "HR portal" keeps its capitals). 60 unit + 40 e2e pass. Tag **v1.0**.
+
 ## Next candidates
-- Run `npm run eval` on the frozen rules and record the blind result. Tag v1.0.
-- Triage the adversarial findings in Phase 3, round 1.
+- Phase 3 round 1: adversarial white-box test + design critic on v1.0 screenshots; triage and fix.

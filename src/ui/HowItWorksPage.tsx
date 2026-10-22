@@ -1,3 +1,4 @@
+import { lowerFirst } from '../lib/text';
 import accuracyData from '../data/accuracy.json';
 import { PLAYBOOKS, PLAYBOOK_ORDER, SHARED_STEPS, SOURCES } from '../engine/playbooks';
 import { LEGIT_CONTEXT, RULES } from '../engine/rules';
@@ -182,11 +183,11 @@ export function HowItWorksPage() {
                   </p>
                   <p className="rule__why">{r.why}</p>
                   <p className="rule__meta">
-                    Points to: {r.playbooks.length === 5 ? 'all scripts' : r.playbooks.map((p) => PLAYBOOKS[p].name.toLowerCase()).join(', ')}
+                    Points to: {r.playbooks.length === 5 ? 'all scripts' : r.playbooks.map((p) => lowerFirst(PLAYBOOKS[p].name)).join(', ')}
                     {r.dampenedBy && (
                       <>
                         {' '}
-                        · Softened by: {LEGIT_CONTEXT.filter((c) => r.dampenedBy!.includes(c.id)).map((c) => c.title.toLowerCase()).join('; ')}
+                        · Softened by: {LEGIT_CONTEXT.filter((c) => r.dampenedBy!.includes(c.id)).map((c) => lowerFirst(c.title)).join('; ')}
                       </>
                     )}
                   </p>

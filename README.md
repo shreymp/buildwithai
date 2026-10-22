@@ -78,7 +78,17 @@ The **How it works** page in the app lists every rule, generated from the same d
 
 `npm run eval` measures Tipoff against a **held-out set of 80 synthetic messages**: 40 scams across the five scripts and 40 deliberately tricky genuine recruiter messages. A separate AI agent wrote the set **after the rules were frozen**, without ever seeing them. The numbers are on the How it works page and in `src/data/accuracy.json`.
 
-What this is not: a measure of real-world accuracy. The test messages are synthetic, and real scammers use wording these rules haven't seen. That's why Tipoff shows its evidence and never says a message is safe. Development history, including a blind first spike and an adversarial test round, is in `DECISIONS.md` and `PROGRESS.md`.
+Blind result for v1.0 (the first and only run before any change, 2026-10-22):
+
+| Measure | Result |
+|---|---|
+| Scams flagged ("Worth a closer look" or "Likely scam") | 34 of 40 (85%) |
+| Genuine messages flagged by mistake | 2 of 40, both "Worth a closer look" |
+| Genuine messages called "Likely scam" | 0 of 40 |
+| Flagged scams matched to the right script | 28 of 34 |
+
+
+What this is not: a measure of real-world accuracy. The test messages are synthetic, and real scammers use wording these rules haven't seen. That's why Tipoff shows its evidence and never says a message is safe. Development history, including the blind first spike, is in `DECISIONS.md` and `PROGRESS.md`.
 
 ## Built with the Devpost Learn Skill Pack
 

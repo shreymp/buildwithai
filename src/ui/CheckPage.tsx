@@ -1,3 +1,4 @@
+import { lowerFirst } from '../lib/text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SAMPLES, sampleText, type Sample } from '../data/samples';
 import { MAX_INPUT } from '../engine/judge';
@@ -370,7 +371,7 @@ function EmptyPreview() {
         ))}
       </ol>
       <p className="preview__scripts">
-        Scripts it knows: {PLAYBOOK_ORDER.map((id) => PLAYBOOKS[id].name.toLowerCase()).join(', ')}.
+        Scripts it knows: {PLAYBOOK_ORDER.map((id) => lowerFirst(PLAYBOOKS[id].name)).join(', ')}.
       </p>
     </section>
   );

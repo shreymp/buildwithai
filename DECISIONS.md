@@ -78,4 +78,11 @@ Source of truth for assumptions, tests, and decisions. Newest entries at the bot
   - "Why this matters to the learner" (scope.md): the user gave no personal story. I won't invent one; the section says so.
   - Team and eligibility: not provided. Recorded as an item the user must confirm on the Devpost form; it doesn't block the build.
   - The Skill Pack was installed into the repo with `npx skills add challengepost/learn-ai-basics --all -y` (`.agents/skills`, `.claude/skills` symlinks, `skills-lock.json`). A duplicate `agent/skills` copy the installer created for another harness was removed.
-  - Stack pins: React 19.1, Vite 6.4, TS 5.9, Vitest 3.2, Playwright 1.56 (matches the preinstalled Chromium 1194). I avoided the newest majors (Vite 8, TS 7), which postdate my training knowledge and can't be verified against docs from this sandbox.
+  - Stack pins: React 19.1, Vite 6.4, TS 5.9, Vitest 4.1 (upgraded from 3.2 after npm audit; needs `legacy-peer-deps`), Playwright 1.56 (matches the preinstalled Chromium 1194). I avoided the newest majors (Vite 8, TS 7), which postdate my training knowledge and can't be verified against docs from this sandbox.
+
+## 7. Measurement
+
+- 2026-10-22: **Blind held-out evaluation, v1.0.** `eval/corpus-heldout.json` (80 items: 8 per scam script, 40 hard genuine messages) was written by a sub-agent that was told the five FTC scam scripts but never saw `src/engine/`. Evidence: its transcript has exactly two tool calls, `ls -la eval` and one `Write` of the corpus file. It made no reads of the repo. The rules were frozen first (`rules.ts` blob `5edf666`, verified with `git hash-object` before the run). Result on the first and only blind run: **34/40 scams flagged (recall 0.85), 2/40 genuine messages flagged as "Worth a closer look" and 0 as "Likely scam" (precision 0.944), 28/34 matched to the right script.** H1's thresholds (≥ 0.8) are met. The corpus is synthetic and written by a model, so this isn't real-world accuracy, and the How it works page says so.
+  - Misses: h19 (fake check), h43, h60 and h70 (pay for the job: "membership", "registration plus the verification" fees), h45 (identity), h76 (reshipping follow-up with no earlier context).
+  - False positives: h50 (`identity_request` on a staffing-agency onboarding note), h69 (`hard_to_trace_payment`).
+  - **Policy:** this corpus is now burned for tuning, like the Phase 1 corpus. Any later rule change reports the blind v1.0 number alongside the post-change number, labeled as such. It doesn't replace the blind number.

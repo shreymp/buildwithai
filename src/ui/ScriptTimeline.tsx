@@ -1,3 +1,4 @@
+import { lowerFirst } from '../lib/text';
 import type { Report } from '../engine/types';
 import { IconArrowRight } from './icons';
 
@@ -32,7 +33,7 @@ export function ScriptTimeline({ report }: Props) {
         <p className="script__sub">
           {report.playbookName ? (
             <>
-              Matches the <strong>{report.playbookName.toLowerCase()}</strong> job scam.
+              Matches the <strong>{lowerFirst(report.playbookName)}</strong> job scam.
             </>
           ) : (
             'The opening moves are shared by most job scams. The later steps depend on which script they’re running.'

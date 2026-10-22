@@ -1,3 +1,4 @@
+import { lowerFirst } from '../lib/text';
 import { useEffect, useRef } from 'react';
 import { LEGIT_CONTEXT, RULES } from '../engine/rules';
 import { stepCopy } from '../engine/playbooks';
@@ -104,7 +105,7 @@ export function FindingList({ findings, playbook, selectedRule, selectTick, onSh
           <ul>
             {softened.map((g) => {
               const rule = RULES.find((r) => r.id === g.ruleId);
-              const by = LEGIT_CONTEXT.filter((c) => rule?.dampenedBy?.includes(c.id)).map((c) => c.title.toLowerCase());
+              const by = LEGIT_CONTEXT.filter((c) => rule?.dampenedBy?.includes(c.id)).map((c) => lowerFirst(c.title));
               return (
                 <li key={g.ruleId}>
                   <strong>{g.title}</strong>: <q>{g.quotes[0]}</q>. Softened because the message also {by.length ? `shows: ${by.join(' or ')}` : 'shows normal hiring steps'}.
