@@ -1,6 +1,6 @@
 # Judge Q&A sheet
 
-These are short, honest answers to the questions judges are most likely to ask. Each answer points to the evidence in the repo. Numbers are as of commit `6a06bb1` (v1.2).
+These are short, honest answers to the questions judges are most likely to ask. Each answer points to the evidence in the repo. Numbers are as of v1.3 (commit listed in `PROGRESS.md` → Tags).
 
 ## Product and impact
 
@@ -55,7 +55,7 @@ The AI was used to *build* it, which is the point of this hackathon.
 **How did you design it?**
 - Research and tokens are in `DESIGN.md`.
 - A no-context design critic reviewed every screen, and the fixes are in `docs/phase3/round1.md`.
-- A blind A/B comparison preferred the revised version in 9 of 9 pairs that differed.
+- Blind A/B comparisons preferred the revised version in 9 of 9 differing pairs in round 1, and in 7 of 7 pairs in round 3 (`docs/phase3/round3.md`).
 - Accessibility: axe WCAG 2.2 AA passes in light and dark mode at 390 px and 1440 px. The whole core workflow works with the keyboard alone. Controls are at least 24 px.
 
 **Why is the results page so long on mobile?**
@@ -64,13 +64,13 @@ Every highlight links to its explanation card, so the cards stay expanded. The "
 ## Technical
 
 **How accurate is it, exactly?**
-| | Blind v1.0 | v1.1 rerun (not blind) |
+| | Blind v1.0 | v1.3 rerun (not blind) |
 |---|---|---|
-| Scams flagged | 34/40 | 34/40 |
+| Scams flagged | 34/40 | 35/40 |
 | Genuine flagged by mistake | 2/40 | 1/40 |
 | Genuine called "Likely scam" | 0/40 | 0/40 |
 
-We report the blind number. The rerun isn't blind, because we had seen the results.
+We report the blind number. The rerun isn't blind, because we had seen the results. The rules were never tuned on the held-out messages; the extra catch in v1.3 came from a pattern written for a critic's own test message.
 
 **How do you know it makes no network requests?**
 `tests/e2e/privacy.spec.ts` records every request while checking several messages, including one with accented letters. The production page's CSP sets `connect-src 'none'`. That test also caught a real bug: fonts used to load mid-check. It's fixed (`docs/phase3/round1.md`).

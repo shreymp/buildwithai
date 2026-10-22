@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 test.describe('core journey', () => {
-  test('the demo conversation: the prediction comes true one message later', async ({ page }) => {
+  test('the demo conversation: the prediction comes true in the later messages', async ({ page }) => {
     await page.goto('/');
     await page.click('[data-sample="fake-check-thread"]');
     await expect(page.getByTestId('verdict')).toContainText('Worth a closer look');
@@ -50,7 +50,7 @@ test.describe('core journey', () => {
       expect(await page.locator('.mark').count()).toBeGreaterThanOrEqual(3);
       expect(await page.locator('[data-testid="finding-cards"] > li').count()).toBeGreaterThanOrEqual(3);
     }
-    for (const id of ['legit-recruiter', 'legit-linkedin']) {
+    for (const id of ['legit-recruiter', 'legit-linkedin', 'legit-background-check']) {
       await page.click(`[data-sample="${id}"]`);
       await expect(page.getByTestId('verdict')).toContainText('No known scam pattern found');
       await expect(page.getByTestId('legit')).toBeVisible();
@@ -113,6 +113,19 @@ test.describe('states', () => {
     await page.getByLabel('Message or conversation').fill('Hola, tenemos un trabajo desde casa para usted con un pago muy alto por día. Escríbanos por WhatsApp para más información.');
     await page.getByTestId('check').click();
     await expect(page.getByTestId('notice')).toContainText('English');
+  });
+
+  test('a single request gets the calm "check before you send" card, not the red end-of-script card', async ({ page }) => {
+    await page.goto('/');
+    await page.getByLabel('Message or conversation').fill('Hi, please send me your Social Security number so I can get you set up for the role today.');
+    await page.getByTestId('check').click();
+    await expect(page.getByTestId('verdict')).toContainText('Worth a closer look');
+    const card = page.getByTestId('next-move');
+    await expect(card).toContainText('Before you answer');
+    await expect(card).not.toHaveClass(/next--final/);
+    await page.click('[data-sample="fake-check-thread"]');
+    await page.getByRole('button', { name: 'Show all' }).click();
+    await expect(page.getByTestId('next-move')).toHaveClass(/next--final/);
   });
 
   test('a stuck engine shows a recoverable error and keeps the text', async ({ page }) => {

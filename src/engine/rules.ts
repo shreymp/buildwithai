@@ -124,7 +124,7 @@ export const RULES: Rule[] = [
       /\b(?:you(?:'ve| have)? been|you are|you're|ur)\s(?:officially\s)?(?:hired|approved for the (?:position|role|job))\b/g,
       /\byou\s(?:got|get)\sthe\s(?:job|position|role)\b/g,
       /\bno interview (?:is )?(?:needed|required|necessary)\b/g,
-      /\bcongratulations\b[^.?!]{0,60}\b(?:hired|you got the|welcome to the team|offer you the position|passed the interview)\b/g,
+      /\bcongratulations\b[^.?!]{0,60}\b(?:hired|you got the (?:job|position|role|offer)|welcome to the team|offer you the position|passed the interview)\b/g,
       /\b(?:passed|cleared)\s(?:the|your)\s(?:interview|screening|assessment)\b[^.?!]{0,60}\b(?:start|begin|onboard)/g,
       /\byou(?:'ve| have)? been (?:selected|chosen)\s(?:for|as)\s(?:(?!interview)[^.?!]){0,40}\b(?:position|role|job)\b/g,
       /\bhired\s(?:immediately|right away|on the spot|today)\b/g,
@@ -215,8 +215,12 @@ export const RULES: Rule[] = [
       /\b(?:print|attach|apply)\w{0,3}\s(?:the\s)?(?:new\s|prepaid\s|shipping\s|return\s){1,2}labels?\b/g,
       /\b(?:new|prepaid)\s(?:shipping\s)?labels?\b/g,
       /\bship\w{0,3}\s(?:them|it|the items|the packages|the parcels)\s(?:out\s)?to\s(?:the\s|new\s|our\s)?(?:addresses|address|customers|recipients)\b/g,
+      /\b(?:ship|send|mail|forward|drop)\w{0,3}\s(?:it|them|each one|the (?:package|parcel|box|item)s?)\s(?:back\s)?(?:out|off|on)\b[^.?!]{0,30}\blabels?\b/g,
+      /\b(?:forward|ship|send|mail)\w{0,3}\b[^.?!]{0,30}\bwith\s(?:the\s|our\s|new\s|prepaid\s)?(?:shipping\s)?labels?\b/g,
     ],
+    // The home address often comes up in an earlier message than the shipping orders.
     needsMessage: HOME,
+    needsThread: true,
   },
   {
     id: 'pay_for_job',
@@ -224,7 +228,7 @@ export const RULES: Rule[] = [
     why: 'Real employers don’t charge you for training, certification, background checks or starter kits. If you have to pay to start, it isn’t a job.',
     step: 4, playbooks: ['upfront_fee'], weight: 3,
     patterns: [
-      /\b(?:pay|purchase|buy)\s(?:a\s|the\s|your\s|for\s|for your\s|for the\s|\$\s?\d{1,4}\s(?:for\s)?(?:the\s|your\s)?)(?:training|certification|starter kit|onboarding kit|welcome kit|background check|registration|software license|work permit|uniform)(?:\s(?:fee|kit|costs?))?\b/g,
+      /\b(?:pay|purchase|buy)\s(?:a\s|the\s|your\s|for\s|for your\s|for the\s|\$\s?\d{1,4}\s(?:for\s)?(?:the\s|your\s)?)(?:onboarding\s|new hire\s|required\s)?(?:training|certification|starter kit|onboarding kit|welcome kit|background check|registration|software license|work permit|uniform)(?:\s(?:fee|kit|costs?))?\b/g,
       /\b(?:training|certification|registration|application|processing|onboarding|activation|background check|kit|placement|enrollment|admin)\s(?:fee|cost|charge|deposit)\b/g,
       /\b(?:refundable|one-time|one time|small|nominal)\s(?:fee|deposit|payment)\b/g,
       /\b(?:training|starter|onboarding|welcome|equipment)?\s?(?:kit|materials|certification|course|exam)\b[^.?!]{0,30}\b(?:cost|costs|is|are|fee of|price is)\s\$\s?\d[\d,]{0,9}(?:\.\d{1,2})?/g,
@@ -263,6 +267,7 @@ export const RULES: Rule[] = [
     patterns: [
       /\b(?:pay|send|zelle|transfer|wire|forward)\w{0,3}\s(?:the\s|our\s|that\s)?(?:money\s|funds\s|payment\s)?(?:to\s)?(?:the\s|our\s)?(?:vendor|supplier)\b/g,
       /\b(?:pay|send|zelle|transfer|wire|forward)\w{0,3}\b[^.?!]{0,30}\bto\s(?:the\s|our\s|their\s|an?\s)?(?:approved\s|designated\s|certified\s|preferred\s|authorized\s)?(?:equipment\s)?(?:vendor|supplier)\b/g,
+      /\b(?:pay|send|zelle|transfer|wire|forward)\w{0,3}\b[^.?!]{0,30}\bto\s(?:the\s|our\s|their\s|an?\s)?equipment\s(?:partner|provider|company)\b/g,
     ],
   },
   {
@@ -287,13 +292,14 @@ export const RULES: Rule[] = [
     why: 'Gift cards, crypto, wire transfers and apps like Zelle or Cash App are hard or impossible to reverse. That’s why scammers ask for them.',
     step: 5, playbooks: ['task', 'fake_check', 'upfront_fee'], weight: 3,
     patterns: [
-      /(?<=\b(?:send|pay|deposit|transfer|buy|purchase|load|top up)\w{0,3}\b[^.?!]{0,30})\b(?:usdt|bitcoin|btc|crypto(?:currency)?|tether|usdc|ethereum|eth|gift ?cards?|itunes cards?|steam cards?)\b/g,
+      /(?<=\b(?:send|pay|deposit|transfer|buy|purchase|load|top up|forward|wire)\w{0,3}\b[^.?!]{0,50})\b(?:usdt|bitcoin|btc|crypto(?:currency)?|tether|usdc|ethereum|eth|gift ?cards?|itunes cards?|steam cards?)\b/g,
       /\b(?:usdt|bitcoin|btc|crypto|tether|usdc|gift ?cards?)\b(?=[^.?!]{0,25}\b(?:payment|deposit|to (?:pay|unlock|activate)|wallet address|receipt)\b)/g,
       /\b(?:bitcoin|crypto) atm\b/g,
       /\bgift ?cards?\b[^.?!]{0,20}\b(?:fine|ok|okay|accepted|works?|acceptable|preferred)\b/g,
       /\bwallet address\b/g,
       /(?<=\b(?:send|pay|transfer|wire)\w{0,3}\b[^.?!]{0,30})\b(?:(?:via|through|using|by|with|on)\s)?(?:zelle|cash ?app|venmo|western union|moneygram|paypal friends)\b/g,
-      /(?<=\b(?:payment|deposit|fee)s?\b[^.?!]{0,15}\s)(?:via|through|by|using)\s(?:zelle|cash ?app|western union|moneygram|wire transfer)\b/g,
+      /(?<=\b(?:payment|deposit|fee|payable)s?\b[^.?!]{0,30}\s)(?:via|through|by|using|on)\s(?:zelle|cash ?app|venmo|western union|moneygram|wire transfer|bitcoin|crypto)\b/g,
+      /\b(?:photos?|pictures?|pics?|scans?)\sof\s(?:the\s)?(?:card\s|gift card\s)?codes\b/g,
     ],
     // An employer paying you by Zelle is unusual but not this scam.
     unlessSentence: /\bwe pay\b|\bpay you\b|\byou(?:'ll| will)? (?:be|get) paid\b|\bpaid (?:every|weekly|biweekly|via)\b|\bpayroll\b/,
@@ -304,13 +310,23 @@ export const RULES: Rule[] = [
     why: 'Your Social Security number, a photo of your ID or your bank login is all an identity thief needs. Real employers collect tax details in an HR system after a written offer, and never ask for your bank password.',
     step: 5, playbooks: ['identity'], weight: 3,
     patterns: [
-      /\b(?:send|provide|text|email|share|reply with|upload|give|forward|submit)\w{0,3}\b[^.?!]{0,40}\b(?:ssn|social security(?: number)?|social|date of birth|dob)\b/g,
+      // The gap can't cross a "never" or "not": "send your resume; we never ask for your SSN".
+      /\b(?:(?:send|provide|text|share|reply|upload|give|forward|submit)\w{0,3}|email\w{0,2}\s(?:me|us|them|it|back))\b(?:(?!\b(?:never|not|don't|won't|no)\b)[^.?!]){0,100}\b(?:ssn|social security(?: number)?|social|date of birth|dob)\b/g,
       /\b(?:photo|picture|scan|copy|pic|image)s?\sof\s(?:your\s)?(?:id|driver'?s licen[cs]e|licen[cs]e|passport|state id|social security card)\b/g,
       /\bfront and back of (?:your )?(?:id|license|licence|card)\b/g,
-      /\b(?:routing|account) (?:and|&) (?:routing|account) numbers?\b/g,
       /\b(?:need|require|collect|verify|confirm)\w{0,2}\s(?:your|ur)\b[^.?!]{0,40}\b(?:ssn|social security(?: number)?|date of birth|dob)\b/g,
       /\bwhat(?:'s| is) (?:your|ur) (?:ssn|social security)\b/g,
-      /\b(?:send|provide|text|email|share|reply with|upload|give|forward|submit)\w{0,3}\b[^.?!]{0,80}\b(?:and|plus|also) (?:your|ur) (?:ssn|social security(?: number)?)\b/g,
+    ],
+    dampenedBy: ['hr_portal'],
+  },
+  {
+    id: 'bank_details',
+    title: 'Asking for your bank account numbers',
+    why: 'Direct deposit does need your routing and account numbers, but a real employer collects them in its payroll system after a written offer, not by email, text or chat. Sent to a stranger, they can be used to commit fraud in your name.',
+    step: 5, playbooks: ['identity'], weight: 3,
+    patterns: [
+      /\b(?:routing|account) (?:and|&) (?:routing|account) numbers?\b/g,
+      /\b(?:send|provide|text|share|reply|give|forward|submit)\w{0,3}\b(?:(?!\b(?:never|not|don't|won't|no)\b)[^.?!]){0,60}\b(?:bank (?:account )?(?:details|info|information|numbers?)|account number|routing number)\b/g,
     ],
     dampenedBy: ['hr_portal'],
   },

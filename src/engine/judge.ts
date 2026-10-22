@@ -5,7 +5,7 @@
 import { inspect } from './inspect';
 import { normalize, toOriginal } from './normalize';
 import {
-  CAUTION_PLAN, GENERIC_NEXT, GENERIC_STOP, PLAYBOOKS, PLAYBOOK_ORDER, VERIFY_PLAN, replyTemplate, stepCopy,
+  CAUTION_PLAN, CHECK_REQUEST, GENERIC_NEXT, GENERIC_STOP, PLAYBOOKS, PLAYBOOK_ORDER, VERIFY_PLAN, replyTemplate, scamName, stepCopy,
 } from './playbooks';
 import { LEGIT_CONTEXT, NEGATION_BEFORE, RULES } from './rules';
 import { looksLikeEmailChain, parseThread, withGreetedAsUser } from './thread';
@@ -83,12 +83,12 @@ function sentenceAround(norm: string, start: number, end: number): string {
   return norm.slice(from, after === -1 ? norm.length : end + after);
 }
 
-function findInMessage(message: Message): Finding[] {
+function findInMessage(message: Message, threadNorm: string): Finding[] {
   const n = normalize(message.text);
   const warnings = warningSpans(n.norm);
   const found: Finding[] = [];
   for (const rule of RULES) {
-    if (rule.needsMessage && !new RegExp(rule.needsMessage.source, rule.needsMessage.flags.replace('g', '')).test(n.norm)) continue;
+    if (rule.needsMessage && !new RegExp(rule.needsMessage.source, rule.needsMessage.flags.replace('g', '')).test(rule.needsThread ? threadNorm : n.norm)) continue;
     for (const pattern of rule.patterns) {
       const re = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
       let m: RegExpExecArray | null;
@@ -181,18 +181,18 @@ function verdictFor(active: Finding[]): { verdict: Verdict; score: number; steps
 function reasonFor(verdict: Verdict, active: Finding[], playbook: PlaybookId | null, steps: Set<number>): string {
   const ruleCount = new Set(active.map((f) => f.ruleId)).size;
   const signs = `${ruleCount} warning sign${ruleCount === 1 ? '' : 's'}`;
+  const match = ruleCount === 1 ? 'matches' : 'match';
   if (verdict === 'likely') {
-    const pb = playbook ? PLAYBOOKS[playbook].name.toLowerCase() : null;
-    // "Pay for the job" already ends in "job": avoid "the pay for the job job scam".
-    const name = pb ? `the ${pb}${pb.endsWith('job') ? ' scam' : ' job scam'}` : 'a known job-scam script';
+    const name = playbook ? scamName(playbook) : 'a known job-scam script';
+    const across = `across ${steps.size} step${steps.size === 1 ? '' : 's'} of the script`;
     const asked = active.some((f) => f.step >= 4 && f.weight >= 3);
     return asked
-      ? `This follows ${name}: ${signs} across ${steps.size} steps of the script, including a request that puts your money or identity at risk.`
-      : `This follows ${name}: ${signs} across ${steps.size} steps of the script. They haven’t asked for money or personal details yet, but that’s where this script goes next.`;
+      ? `This follows ${name}: ${signs} ${across}, including a request that puts your money or identity at risk.`
+      : `This follows ${name}: ${signs} ${across}. They haven’t asked for money or personal details yet, but that’s where this script goes next.`;
   }
   if (verdict === 'closer_look') {
     return playbook
-      ? `${signs} that match the start of the ${PLAYBOOKS[playbook].name.toLowerCase()} script, but not the full pattern yet.`
+      ? `${signs} that ${match} part of the ${PLAYBOOKS[playbook].name.toLowerCase()} script, but not the full pattern yet.`
       : `${signs} common in job scams, but not enough to match a full script yet.`;
   }
   if (ruleCount > 0) return 'Only weak signs matched. These are common in real job messages too, so verify the basics below.';
@@ -201,7 +201,8 @@ function reasonFor(verdict: Verdict, active: Finding[], playbook: PlaybookId | n
 
 function nextMoveFor(verdict: Verdict, currentStep: number, playbook: PlaybookId | null): NextMove | null {
   if (verdict === 'none' || currentStep === 0) return null;
-  if (currentStep === 5) return playbook ? PLAYBOOKS[playbook].stop : GENERIC_STOP;
+  // A request on its own isn't the end of a script: say what to check, not "it's over".
+  if (currentStep === 5) return verdict !== 'likely' ? CHECK_REQUEST : playbook ? PLAYBOOKS[playbook].stop : GENERIC_STOP;
   const key = currentStep as 1 | 2 | 3 | 4;
   return playbook ? PLAYBOOKS[playbook].next[key] : GENERIC_NEXT[key];
 }
@@ -246,7 +247,8 @@ function judgeMessages(messages: Message[], truncated: boolean): Report {
     return emptyReport('not_english', messages, truncated, 'Tipoff only reads English job messages for now.');
   }
 
-  const findings = theirs.flatMap(findInMessage);
+  const threadNorm = normalize(theirText).norm;
+  const findings = theirs.flatMap((m) => findInMessage(m, threadNorm));
   const legitSignals = theirs.flatMap(legitInMessage);
   const legitIds = new Set(legitSignals.map((l) => l.id));
   for (const f of findings) {

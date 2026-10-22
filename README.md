@@ -20,7 +20,7 @@ It runs entirely in your browser. There's no server, no account and no AI servic
 
 1. Open the live app, or run it locally (below) and open the printed URL.
 2. Under **Try an example**, tap **Remote data entry offer**.
-3. Press **Show the next message** a few times. At message 1 Tipoff predicts a chat-only "hire". At message 4 it predicts a check for equipment. Message 5 is exactly that.
+3. Press **Show the next message** a few times. At message 1 Tipoff predicts a chat-only "hire", and messages 3 and 4 are exactly that. At message 4 it warns that they'll ask for something next, most often a check to buy equipment. Message 5 is that check.
 4. Tap any highlighted phrase to read why it was flagged.
 5. Try **Interview invite after applying**, a genuine recruiter email: *No known scam pattern found*, plus the signs of a normal hiring process.
 
@@ -46,9 +46,9 @@ npm run preview      # then open http://localhost:4173
 
 | Command | What it checks |
 |---|---|
-| `npm test` | 116 engine unit tests, in about 2 seconds: normalizer offsets, thread parsing, link inspector, every sample, the demo thread's predictions, hard genuine-recruiter regressions, edge states, performance on adversarial input, and dev-set regression |
-| `npm run e2e` | 42 Playwright tests in Chromium at 1440 px and 390 px, in about 1–2 minutes: the full journey, highlight-to-card linking, edge and error states, the keyboard-only flow, axe-core WCAG 2.2 AA in light and dark mode, target sizes, and **zero network requests while checking** |
-| `npm run eval` | Scores the rules on the held-out corpus (`eval/corpus-heldout.json`) and prints the result. It changes no files. `EVAL_VERSION=v1.2 npm run eval` also writes `src/data/accuracy-rerun.json`, which the How it works page shows as the labeled "not blind" rerun. The blind v1.0 result in `src/data/accuracy.json` is never overwritten |
+| `npm test` | 132 engine unit tests, in about 2 seconds: normalizer offsets, thread parsing, link inspector, every sample, the demo thread's predictions, hard genuine-recruiter regressions, edge states, performance on adversarial input, and dev-set regression |
+| `npm run e2e` | 44 Playwright tests in Chromium at 1440 px and 390 px, in about 1–2 minutes: the full journey, highlight-to-card linking, edge and error states, the keyboard-only flow, axe-core WCAG 2.2 AA in light and dark mode, target sizes, and **zero network requests while checking** |
+| `npm run eval` | Scores the rules on the held-out corpus (`eval/corpus-heldout.json`) and prints the result. It changes no files. `EVAL_VERSION=v1.3 npm run eval` also writes `src/data/accuracy-rerun.json`, which the How it works page shows as the labeled "not blind" rerun. The blind v1.0 result in `src/data/accuracy.json` is never overwritten |
 | `npm run typecheck` | TypeScript |
 
 `npm run e2e` builds the app and serves it on http://127.0.0.1:4173 by itself. **Stop any `npm run preview` first.** Outside CI, Playwright reuses whatever is already listening on port 4173, which could be an old build. With `CI` set, it refuses to start if the port is taken.
@@ -71,7 +71,7 @@ paste ──► thread parser ──► normalizer ──► rulebook ──► 
 - **`src/engine/normalize.ts`** builds a cleaned copy for matching: look-alike letters from other alphabets, "t e l e g r a m", "tra1ning", hidden characters and curly quotes. It keeps a character map back to the original, so highlights land on exactly what was pasted.
 - **`src/engine/rules.ts`** holds the rulebook. Each rule has bounded patterns, a plain-language explanation, a script step, and the playbooks it points to. Signs of a genuine hiring process, such as a video interview, an HR portal, or the employer paying for equipment, soften related rules.
 - **`src/engine/playbooks.ts`** holds the five scripts, their step names, the next-move text for every step, the action plans, and the reply template. All of it is written from FTC consumer guidance.
-- **`src/engine/judge.ts`** produces the verdict. **Likely scam** needs a request for money, identity documents or account access, backed by another step of the script or a second, different request. Otherwise the verdict is *Worth a closer look* or *No known scam pattern found*.
+- **`src/engine/judge.ts`** produces the verdict. **Likely scam** needs a request for money, identity documents or account access, backed by another step of the script or a second, different request. It can also be reached before any request, when many signs cover three or more steps of the script (at least 9 points: strong 3, moderate 2, weak 1). The demo thread hits this at message 4, and the reason then says they haven't asked for money yet. Otherwise the verdict is *Worth a closer look* or *No known scam pattern found*.
 - **`src/engine/engine.worker.ts`** runs the check in a Web Worker with a 2-second timeout, so the page never freezes. Input is capped at 20,000 characters.
 
 The **How it works** page in the app lists every rule, generated from the same data the engine uses, along with the measured accuracy.
@@ -89,7 +89,7 @@ Blind result for v1.0 (the first and only run before any change, 2026-10-22):
 | Genuine messages called "Likely scam" | 0 of 40 |
 | Flagged scams matched to the right script | 28 of 34 |
 
-After that run, a white-box adversarial test (46 cases written by a separate agent that read the engine and tried to break it) led to rule and parser fixes in v1.1. All 46 are now regression tests in `tests/engine/adversarial.test.ts`. The v1.1 rerun on the same held-out set gives 34 of 40 scams flagged and 1 of 40 genuine messages flagged. That rerun **isn't blind**, because the v1.0 results had already been seen, so the blind table above is the one to trust. Details: `docs/phase3/round1.md`.
+After that run, a white-box adversarial test (46 cases written by a separate agent that read the engine and tried to break it) led to rule and parser fixes in v1.1. All 46 are now regression tests in `tests/engine/adversarial.test.ts`. Round 3 (a judge-perspective critic's own test messages) changed the rules again in v1.3. The v1.3 rerun on the same held-out set gives 35 of 40 scams flagged and 1 of 40 genuine messages flagged. Reruns **aren't blind**, because the v1.0 results had already been seen, so the blind table above is the one to trust. Details: `docs/phase3/round1.md` and `round3.md`.
 
 
 What this is not: a measure of real-world accuracy. The test messages are synthetic, and real scammers use wording these rules haven't seen. That's why Tipoff shows its evidence and never says a message is safe. Development history, including the blind first spike, is in `DECISIONS.md` and `PROGRESS.md`.

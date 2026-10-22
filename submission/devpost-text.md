@@ -16,7 +16,7 @@ Job scams don't arrive as one obviously fake message. They follow a script: a fr
 ## What it does
 - You paste a recruiter's text, DM or email, or a whole conversation. That includes WhatsApp exports and email reply chains.
 - Tipoff places the conversation on a five-step job-scam script: the hook, off the platform, the fast "hire", the setup, and the ask. It shows **"You are here"** and **what they'll likely do next**.
-- It names which of five FTC-documented scripts the conversation matches:
+- When the signs point to one, it names which of five FTC-documented scripts the conversation matches:
   - fake check and equipment
   - pay-to-work "tasks"
   - reshipping
@@ -33,18 +33,18 @@ Job scams don't arrive as one obviously fake message. They follow a script: a fr
 - **The engine** is plain TypeScript, and it runs in a Web Worker with a 2-second timeout and an in-page fallback. It works in four stages:
   - It parses chat exports and email chains into messages, without dropping anything the other person wrote.
   - It normalizes tricks scammers use to dodge filters: "t e l e g r a m", "tra1ning", look-alike Cyrillic letters, zero-width characters and 𝗯𝗼𝗹𝗱 Unicode. Every highlight still maps back to the exact characters you pasted.
-  - It runs 25 readable rules written from FTC guidance. Signs of a real hiring process soften them: a named HR system, a video interview, or the employer paying for equipment.
+  - It runs 26 readable rules written from FTC guidance. Signs of a real hiring process soften them: a named HR system, a video interview, or the employer paying for equipment.
   - It scores the steps of the script and predicts the next one.
 - **The rules are data.** The "How it works" page renders the same rule list the engine runs, so the explanation can't drift from the behavior.
 - **Testing.**
-  - 116 engine tests, including 46 adversarial cases from a separate agent that read the code and tried to break it.
-  - 42 browser tests covering the core journey, every error state, keyboard-only use, axe accessibility checks in light and dark mode at phone and desktop sizes, and zero network requests.
+  - 132 engine tests, including 46 adversarial cases from a separate agent that read the code and tried to break it.
+  - 44 browser tests covering the core journey, every error state, keyboard-only use, axe accessibility checks in light and dark mode at phone and desktop sizes, and zero network requests.
 
 ## How we measured accuracy (honestly)
 - After the rules were frozen, a separate AI agent that never saw them wrote a held-out test set: 40 scams across the five scripts, and 40 deliberately tricky genuine recruiter messages.
 - On the first and only blind run, Tipoff flagged **34 of 40 scams**. It wrongly flagged **2 of 40 genuine messages**, both as "Worth a closer look"; none was called "Likely scam". It matched 28 of the 34 flagged scams to the right script.
 - The messages are synthetic, so this isn't real-world accuracy, and the app's How it works page says so and lists every miss.
-- A later rerun after fixes is shown separately and labeled "not blind", because we had seen the results.
+- Later reruns after fixes are shown separately and labeled "not blind", because we had seen the results. The latest (v1.3) flags 35 of 40 scams and 1 of 40 genuine messages.
 
 ## Challenges we ran into
 - **Real conversations are messy.** Email signatures and "Pay Rate:" lines looked like chat speakers, and the first parser dropped the email body above them. An adversarial test round found this, and the parser now never drops the other person's text.
@@ -81,5 +81,5 @@ An AI coding agent (Claude Code) planned, designed, coded and tested this projec
 
 ## ⚠ Check before you submit
 1. **The FTC figure ($90M in 2020 → $501M in 2024, job and employment-agency scams).** I confirmed it only through search-result summaries of the FTC's March 10, 2025 press release ("New FTC Data Show a Big Jump in Reported Losses to Fraud to $12.5 Billion in 2024"). I could not open ftc.gov from the build sandbox. Open the release and confirm the numbers, or delete the sentence.
-2. **Test counts (116 engine, 42 browser).** These are true as of commit `6a06bb1`. If you change the code, run `npm test` and `npm run e2e` and update them.
+2. **Test counts (132 engine, 44 browser).** These are true as of v1.3 (see `PROGRESS.md` → Tags). If you change the code, run `npm test` and `npm run e2e` and update them.
 3. **The video link**, once uploaded.

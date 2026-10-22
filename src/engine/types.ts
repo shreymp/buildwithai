@@ -36,6 +36,8 @@ export interface Rule {
   unlessSentence?: RegExp;
   /** The rule only applies when the message also matches this (e.g. secrecy needs money talk). */
   needsMessage?: RegExp;
+  /** Check needsMessage against everything the other person wrote, not just this message. */
+  needsThread?: boolean;
 }
 
 export interface LegitContext {

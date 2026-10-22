@@ -140,7 +140,7 @@ PRD ref: `prd.md > States and Boundaries` (Checking, Error).
 - `Message { id, speaker: string | null, side: 'them' | 'me', text, start, end }`
 - `Finding { id, ruleId, messageId, start, end, quote, step, playbooks, weight, dampened: boolean }`. The `start`/`end` offsets index into `message.text`.
 - `Report { status: 'ok' | 'too_short' | 'not_english', verdict: 'none' | 'closer_look' | 'likely', reason, playbook: PlaybookId | null, playbookScores, currentStep: 0–5, stepsSeen: number[], nextMove: { title, body, dont }, findings, legitSignals, inspector, plan: PlanItem[], reply: string, messages, truncated: boolean }`
-- `src/data/samples.ts`: six fictional samples, each labeled as such.
+- `src/data/samples.ts`: seven fictional samples, each labeled as such (the seventh, a genuine background check, was added in Phase 3 round 3).
 - `src/data/accuracy.json`: the blind v1.0 result, written once by `npm run eval` from `eval/corpus-heldout.json` and frozen since. Committed so the static site can show it. Later, non-blind reruns go to `src/data/accuracy-rerun.json`.
 
 ## File Structure

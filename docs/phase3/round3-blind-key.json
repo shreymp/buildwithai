@@ -1,0 +1,37 @@
+{
+ "pair1": {
+  "case": "s4",
+  "A": "v12",
+  "B": "v13"
+ },
+ "pair2": {
+  "case": "s6",
+  "A": "v12",
+  "B": "v13"
+ },
+ "pair3": {
+  "case": "lone",
+  "A": "v12",
+  "B": "v13"
+ },
+ "pair4": {
+  "case": "bgcheck",
+  "A": "v13",
+  "B": "v12"
+ },
+ "pair5": {
+  "case": "gift",
+  "A": "v12",
+  "B": "v13"
+ },
+ "pair6": {
+  "case": "fee",
+  "A": "v13",
+  "B": "v12"
+ },
+ "pair7": {
+  "case": "demo",
+  "A": "v13",
+  "B": "v12"
+ }
+}

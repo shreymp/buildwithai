@@ -80,6 +80,13 @@ export const GENERIC_STOP: NextMove = {
   dont: STOP_DONT,
 };
 
+/** A step-5 request without the rest of a script: what to check before answering it. */
+export const CHECK_REQUEST: NextMove = {
+  title: 'Before you send anything, check who’s asking',
+  body: 'This is the kind of request job scams end with: money, a hard-to-undo payment, or your personal or bank details. On its own it isn’t proof. Real employers ask for some of these things too, but only in their HR or payroll system after a written offer.',
+  dont: 'Don’t send money or personal details until you’ve found the job on the company’s official site and confirmed it with someone there.',
+};
+
 const COMMON_REPORT: PlanItem = { text: 'Report it, even if you didn’t lose money. Reports help others spot the same script.', link: SOURCES.report };
 
 export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
@@ -205,13 +212,13 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
       4: {
         title: 'Next: pay by gift card, app or crypto',
         body: 'They’ll ask you to pay the fee by Zelle, Cash App, gift cards or crypto, which are hard to reverse. More fees often follow.',
-        dont: 'Don’t pay any fee. If you already paid by card, call your card issuer to dispute it.',
+        dont: 'Don’t pay any fee. If you already paid by card, call your card issuer to dispute it. For a gift card, contact the company that issued it.',
       },
     },
-    stop: { ...GENERIC_STOP, dont: 'Don’t pay any fee, by any method. If you already paid by card, call your card issuer.' },
+    stop: { ...GENERIC_STOP, dont: 'Don’t pay any fee, by any method. If you already paid by card, call your card issuer. For a gift card, contact the company that issued it.' },
     plan: [
       { text: 'Don’t pay any fee for training, certification, background checks or equipment.' },
-      { text: 'If you paid with a card, call your card issuer and ask to dispute the charge.' },
+      { text: 'If you paid with a card, call your card issuer and ask to dispute the charge. If you paid with a gift card, contact the company that issued it right away, say it was used in a scam, and keep the card and receipt.' },
       { text: 'Search the company name with “scam” or “complaint”, and contact it only through its official website.', link: SOURCES.jobScams },
       COMMON_REPORT,
     ],
@@ -251,6 +258,12 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
 };
 
 export const PLAYBOOK_ORDER: PlaybookId[] = ['fake_check', 'task', 'upfront_fee', 'identity', 'reshipping'];
+
+/** "the fake check and equipment job scam"; a name that already ends in "job" isn't doubled. */
+export function scamName(playbook: PlaybookId): string {
+  const name = PLAYBOOKS[playbook].name.toLowerCase();
+  return `the ${name}${name.endsWith('job') ? ' scam' : ' job scam'}`;
+}
 
 export function stepCopy(step: Step, playbook: PlaybookId | null): StepCopy {
   if (step <= 3) return SHARED_STEPS[step as 1 | 2 | 3];

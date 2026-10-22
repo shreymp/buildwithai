@@ -14,7 +14,7 @@ test.describe('accessibility (axe, WCAG 2.2 AA)', () => {
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
       await page.goto('/');
       await axe(page, 'empty');
-      for (const id of ['fake-check-thread', 'task-scam', 'training-fee', 'identity-form', 'legit-recruiter', 'legit-linkedin']) {
+      for (const id of ['fake-check-thread', 'task-scam', 'training-fee', 'identity-form', 'legit-recruiter', 'legit-linkedin', 'legit-background-check']) {
         await page.click(`[data-sample="${id}"]`);
         await expect(page.getByTestId('verdict')).toBeVisible();
         await axe(page, id);
@@ -29,6 +29,10 @@ test.describe('accessibility (axe, WCAG 2.2 AA)', () => {
       await page.getByLabel('Message or conversation').fill('Hi, job for you');
       await page.getByTestId('check').click();
       await axe(page, 'too short');
+      await page.getByLabel('Message or conversation').fill('Hi, please send me your Social Security number so I can get you set up for the role today.');
+      await page.getByTestId('check').click();
+      await expect(page.getByTestId('next-move')).toBeVisible();
+      await axe(page, 'a single request');
       await page.goto('/#/how-it-works');
       await axe(page, 'how it works');
     });

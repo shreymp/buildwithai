@@ -1,7 +1,8 @@
 // Records the silent backup demo video and checks every on-screen claim of submission/demo-script.md.
 // Usage: npm run build && npx vite preview --port 4199 --strictPort --host 127.0.0.1
 //        node scripts/record-demo.mjs [baseURL] [outDir]
-// The caption bar is drawn by this script (not part of Tipoff) so the video reads without narration.
+// The title card and caption bar are drawn by this script (not part of Tipoff) so the video reads
+// without narration. Text is enlarged to 112.5% so it reads on a small video.
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium, expect } from '@playwright/test';
@@ -37,10 +38,23 @@ async function caption(text) {
     el.style.display = t ? 'block' : 'none';
   }, text);
 }
-async function show(locator, block = 'center') {
-  await locator.scrollIntoViewIfNeeded();
-  await locator.evaluate((el, b) => el.scrollIntoView({ block: b, behavior: 'smooth' }), block);
-  await wait(700);
+// Instant scrolls: smooth ones leave ghosted frames in the recording.
+async function show(locator, block = 'start') {
+  await locator.evaluate((el, b) => { el.scrollIntoView({ block: b, behavior: 'instant' }); if (b === 'start') window.scrollBy({ top: -24, behavior: 'instant' }); }, block);
+  await wait(500);
+}
+async function titleCard(lines, ms) {
+  await page.evaluate((ls) => {
+    const el = document.createElement('div');
+    el.id = 'rec-title';
+    el.setAttribute('aria-hidden', 'true');
+    el.style.cssText = 'position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;'
+      + 'background:#0f3d3a;color:#fff;font:600 34px/1.35 system-ui,sans-serif;text-align:center;padding:0 12%';
+    ls.forEach((t, i) => { const p = document.createElement('p'); p.textContent = t; if (i) p.style.cssText = 'font-weight:400;font-size:24px;opacity:.92'; el.appendChild(p); });
+    document.body.appendChild(el);
+  }, lines);
+  await wait(ms);
+  await page.evaluate(() => document.getElementById('rec-title')?.remove());
 }
 const nextMessage = async () => { await page.getByTestId('next-message').click(); await wait(600); };
 const verdict = () => page.getByTestId('verdict');
@@ -48,7 +62,12 @@ const nextMove = () => page.getByTestId('next-move');
 const step = () => page.locator('.step[aria-current="step"]');
 
 await page.goto(base);
-await page.evaluate(() => document.fonts.ready);
+await page.evaluate(() => { document.documentElement.style.fontSize = '112.5%'; return document.fonts.ready; });
+await titleCard([
+  'Job scams follow a script.',
+  'Tipoff is for job seekers who get an unexpected recruiter message. Paste it in, and Tipoff shows which scam script it follows, where you are in it, and what comes next.',
+  'It runs entirely in your browser. Nothing you paste is sent anywhere.',
+], 9000);
 
 // 0:00 the hook
 await caption('Job scams follow a script. Tipoff shows you where you are in it, and what comes next.');
@@ -121,7 +140,7 @@ note(`highlight "${(await anyMark.innerText()).slice(0, 60)}" opened card "${(aw
 await wait(6000);
 
 // 1:55 the failure case
-await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
 await wait(800);
 await page.getByRole('button', { name: 'Clear' }).click();
 await caption('A miss: this “membership fee” message is a scam, and Tipoff doesn’t catch it.');

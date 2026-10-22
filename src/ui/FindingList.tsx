@@ -78,7 +78,7 @@ export function FindingList({ findings, playbook, selectedRule, selectTick, onSh
                   <span className="card__step">
                     Step {g.step} · {step.label}
                   </span>
-                  <span className={`card__strength card__strength--${g.weight >= 3 ? 'high' : 'medium'}`}>{g.weight >= 3 ? 'Strong sign' : g.weight === 2 ? 'Clear sign' : 'Weak sign'}</span>
+                  <span className={`card__strength card__strength--${g.weight >= 3 ? 'high' : 'medium'}`}>{g.weight >= 3 ? 'Strong sign' : g.weight === 2 ? 'Moderate sign' : 'Weak sign'}</span>
                 </p>
                 <h3 className="card__title">{g.title}</h3>
                 <ul className="card__quotes">

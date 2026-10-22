@@ -33,7 +33,7 @@ for (const [name, viewport] of Object.entries(sizes)) {
   await page.waitForTimeout(150);
   await shot('05-mark-selected', false);
 
-  for (const s of ['task-scam', 'training-fee', 'identity-form', 'legit-recruiter', 'legit-linkedin']) {
+  for (const s of ['task-scam', 'training-fee', 'identity-form', 'legit-recruiter', 'legit-linkedin', 'legit-background-check']) {
     await page.click(`[data-sample="${s}"]`);
     await page.waitForSelector('[data-testid="verdict"]');
     await page.waitForTimeout(100);
@@ -51,6 +51,10 @@ for (const [name, viewport] of Object.entries(sizes)) {
   await page.click('[data-testid="check"]');
   await page.waitForSelector('[data-testid="notice"]');
   await shot('09-not-english', false);
+  await page.fill('[data-testid="input"]', 'Hi, please send me your Social Security number so I can get you set up for the role today.');
+  await page.click('[data-testid="check"]');
+  await page.waitForSelector('[data-testid="next-move"]');
+  await shot('11-single-request');
 
   await page.goto(base + '#/how-it-works');
   await page.waitForTimeout(200);

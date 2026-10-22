@@ -33,7 +33,8 @@ export function ScriptTimeline({ report }: Props) {
         <p className="script__sub">
           {report.playbookName ? (
             <>
-              Matches the <strong>{lowerFirst(report.playbookName)}</strong> job scam.
+              Matches the <strong>{lowerFirst(report.playbookName)}</strong>
+              {report.playbookName.toLowerCase().endsWith('job') ? ' scam' : ' job scam'}.
             </>
           ) : (
             'The opening moves are shared by most job scams. The later steps depend on which script they’re running.'
@@ -72,12 +73,14 @@ export function ScriptTimeline({ report }: Props) {
 export function NextMoveCard({ report }: Props) {
   const move = report.nextMove;
   if (!move) return null;
-  const final = report.currentStep === 5;
+  // The red "where this ends" card is only for a likely scam; a lone request gets the calm card.
+  const ask = report.currentStep === 5;
+  const final = ask && report.verdict === 'likely';
   return (
     <section className={`next ${final ? 'next--final' : ''}`} aria-labelledby="next-title" data-testid="next-move">
-      <p className="next__eyebrow">{final ? 'Where this ends' : 'What they’ll likely do next'}</p>
+      <p className="next__eyebrow">{final ? 'Where this ends' : ask ? 'Before you answer' : 'What they’ll likely do next'}</p>
       <h2 id="next-title" className="next__title">
-        {!final && <IconArrowRight className="next__icon" width={22} height={22} />}
+        {!ask && <IconArrowRight className="next__icon" width={22} height={22} />}
         {move.title}
       </h2>
       <p className="next__body">{move.body}</p>

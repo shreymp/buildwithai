@@ -44,7 +44,7 @@ export function MessageView({ messages, findings, selectedRule, onSelect, speake
         {active.length > 0 && (
           <p className="messages__hint">
             Tap a highlighted phrase to see why it was flagged. <span className="legend legend--high">Strong sign</span>{' '}
-            <span className="legend legend--medium">Clear or weak sign</span>
+            <span className="legend legend--medium">Moderate or weak sign</span>
           </p>
         )}
       </div>

@@ -21,7 +21,8 @@
         "tests/engine/judge.test.ts > samples",
         "tests/e2e/journey.spec.ts > each scam sample is flagged…"
       ],
-      "status": "pass"
+      "status": "pass",
+      "result": "v1.3: npm test 132 passed, CI=1 npm run e2e 44 passed (2026-10-22). Genuine samples now include a background check that asks for an SSN through a named screening company; it stays unflagged."
     },
     {
       "id": "C3",
@@ -41,7 +42,7 @@
         "How it works page"
       ],
       "status": "pass",
-      "result": "Blind v1.0 (rules blob 5edf666, 2026-10-22): recall 0.85 (34/40), precision 0.944 (2/40 legit flagged, both closer-look; 0 legit likely), script match 28/34. Synthetic corpus; not real-world accuracy."
+      "result": "Blind v1.0 (rules blob 5edf666, 2026-10-22): recall 0.85 (34/40), precision 0.944 (2/40 legit flagged, both closer-look; 0 legit likely), script match 28/34. Synthetic corpus; not real-world accuracy. Later reruns are not blind and are shown separately: v1.3 (2026-10-22) 35/40 scams, 1/40 legit flagged, 29/35 right script (src/data/accuracy-rerun.json)."
     },
     {
       "id": "C5",

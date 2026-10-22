@@ -74,6 +74,15 @@ export const SAMPLES: Sample[] = [
       'Hi Alex, I’m a recruiter at Corvid Health. I saw your profile and think you could be a good fit for our Patient Support Specialist role ($21/hr, remote within the US). Would you have 15 minutes for a phone screen this week? Here’s the posting on our careers site so you can read the details first.',
     ],
   },
+  {
+    id: 'legit-background-check',
+    label: 'Background check after an offer',
+    kind: 'legit',
+    note: 'A genuine email that asks for your SSN the right way',
+    lines: [
+      'Hi Morgan, congratulations again on accepting our offer for the Billing Specialist role at Orchard Dental Group. The next step is a background check. You’ll get an email from Northgate Screening, our screening partner, asking you to consent and enter your Social Security number in their secure portal. The check is at no cost to you. After that, HR will send your Workday invitation to set up direct deposit. Thanks, Priya Shah, Talent Team, Orchard Dental Group',
+    ],
+  },
 ];
 
 export const sampleText = (s: Sample, upTo = s.lines.length): string => s.lines.slice(0, upTo).join('\n');

@@ -87,7 +87,7 @@ export function HowItWorksPage() {
         <h2 id="verdict-rules-title">How the verdict is decided</h2>
         <ul className="plain-list">
           <li>
-            <strong>Likely scam</strong>: a request for money, identity documents or account access (step 4 or 5), backed up by evidence from another step of the script or a second, different request.
+            <strong>Likely scam</strong>: a request for money, identity documents or account access (step 4 or 5), backed up by evidence from another step of the script or a second, different request. Or, before any request: many signs across three or more steps of the script (at least 9 points, counting a strong sign as 3, a moderate sign as 2 and a weak one as 1), because the ask is what comes next.
           </li>
           <li>
             <strong>Worth a closer look</strong>: several warning signs, or one strong one, but not a full script.
@@ -188,7 +188,7 @@ export function HowItWorksPage() {
                 <li key={r.id} className="rule" data-testid="rule">
                   <p className="rule__title">
                     <strong>{r.title}</strong>
-                    <span className="rule__weight">{r.weight >= 3 ? 'Strong sign' : r.weight === 2 ? 'Clear sign' : 'Weak sign'}</span>
+                    <span className="rule__weight">{r.weight >= 3 ? 'Strong sign' : r.weight === 2 ? 'Moderate sign' : 'Weak sign'}</span>
                   </p>
                   <p className="rule__why">{r.why}</p>
                   <p className="rule__meta">
