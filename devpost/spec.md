@@ -47,7 +47,7 @@ Everything in this list was checked against the npm registry on 2026-10-22.
 - **Runtime:** any modern browser (desktop or phone). Building requires Node 20 or later. No API keys.
 - **Develop:** `npm ci && npm run dev`, then open the printed URL.
 - **Production preview:** `npm run build && npm run preview`, then open the printed URL.
-- **Tests:** `npm test` (engine), `npm run e2e` (browser flows, accessibility, network), `npm run eval` (prints held-out accuracy and writes `src/data/accuracy.json`).
+- **Tests:** `npm test` (engine), `npm run e2e` (browser flows, accessibility, network), `npm run eval` (prints held-out accuracy; `EVAL_VERSION=v1.x npm run eval` also writes `src/data/accuracy-rerun.json`). *Revised in Phase 3: the blind v1.0 result in `src/data/accuracy.json` is frozen and no longer written by eval (see DECISIONS.md).*
 - **Deployment:** GitHub Pages, at the project URL `https://shreymp.github.io/buildwithai/`. `npm run build` with `BASE=/buildwithai/` produces `dist/`, which is published to the `gh-pages` branch. `npm run deploy` does both.
 - **Demo recording:** use the deployed URL or `npm run preview`, at phone width (390 px) and desktop width.
 
@@ -141,7 +141,7 @@ PRD ref: `prd.md > States and Boundaries` (Checking, Error).
 - `Finding { id, ruleId, messageId, start, end, quote, step, playbooks, weight, dampened: boolean }`. The `start`/`end` offsets index into `message.text`.
 - `Report { status: 'ok' | 'too_short' | 'not_english', verdict: 'none' | 'closer_look' | 'likely', reason, playbook: PlaybookId | null, playbookScores, currentStep: 0–5, stepsSeen: number[], nextMove: { title, body, dont }, findings, legitSignals, inspector, plan: PlanItem[], reply: string, messages, truncated: boolean }`
 - `src/data/samples.ts`: six fictional samples, each labeled as such.
-- `src/data/accuracy.json`: written by `npm run eval` from `eval/corpus-heldout.json`. Committed so the static site can show it.
+- `src/data/accuracy.json`: the blind v1.0 result, written once by `npm run eval` from `eval/corpus-heldout.json` and frozen since. Committed so the static site can show it. Later, non-blind reruns go to `src/data/accuracy-rerun.json`.
 
 ## File Structure
 ```

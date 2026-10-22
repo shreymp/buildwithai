@@ -18,7 +18,7 @@ It runs entirely in your browser. There's no server, no account and no AI servic
 
 ## Try it in 30 seconds
 
-1. Open the live app.
+1. Open the live app, or run it locally (below) and open the printed URL.
 2. Under **Try an example**, tap **Remote data entry offer**.
 3. Press **Show the next message** a few times. At message 1 Tipoff predicts a chat-only "hire". At message 4 it predicts a check for equipment. Message 5 is exactly that.
 4. Tap any highlighted phrase to read why it was flagged.
@@ -32,7 +32,7 @@ Requirements: Node.js 20 or newer, and npm.
 git clone https://github.com/shreymp/buildwithai.git
 cd buildwithai
 npm ci
-npm run dev          # development server, then open the printed URL
+npm run dev          # development server, then open the printed URL (usually http://localhost:5173)
 ```
 
 Production build and preview (the same files that are deployed):
@@ -46,16 +46,18 @@ npm run preview      # then open http://localhost:4173
 
 | Command | What it checks |
 |---|---|
-| `npm test` | Engine unit tests: normalizer offsets, thread parsing, link inspector, every sample, the demo thread's predictions, hard genuine-recruiter regressions, edge states, performance on adversarial input, and dev-set regression |
-| `npm run e2e` | Playwright in Chromium at 1440 px and 390 px: the full journey, highlight-to-card linking, edge and error states, the keyboard-only flow, axe-core WCAG 2.2 AA in light and dark mode, target sizes, and **zero network requests while checking** |
-| `npm run eval` | Scores the rules on the held-out corpus (`eval/corpus-heldout.json`) and writes `src/data/accuracy-rerun.json`. The blind v1.0 result in `src/data/accuracy.json` is never overwritten |
+| `npm test` | 116 engine unit tests, in about 2 seconds: normalizer offsets, thread parsing, link inspector, every sample, the demo thread's predictions, hard genuine-recruiter regressions, edge states, performance on adversarial input, and dev-set regression |
+| `npm run e2e` | 42 Playwright tests in Chromium at 1440 px and 390 px, in about 1–2 minutes: the full journey, highlight-to-card linking, edge and error states, the keyboard-only flow, axe-core WCAG 2.2 AA in light and dark mode, target sizes, and **zero network requests while checking** |
+| `npm run eval` | Scores the rules on the held-out corpus (`eval/corpus-heldout.json`) and prints the result. It changes no files. `EVAL_VERSION=v1.2 npm run eval` also writes `src/data/accuracy-rerun.json`, which the How it works page shows as the labeled "not blind" rerun. The blind v1.0 result in `src/data/accuracy.json` is never overwritten |
 | `npm run typecheck` | TypeScript |
 
-`npm run e2e` needs a Playwright Chromium. If one isn't installed, run `npx playwright install chromium` first.
+`npm run e2e` builds the app and serves it on http://127.0.0.1:4173 by itself. **Stop any `npm run preview` first.** Outside CI, Playwright reuses whatever is already listening on port 4173, which could be an old build. With `CI` set, it refuses to start if the port is taken.
+
+It needs a Playwright Chromium. If one isn't installed, run `npx playwright install chromium` first. On a fresh Linux machine you may need `npx playwright install --with-deps chromium` (not tested here).
 
 ### Deploy
 
-`npm run deploy` builds with `BASE=/buildwithai/` and pushes `dist/` to the `gh-pages` branch, which GitHub Pages serves.
+`npm run deploy` builds with `BASE=/buildwithai/` and **force-pushes** `dist/` to the `gh-pages` branch of your `origin` remote, replacing that branch. GitHub Pages serves it. It needs push access. If your copy of the repository has a different name, set `PAGES_REPO=<name>` so the asset paths match.
 
 ## How it works
 

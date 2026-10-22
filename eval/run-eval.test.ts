@@ -1,8 +1,8 @@
 // `npm run eval` — scores the engine on the held-out corpus (written by an agent that
 // never saw the rules). The first, blind run (v1.0) is kept in src/data/accuracy.json and
 // is never overwritten: the corpus results have been seen since, so later runs can't be
-// blind. Later runs write src/data/accuracy-rerun.json, which the page labels "not blind".
-// Set EVAL_WRITE=0 to print without writing, and EVAL_VERSION to name the version.
+// blind. A plain run only prints the scores. EVAL_VERSION=v1.x names the version and writes
+// src/data/accuracy-rerun.json, which the page shows and labels "not blind".
 import fs from 'node:fs';
 import path from 'node:path';
 import { expect, it } from 'vitest';
@@ -35,7 +35,7 @@ it('held-out evaluation', () => {
 
   const result = {
     measured: true,
-    version: process.env.EVAL_VERSION ?? 'unreleased',
+    version: process.env.EVAL_VERSION ?? 'unnamed',
     blind: false,
     date: new Date().toISOString().slice(0, 10),
     corpus: {
@@ -67,7 +67,7 @@ it('held-out evaluation', () => {
   };
 
   console.log(JSON.stringify({ ...result, misses: result.misses.length, falsePositives: result.falsePositives.map((f) => `${f.id}:${f.rules}`) }, null, 2));
-  if (process.env.EVAL_WRITE !== '0') {
+  if (process.env.EVAL_VERSION) {
     fs.writeFileSync(path.resolve(__dirname, '../src/data/accuracy-rerun.json'), `${JSON.stringify(result, null, 2)}\n`);
   }
 });

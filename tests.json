@@ -11,7 +11,8 @@
         "npm run e2e",
         "fresh-agent README walkthrough (Phase 3 verification)"
       ],
-      "status": "pending"
+      "status": "pass",
+      "result": "Fresh-agent README walkthrough (2026-10-22, clone of a4598c4 in the scratchpad, Node 22.22.0): npm ci, dev, build, preview, npm test (112 at that commit), npm run e2e (42 passed on a clean port), npm run eval and typecheck all worked the first time. Not tested: Node 20 itself, `npx playwright install` on a bare machine, the live site (no outbound access). It found README gaps: eval dirtied a tracked file, e2e silently reuses a server on 4173, deploy is a force-push. Fixed in the commit after 6a06bb1: eval now writes only with EVAL_VERSION, and the README documents the e2e server, the force-push and PAGES_REPO. Re-verified there: npm test 116 passed, plain eval leaves git clean."
     },
     {
       "id": "C2",
@@ -82,7 +83,7 @@
         "GitHub API: pages build and deployment workflow run conclusion = success for latest gh-pages commit"
       ],
       "status": "pass",
-      "result": "gh-pages commit 726d9a6 (\"Deploy 53e8272\"): GitHub Actions run 39757132208 \"pages build and deployment\" completed with conclusion success, 2026-10-22T09:40Z. github.io itself cannot be fetched from the build sandbox."
+      "result": "gh-pages commit 2060b15 (\"Deploy 6a06bb1\"): GitHub Actions run 39801492120 \"pages build and deployment\" completed with conclusion success (2026-10-22T15:06Z). Earlier: 726d9a6 (\"Deploy 53e8272\"), run 39757132208. The live URL can't be loaded from the build sandbox (the proxy returns 403), so the page load itself is unverified from here."
     },
     {
       "id": "C10",
