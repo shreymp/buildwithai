@@ -35,3 +35,16 @@ describe('parseThread', () => {
     expect(msgs.find((m) => m.speaker === 'Maya')?.side).toBe('me');
   });
 });
+
+describe('parseThread: single forwarded line and overrides', () => {
+  it('reads a single "Name: long message" line as one message from that speaker', () => {
+    const msgs = parseThread('Dana: Hi Maya! We came across your resume and have a remote role for you.');
+    expect(msgs).toHaveLength(1);
+    expect(msgs[0].speaker).toBe('Dana');
+    expect(msgs[0].text.startsWith('Hi Maya!')).toBe(true);
+  });
+  it('lets the user say a speaker called "Me" is not them', () => {
+    const msgs = parseThread('Me: Hi\nDana: Hello there', [], ['Me']);
+    expect(msgs.every((m) => m.side === 'them')).toBe(true);
+  });
+});

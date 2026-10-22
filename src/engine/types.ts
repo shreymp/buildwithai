@@ -120,4 +120,6 @@ export interface Report {
 export interface AnalyzeOptions {
   /** Speaker names the user marked as themselves. */
   meSpeakers?: string[];
+  /** Speaker names the user marked as NOT themselves (overrides the "Me"/"You" default). */
+  themSpeakers?: string[];
 }

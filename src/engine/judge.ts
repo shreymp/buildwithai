@@ -161,7 +161,7 @@ export function analyze(rawInput: string, options: AnalyzeOptions = {}): Report 
 
   if (!input.trim()) return emptyReport('empty', [], false, 'Paste a message to check it.');
 
-  const messages = parseThread(input, options.meSpeakers ?? []);
+  const messages = parseThread(input, options.meSpeakers ?? [], options.themSpeakers ?? []);
   const theirs = messages.filter((m) => m.side === 'them');
   const theirText = theirs.map((m) => m.text).join('\n');
 

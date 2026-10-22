@@ -60,12 +60,12 @@ function matcherFor(re: RegExp): Matcher {
   };
 }
 
-function build(input: string, lines: Line[], match: Matcher, meSpeakers: Set<string>): Message[] {
+function build(input: string, lines: Line[], match: Matcher, meSpeakers: Set<string>, themSpeakers: Set<string>): Message[] {
   const out: Message[] = [];
   for (const line of lines) {
     const hit = match(line.text);
     if (hit) {
-      const side: Side = meSpeakers.has(hit.name) || ME_NAMES.test(hit.name) ? 'me' : 'them';
+      const side: Side = meSpeakers.has(hit.name) || (ME_NAMES.test(hit.name) && !themSpeakers.has(hit.name)) ? 'me' : 'them';
       const start = line.start + hit.offset;
       out.push({ id: `m${out.length + 1}`, speaker: hit.name, side, text: hit.text, start, end: start + hit.text.length });
     } else if (out.length && line.text.trim()) {
@@ -78,14 +78,15 @@ function build(input: string, lines: Line[], match: Matcher, meSpeakers: Set<str
   return out.filter((m) => m.text.trim().length > 0);
 }
 
-export function parseThread(input: string, meSpeakerList: string[] = []): Message[] {
+export function parseThread(input: string, meSpeakerList: string[] = [], themSpeakerList: string[] = []): Message[] {
   const meSpeakers = new Set(meSpeakerList);
+  const themSpeakers = new Set(themSpeakerList);
   const lines = splitLines(input);
   const nonEmpty = lines.filter((l) => l.text.trim());
 
   for (const re of [IOS, ANDROID]) {
     const hits = nonEmpty.filter((l) => re.test(l.text)).length;
-    if (hits >= 1 && hits >= nonEmpty.length * 0.3) return build(input, lines, matcherFor(re), meSpeakers);
+    if (hits >= 1 && hits >= nonEmpty.length * 0.3) return build(input, lines, matcherFor(re), meSpeakers, themSpeakers);
   }
 
   // "Name: text" transcripts: need two or more such lines, and a repeated or alternating speaker.
@@ -100,8 +101,19 @@ export function parseThread(input: string, meSpeakerList: string[] = []): Messag
         if (!m || !looksLikeName(m[1]) || !counts.has(cleanName(m[1]))) return null;
         return { name: cleanName(m[1]), text: m[2], offset: line.length - m[2].length };
       };
-      return build(input, lines, match, meSpeakers);
+      return build(input, lines, match, meSpeakers, themSpeakers);
     }
+  }
+
+  // One "Name: long message" line (a single forwarded chat message).
+  if (nonEmpty.length >= 1 && named.length === 1 && NAMED.exec(nonEmpty[0].text) && named[0][2].split(/\s+/).length >= 6) {
+    const name = cleanName(named[0][1]);
+    const match: Matcher = (line) => {
+      const m = NAMED.exec(line);
+      if (!m || cleanName(m[1]) !== name) return null;
+      return { name, text: m[2], offset: line.length - m[2].length };
+    };
+    return build(input, lines, match, meSpeakers, themSpeakers);
   }
 
   // A single message: trim surrounding whitespace but keep offsets exact.
