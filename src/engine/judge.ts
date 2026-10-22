@@ -182,8 +182,13 @@ function reasonFor(verdict: Verdict, active: Finding[], playbook: PlaybookId | n
   const ruleCount = new Set(active.map((f) => f.ruleId)).size;
   const signs = `${ruleCount} warning sign${ruleCount === 1 ? '' : 's'}`;
   if (verdict === 'likely') {
-    const name = playbook ? `the ${PLAYBOOKS[playbook].name.toLowerCase()} job scam` : 'a known job-scam script';
-    return `This follows ${name}: ${signs} across ${steps.size} steps of the script, including a request that puts your money or identity at risk.`;
+    const pb = playbook ? PLAYBOOKS[playbook].name.toLowerCase() : null;
+    // "Pay for the job" already ends in "job": avoid "the pay for the job job scam".
+    const name = pb ? `the ${pb}${pb.endsWith('job') ? ' scam' : ' job scam'}` : 'a known job-scam script';
+    const asked = active.some((f) => f.step >= 4 && f.weight >= 3);
+    return asked
+      ? `This follows ${name}: ${signs} across ${steps.size} steps of the script, including a request that puts your money or identity at risk.`
+      : `This follows ${name}: ${signs} across ${steps.size} steps of the script. They haven’t asked for money or personal details yet, but that’s where this script goes next.`;
   }
   if (verdict === 'closer_look') {
     return playbook
@@ -276,7 +281,7 @@ function judgeMessages(messages: Message[], truncated: boolean): Report {
     legitSignals,
     inspector: inspect(messages),
     plan,
-    reply: replyTemplate(playbook),
+    reply: replyTemplate(playbook, verdict),
     messages,
     truncated,
     score,

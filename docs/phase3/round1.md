@@ -92,6 +92,8 @@ The design critic said some quotes were wrong ("SSN not highlighted", "forms.gle
 
 - **Caught in self-review before commit:** the first version of the new `reship_out` rule made the object after "forward" optional, so "I’ve forwarded your resume… work from home" would have been a strong step-5 sign. "Forward" now needs packages, parcels or items after it, and a test covers the resume case.
 
+- **Found while scripting the demo (also in v1.0):** "Likely scam" can come from many early signs with no request yet (score ≥ 9 across 3 steps). But the reason always said "including a request that puts your money or identity at risk", which was false at message 4 of the demo. The reason now says they haven't asked for money or details yet when that's true. Test: `judge.test.ts > the verdict reason only claims what happened`.
+
 ## Accuracy after the changes (not blind)
 
 The held-out corpus results had been seen before these changes (DECISIONS.md §7), so a rerun can't be blind. It is reported only next to the blind v1.0 number, never in place of it.
@@ -107,3 +109,12 @@ The held-out corpus results had been seen before these changes (DECISIONS.md §7
 The genuine message that is no longer flagged (h69) cleared because of the Zelle change, which came from the adversarial case `fp_small_biz_zelle`. But h69 was already known to be a false positive, so this isn't independent evidence. The six misses are unchanged. Three of them hinge on "membership" or "verification" fees, and those phrasings were deliberately **not** added, because they're known only from the held-out set.
 
 The How it works page shows the blind numbers as the headline. The rerun is a labeled footnote (`src/data/accuracy-rerun.json`), and an end-to-end test checks the label.
+
+## Blind before/after comparison (v1.0 vs v1.1)
+
+A fresh sub-agent saw 10 screenshot pairs: 4 desktop and 6 mobile screens, covering the empty page, the demo, every scam sample, a genuine sample, the How it works page and the non-English notice. It was told only that each pair held two builds of the same app, in randomized A/B order, and it read no other files. The key (`docs/phase3/round1-blind-key.json`) was applied only after the report came back.
+
+**Result: v1.1 was preferred in all 9 pairs that differed (confidence 3–5 of 5). The remaining pair, the empty page, showed no meaningful difference.**
+
+The reviewer also listed problems that remained in the preferred version. They're handled in round 2 (`docs/phase3/round2.md`).
+

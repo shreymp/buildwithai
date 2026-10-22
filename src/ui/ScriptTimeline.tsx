@@ -75,7 +75,7 @@ export function NextMoveCard({ report }: Props) {
   const final = report.currentStep === 5;
   return (
     <section className={`next ${final ? 'next--final' : ''}`} aria-labelledby="next-title" data-testid="next-move">
-      <p className="next__eyebrow">{final ? 'Where this ends' : 'What they’ll likely ask next'}</p>
+      <p className="next__eyebrow">{final ? 'Where this ends' : 'What they’ll likely do next'}</p>
       <h2 id="next-title" className="next__title">
         {!final && <IconArrowRight className="next__icon" width={22} height={22} />}
         {move.title}

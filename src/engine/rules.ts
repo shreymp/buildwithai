@@ -374,7 +374,7 @@ export const LEGIT_CONTEXT: LegitContext[] = [
     id: 'safety_warning',
     title: 'Warns you about scams',
     why: 'Real employers often remind candidates they’ll never ask for money or sensitive details by text.',
-    patterns: [/\b(?:we|i|they|recruiters?)\s(?:will\s)?(?:never|won't|will not|do not|don't)\s(?:ask|request)\b[^.?!]{0,40}\b(?:money|payment|ssn|social security|bank|password|fee|gift cards?)\b/g],
+    patterns: [/\b(?:we|i|they|recruiters?)\s(?:will\s)?(?:never|won't|will not|do not|don't)\s(?:ask|request)\b[^.?!]{0,40}\b(?:money|payment|ssn|social security(?: numbers?)?|bank(?: details| account)?|password|fees?|gift cards?)\b/g],
   },
 ];
 

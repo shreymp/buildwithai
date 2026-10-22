@@ -81,24 +81,26 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 2: a no-context critic agent uses the app from screenshots and the e2e recording
-- [ ] Final kick-the-tires exploration and feedback completed — Phase 3 critic rounds
+The owner asked for an unattended build ("Do not rely on me for anything"), so no learner tried the app during the build. Independent agents stood in, and their checks are recorded below. These boxes stay unchecked because the template requires the learner to report back.
+
+- [ ] Early usable behavior explored. **Stand-in done:** after the UI slice, a no-context design critic reviewed the 28 v1.0 screenshots (`docs/phase3/round1.md`, "Design critic"). **Owner hands-on: not done.**
+- [ ] Final kick-the-tires exploration and feedback completed. **Stand-in done:** white-box adversarial tester, 46 cases (`eval/adversarial-findings.json`), plus a blind A/B screenshot comparison of v1.0 against v1.1 (`docs/phase3/round1.md`). **Owner hands-on: not done.** Suggested 5-minute pass: open the live site, click each example, paste one real message you've received, and tick yourself in a conversation.
 
 ## Final Review
 
-- [ ] Final review complete — feedback resolved and ready to ship
+- [ ] Final review complete: feedback resolved and learner confirms ready to ship. **Owner's step.** All agent-found issues so far are fixed or logged as accepted (`DECISIONS.md` §7). Only the owner can confirm readiness.
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [ ] Learning activity complete. Not done: there was no learner present during the unattended build. The map below includes a reference route the owner can follow in about 3 minutes.
+- [ ] Optional edit and transfer reflection addressed. Not applicable while unattended. Offered to the owner in the map's "Run it again" and "To change this" sections.
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse.
 
-Activity and evidence:
-Route and stops:
-Edit outcome:
-Reflection:
-Activity mode:
+Activity and evidence: No live activity took place (unattended build). The map was generated from the v1.1 code (engine commit `78c4711`). Every path and symbol it names was checked with grep against `src/` and `tests/`. axe (WCAG 2.2 AA) passes in light and dark at 390 px wide, with no page-level horizontal scroll and no network requests (Playwright, `file://`).
+Route and stops: Reference route only, not toured: `check` in `src/ui/CheckPage.tsx` → `runCheck` in `src/lib/runCheck.ts` (worker, 2 s timeout, in-page fallback) → `analyze` / `judgeMessages` / `findInMessage` / `verdictFor` / `pickPlaybook` in `src/engine/judge.ts`.
+Edit outcome: Not applicable (no learner present).
+Reflection: Not offered (no learner present).
+Activity mode: Static app map plus a reference route. Practice to reuse: "write tests that could actually fail" (the tautological offset check versus the `cutsWord` property check).
 
 ## Revisions
 
@@ -108,3 +110,4 @@ Activity mode:
 - The slices were built and committed in fewer, larger commits than the per-slice commit names above (`9f4e76b` engine, `36668f8` UI, `258f513` e2e and deploy, `53e8272` v1.0).
 - Learner checks were run by independent critic agents (unattended build, see top). Their findings are in `PROGRESS.md`.
 - Mechanical checks added late, when the verification pass found them missing: the accuracy numbers on the page are compared with `accuracy.json`, and the action plan shows official links (`journey.spec.ts`).
+- Agent stand-ins replaced the learner's hands-on checkpoints, and the code tour became a static reference map, because the owner asked for an unattended build. Owner-only steps are left unchecked.

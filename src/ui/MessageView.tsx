@@ -44,7 +44,7 @@ export function MessageView({ messages, findings, selectedRule, onSelect, speake
         {active.length > 0 && (
           <p className="messages__hint">
             Tap a highlighted phrase to see why it was flagged. <span className="legend legend--high">Strong sign</span>{' '}
-            <span className="legend legend--medium">Weaker sign</span>
+            <span className="legend legend--medium">Clear or weak sign</span>
           </p>
         )}
       </div>
@@ -76,18 +76,27 @@ export function MessageView({ messages, findings, selectedRule, onSelect, speake
             const titles = [...new Set(c.findings.map((f) => f.title))].join('; ');
             const selected = c.findings.some((f) => f.ruleId === selectedRule);
             parts.push(
-              <button
+              // A <mark> rather than a <button>: buttons lay out as inline blocks, so a long
+              // highlight couldn't wrap like the text around it.
+              <mark
                 key={`${m.id}-${c.start}`}
-                type="button"
+                role="button"
+                tabIndex={0}
                 className={`mark mark--${high ? 'high' : 'medium'}${selected ? ' is-selected' : ''}`}
                 data-rule={rule}
                 data-rules={c.findings.map((f) => f.ruleId).join(' ')}
                 aria-pressed={selected}
                 aria-label={`“${m.text.slice(c.start, c.end)}”. Flagged: ${titles}. Show explanation.`}
                 onClick={() => onSelect(rule)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelect(rule);
+                  }
+                }}
               >
                 {m.text.slice(c.start, c.end)}
-              </button>,
+              </mark>,
             );
             pos = c.end;
           }

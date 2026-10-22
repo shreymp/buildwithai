@@ -913,6 +913,7 @@ form {
 }
 
 .mark {
+  display: inline;
   font: inherit;
   color: inherit;
   line-height: inherit;
@@ -1134,12 +1135,16 @@ form {
 }
 
 .plan__link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+  display: inline;
   margin-left: var(--space-2);
+  padding-block: 3px;
   font-weight: 700;
-  min-height: 24px;
+}
+
+.plan__link svg {
+  display: inline-block;
+  vertical-align: -0.2em;
+  margin-left: var(--space-1);
 }
 
 .reply {

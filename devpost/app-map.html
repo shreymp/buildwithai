@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tipoff app map</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --surface: #ffffff; --text: #1d2a2a; --muted: #4c5a59; --line: #d6d1c6;
+    --accent: #0f5c55; --accent-soft: #e3efec; --warn: #9a3b26; --code: #efece5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141a1a; --surface: #1c2424; --text: #e8ecea; --muted: #a9b5b2; --line: #33403f;
+      --accent: #7cc7bb; --accent-soft: #1f3431; --warn: #f0a08a; --code: #253030;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 52rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  h1 { font: 700 2rem/1.2 Georgia, "Times New Roman", serif; margin: 0 0 .5rem; }
+  h2 { font: 700 1.35rem/1.3 Georgia, "Times New Roman", serif; margin: 2.5rem 0 .75rem; }
+  h3 { font-size: 1.05rem; margin: 1.25rem 0 .25rem; }
+  p, li { max-width: 68ch; }
+  .meta { color: var(--muted); font-size: .95rem; }
+  code { font: .9em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: .1em .3em; border-radius: 4px; overflow-wrap: anywhere; }
+  pre { background: var(--code); padding: .75rem 1rem; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0; }
+  .stop { display: grid; grid-template-columns: 2.25rem 1fr; gap: .75rem; }
+  .num { width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent); color: var(--surface); display: grid; place-items: center; font-weight: 700; }
+  .label { display: inline-block; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--warn); }
+  figure { margin: 1rem 0; }
+  .diagram { overflow-x: auto; }
+  .diagram svg { width: 100%; min-width: 640px; height: auto; display: block; }
+  .diagram:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  figcaption { color: var(--muted); font-size: .9rem; margin-top: .5rem; }
+  a { color: var(--accent); }
+  a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  details { margin: .5rem 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; vertical-align: top; padding: .5rem; border-bottom: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tipoff: app map</h1>
+  <p class="meta">A snapshot of how the code fits together, made from the finished v1.1 code (engine commit <code>78c4711</code>, branch <code>claude/gifted-hypatia-gz8ol7</code>). The code may change after this, so search for the names below rather than relying on line numbers.</p>
+
+  <h2>What the app does</h2>
+  <p>You paste a recruiter’s message or a whole conversation. Tipoff checks it in your browser against plain rules written from the FTC’s descriptions of job scams. It tells you which scam script the conversation follows, which step you’re at, what the scammer will probably ask next, and what to do. Nothing is sent anywhere: there is no server, no AI model and no network request after the page loads.</p>
+  <p>There are three main pieces:</p>
+  <ul>
+    <li><strong>The check page</strong> (<code>src/ui/</code>): React components for the input box, the verdict, the script timeline, the highlighted messages and the evidence cards.</li>
+    <li><strong>The engine</strong> (<code>src/engine/</code>): plain TypeScript with no browser code. It splits the paste into messages, normalizes the text, runs the rules and builds a report.</li>
+    <li><strong>The rulebook</strong> (<code>src/engine/rules.ts</code> and <code>playbooks.ts</code>): rules and scam scripts stored as data. The “How it works” page displays this same data, so the explanation can’t drift from what runs.</li>
+  </ul>
+
+  <h2>One action, end to end: “Check message”</h2>
+  <figure>
+    <div class="diagram" tabindex="0" role="region" aria-label="Diagram (scrolls sideways on small screens)">
+    <svg viewBox="0 0 760 250" role="img" aria-labelledby="flow-title flow-desc">
+      <title id="flow-title">From the Check message button to the verdict on screen</title>
+      <desc id="flow-desc">Clicking Check message calls check in CheckPage.tsx, which calls runCheck in runCheck.ts. That sends the text to a Web Worker that runs analyze in judge.ts. analyze uses parseThread, normalize and the RULES list, and returns a Report. The report goes back to CheckPage, which renders the verdict, the script timeline, the highlights and the evidence cards.</desc>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g font-family="system-ui, sans-serif" font-size="14" fill="currentColor" style="color: var(--text)">
+        <rect x="10" y="20" width="170" height="70" rx="8" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="95" y="48" text-anchor="middle" font-weight="700">You click</text>
+        <text x="95" y="70" text-anchor="middle">“Check message”</text>
+
+        <rect x="210" y="20" width="160" height="70" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="290" y="48" text-anchor="middle" font-weight="700">check()</text>
+        <text x="290" y="70" text-anchor="middle" font-size="12">ui/CheckPage.tsx</text>
+
+        <rect x="400" y="20" width="160" height="70" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="480" y="48" text-anchor="middle" font-weight="700">runCheck()</text>
+        <text x="480" y="70" text-anchor="middle" font-size="12">lib/runCheck.ts</text>
+
+        <rect x="590" y="20" width="160" height="70" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="670" y="48" text-anchor="middle" font-weight="700">analyze()</text>
+        <text x="670" y="70" text-anchor="middle" font-size="12">engine/judge.ts (in a worker)</text>
+
+        <rect x="590" y="150" width="160" height="80" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-dasharray="5 4"/>
+        <text x="670" y="175" text-anchor="middle" font-size="12">parseThread() · thread.ts</text>
+        <text x="670" y="197" text-anchor="middle" font-size="12">normalize() · normalize.ts</text>
+        <text x="670" y="219" text-anchor="middle" font-size="12">RULES · rules.ts</text>
+
+        <rect x="210" y="150" width="350" height="80" rx="8" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="385" y="178" text-anchor="middle" font-weight="700">You see: verdict, script, next move,</text>
+        <text x="385" y="200" text-anchor="middle" font-weight="700">highlights and evidence cards</text>
+        <text x="385" y="220" text-anchor="middle" font-size="12">VerdictBanner, ScriptTimeline, MessageView, FindingList</text>
+
+        <g stroke="currentColor" stroke-width="1.6" fill="none" marker-end="url(#arrow)">
+          <line x1="180" y1="55" x2="206" y2="55"/>
+          <line x1="370" y1="55" x2="396" y2="55"/>
+          <line x1="560" y1="55" x2="586" y2="55"/>
+          <line x1="670" y1="90" x2="670" y2="146"/>
+          <path d="M590,190 L564,190"/>
+        </g>
+        <text x="575" y="140" text-anchor="middle" font-size="12">Report</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>On a narrow screen, scroll the diagram sideways. There’s no storage and no external service. The report goes from the worker back to the page and is never saved.</figcaption>
+  </figure>
+
+  <h2>Reference route: three stops</h2>
+  <p class="label">Reference route, not toured with the learner</p>
+  <p>To follow it yourself: run the app (see below), click the “Remote data entry offer” example, then open these places in your editor.</p>
+
+  <div class="card stop">
+    <span class="num" aria-hidden="true">1</span>
+    <div>
+      <h3>The click becomes a request: <code>check</code> in <code>src/ui/CheckPage.tsx</code></h3>
+      <p>Search for <code>const check = useCallback</code>. An empty box shows an inline error instead. Otherwise it calls <code>runCheck(value, optionsFor(o))</code>, where <code>o</code> holds the names you ticked as “you”. If a newer check started in the meantime, the older answer is ignored.</p>
+    </div>
+  </div>
+  <div class="card stop">
+    <span class="num" aria-hidden="true">2</span>
+    <div>
+      <h3>Off the main thread, safely: <code>runCheck</code> in <code>src/lib/runCheck.ts</code></h3>
+      <p>Sends the text to <code>src/engine/engine.worker.ts</code> so a huge paste can’t freeze the page. After 2 seconds (<code>CHECK_TIMEOUT_MS</code>) it gives up and the page shows a recoverable error. If the browser can’t start a worker, it runs <code>analyze</code> in the page instead.</p>
+    </div>
+  </div>
+  <div class="card stop">
+    <span class="num" aria-hidden="true">3</span>
+    <div>
+      <h3>The judgment: <code>analyze</code> and <code>judgeMessages</code> in <code>src/engine/judge.ts</code></h3>
+      <p><code>parseThread</code> splits the paste into messages and decides which ones are yours. <code>findInMessage</code> runs every rule in <code>RULES</code> on a normalized copy of each of the other person’s messages, then maps matches back to the exact characters you pasted (<code>toOriginal</code>). <code>verdictFor</code> turns the findings into “Likely scam”, “Worth a closer look” or no match. <code>pickPlaybook</code> names the script. The resulting <code>Report</code> is what the components render.</p>
+      <details>
+        <summary>The rule that decides “Likely scam”</summary>
+        <pre tabindex="0"><code>if ((strongAsk &amp;&amp; (steps.size &gt;= 2 || strong.length &gt;= 2) &amp;&amp; score &gt;= 5) || (score &gt;= 9 &amp;&amp; steps.size &gt;= 3)) verdict = &#39;likely&#39;;
+else if (score &gt;= 3 || strongAsk) verdict = &#39;closer_look&#39;;</code></pre>
+        <p>A “strong ask” is a weight-3 rule at step 4 or 5 (money or identity). “Likely” needs it plus corroboration, so one scary phrase alone never gets the strongest label.</p>
+      </details>
+    </div>
+  </div>
+
+  <h2>To change this, start here</h2>
+  <table>
+    <thead><tr><th scope="col">If you want to…</th><th scope="col">Start at</th></tr></thead>
+    <tbody>
+      <tr><td>Catch a new scam phrase</td><td>Add a pattern to the right rule in <code>RULES</code> (<code>src/engine/rules.ts</code>), then a case in <code>tests/engine/adversarial.test.ts</code> or <code>judge.test.ts</code>. It shows up on the How it works page automatically.</td></tr>
+      <tr><td>Stop a real recruiter message being flagged</td><td><code>LEGIT_CONTEXT</code>, or a rule’s <code>dampenedBy</code>, <code>unlessSentence</code> or <code>needsMessage</code> in <code>rules.ts</code>.</td></tr>
+      <tr><td>Change what to do or what happens next</td><td><code>PLAYBOOKS</code> in <code>src/engine/playbooks.ts</code> (each script’s plan, next move and stop advice).</td></tr>
+      <tr><td>Support a new chat-export format</td><td><code>parseThread</code> in <code>src/engine/thread.ts</code> (see <code>IOS</code>, <code>DESKTOP</code>, <code>ANDROID</code>).</td></tr>
+      <tr><td>Change colors or spacing</td><td><code>src/styles/tokens.css</code> (light and dark tokens), then <code>components.css</code>.</td></tr>
+      <tr><td>Add or edit an example</td><td><code>SAMPLES</code> in <code>src/data/samples.ts</code>. Examples are fictional, and <code>judge.test.ts</code> checks each one.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>A practice to reuse</h2>
+  <div class="card">
+    <p><strong>Write tests that could actually fail.</strong> Every engine test checked that each highlight’s quote equaled the text at its offsets. But the quote was <em>made</em> from those offsets, so that check could never fail. When the v1.1 Unicode change shifted every highlight after an emoji by one letter (“imple tasks”), all the tests still passed. The bug was caught only by looking at real output.</p>
+    <p>The fix was a check that uses outside knowledge: a highlight must never start or end in the middle of a word (<code>cutsWord</code> in <code>tests/engine/helpers.ts</code>, run on every sample and every adversarial case). It failed on the bug, and it immediately found a second one: amounts cut to “$2” instead of “$280”. The full story is in <code>docs/phase3/round1.md</code>, under “Found while fixing: highlight bugs”.</p>
+    <p>On any project: for each test, ask “what broken version of this code would still pass?” If the answer is “almost any”, check a property the result must have, rather than comparing the code’s output with itself.</p>
+  </div>
+
+  <h2>Run it again</h2>
+  <pre tabindex="0"><code>npm install
+npm run dev        # open the address it prints
+npm test           # engine tests
+npm run e2e        # browser tests (builds and serves the app itself)</code></pre>
+  <p>Live copy: <a href="https://shreymp.github.io/buildwithai/">shreymp.github.io/buildwithai</a>. This map works offline and needs no scripts.</p>
+</main>
+</body>
+</html>

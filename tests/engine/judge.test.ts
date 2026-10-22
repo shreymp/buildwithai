@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { analyze, MAX_INPUT } from '../../src/engine/judge';
 import { RULES } from '../../src/engine/rules';
+import { GENERIC_STOP, PLAYBOOKS, PLAYBOOK_ORDER } from '../../src/engine/playbooks';
 import { SAMPLES, sampleText } from '../../src/data/samples';
 import { cutsWord } from './helpers';
 
@@ -60,6 +61,40 @@ describe('the demo thread: the prediction comes true', () => {
     const r = analyze(sampleText(demo));
     const mine = new Set(r.messages.filter((m) => m.side === 'me').map((m) => m.id));
     expect(r.findings.some((f) => mine.has(f.messageId))).toBe(false);
+  });
+});
+
+describe('the verdict reason only claims what happened', () => {
+  it('does not mention a money request before one is made', () => {
+    const demo4 = analyze(sampleText(demo, 4));
+    expect(demo4.verdict).toBe('likely');
+    expect(demo4.reason).not.toMatch(/including a request/);
+    expect(demo4.reason).toMatch(/haven’t asked for money/);
+    expect(analyze(sampleText(demo)).reason).toMatch(/including a request that puts your money/);
+  });
+});
+
+describe('copy fits the case (blind review, round 2)', () => {
+  it('never says "job job" and gives stop advice that fits each script', () => {
+    for (const s of SAMPLES) {
+      const r = analyze(sampleText(s));
+      expect(r.reason, s.id).not.toMatch(/job job/);
+    }
+    for (const id of PLAYBOOK_ORDER) {
+      expect(PLAYBOOKS[id].stop.dont, id).not.toBe(GENERIC_STOP.dont);
+    }
+    expect(PLAYBOOKS.identity.stop.dont).not.toMatch(/deposit/);
+    expect(PLAYBOOKS.upfront_fee.stop.dont).not.toMatch(/deposit/);
+  });
+  it('does not ask a clean-looking recruiter for an interview they may have offered', () => {
+    const legit = analyze(sampleText(SAMPLES.find((x) => x.id === 'legit-recruiter')!));
+    expect(legit.verdict).toBe('none');
+    expect(legit.reply).not.toMatch(/video interview/);
+    expect(analyze(sampleText(demo)).reply).toMatch(/video interview/);
+  });
+  it('quotes a scam warning to the end of the phrase', () => {
+    const legit = analyze(sampleText(SAMPLES.find((x) => x.id === 'legit-recruiter')!));
+    expect(legit.legitSignals.find((l) => l.id === 'safety_warning')?.quote).toMatch(/Social Security number$/);
   });
 });
 

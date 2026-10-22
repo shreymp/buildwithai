@@ -1,0 +1,52 @@
+{
+ "pair01": {
+  "screen": "desktop-01-empty",
+  "A": "v1.0",
+  "B": "v1.1"
+ },
+ "pair02": {
+  "screen": "desktop-04-demo-full",
+  "A": "v1.0",
+  "B": "v1.1"
+ },
+ "pair03": {
+  "screen": "desktop-06-sample-identity-form",
+  "A": "v1.0",
+  "B": "v1.1"
+ },
+ "pair04": {
+  "screen": "desktop-06-sample-training-fee",
+  "A": "v1.1",
+  "B": "v1.0"
+ },
+ "pair05": {
+  "screen": "desktop-10-how-it-works",
+  "A": "v1.0",
+  "B": "v1.1"
+ },
+ "pair06": {
+  "screen": "mobile-02-demo-step1",
+  "A": "v1.1",
+  "B": "v1.0"
+ },
+ "pair07": {
+  "screen": "mobile-04-demo-full",
+  "A": "v1.1",
+  "B": "v1.0"
+ },
+ "pair08": {
+  "screen": "mobile-06-sample-task-scam",
+  "A": "v1.0",
+  "B": "v1.1"
+ },
+ "pair09": {
+  "screen": "mobile-06-sample-legit-recruiter",
+  "A": "v1.1",
+  "B": "v1.0"
+ },
+ "pair10": {
+  "screen": "mobile-09-not-english",
+  "A": "v1.1",
+  "B": "v1.0"
+ }
+}

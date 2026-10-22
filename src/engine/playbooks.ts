@@ -1,7 +1,7 @@
 // The five job-scam scripts Tipoff knows, plus the shared early steps.
 // Each script is written from the FTC's public descriptions of these scams.
 
-import type { NextMove, PlanItem, PlaybookId, Step } from './types';
+import type { NextMove, PlanItem, PlaybookId, Step, Verdict } from './types';
 
 export const SOURCES = {
   jobScams: { href: 'https://consumer.ftc.gov/articles/job-scams', label: 'FTC: Job scams' },
@@ -105,7 +105,7 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
         dont: 'Don’t send any money. Funds showing in your account don’t mean the check has cleared.',
       },
     },
-    stop: GENERIC_STOP,
+    stop: { ...GENERIC_STOP, dont: 'Don’t deposit their check, and don’t send money to their vendor or back to them, by any method.' },
     plan: [
       { text: 'Don’t deposit the check. If you already did, call your bank now and tell them it may be fake. Don’t spend or forward the money.' },
       { text: 'Don’t pay any “vendor” or send back an “overpayment”, by any method.' },
@@ -146,7 +146,7 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
         dont: 'Don’t deposit to “unlock”, “reset” or “withdraw”. The balance on screen isn’t real.',
       },
     },
-    stop: GENERIC_STOP,
+    stop: { ...GENERIC_STOP, dont: 'Don’t deposit, “recharge” or pay a “withdrawal fee”. The balance in their app isn’t real.' },
     plan: [
       { text: 'Stop doing tasks and don’t deposit any money, crypto or gift cards, no matter what the app balance says.' },
       { text: 'If you sent crypto or money, contact the exchange or bank right away, and keep screenshots of the app and chats.', link: SOURCES.ic3 },
@@ -177,7 +177,7 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
         dont: 'Don’t ship anything. Keep the packages and labels as evidence.',
       },
     },
-    stop: GENERIC_STOP,
+    stop: { ...GENERIC_STOP, dont: 'Don’t ship any packages. Keep them and the labels as evidence for the police or postal inspectors.' },
     plan: [
       { text: 'Don’t reship any package. Keep the packages and labels, and stop replying.' },
       { text: 'Report it to the U.S. Postal Inspection Service as well as the FTC.', link: SOURCES.uspis },
@@ -208,7 +208,7 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
         dont: 'Don’t pay any fee. If you already paid by card, call your card issuer to dispute it.',
       },
     },
-    stop: GENERIC_STOP,
+    stop: { ...GENERIC_STOP, dont: 'Don’t pay any fee, by any method. If you already paid by card, call your card issuer.' },
     plan: [
       { text: 'Don’t pay any fee for training, certification, background checks or equipment.' },
       { text: 'If you paid with a card, call your card issuer and ask to dispute the charge.' },
@@ -239,7 +239,7 @@ export const PLAYBOOKS: Record<PlaybookId, Playbook> = {
         dont: 'Don’t fill in the form. Never share a bank password or a photo of your ID by chat.',
       },
     },
-    stop: GENERIC_STOP,
+    stop: { ...GENERIC_STOP, dont: 'Don’t send your SSN, ID photos or bank details. If you already did, follow the identity theft steps below.' },
     plan: [
       { text: 'Don’t send your SSN, ID photos or bank login. If you already did, follow the recovery steps at IdentityTheft.gov.', link: SOURCES.identity },
       { text: 'If you shared bank details, call your bank and change your online banking password.' },
@@ -272,13 +272,21 @@ export const VERIFY_PLAN: PlanItem[] = [
   { text: 'Never pay for training or equipment, and only share tax or bank details in an official HR system after a written offer.', link: SOURCES.jobScams },
 ];
 
-export function replyTemplate(playbook: PlaybookId | null): string {
-  const lines = [
-    'Thanks for reaching out. Before we go further, could you send:',
-    '• the link to this job on your company’s official careers site,',
-    '• your full name, title, and company email address, and',
-    '• a time for a video interview with the hiring manager.',
-  ];
+export function replyTemplate(playbook: PlaybookId | null, verdict: Verdict = 'closer_look'): string {
+  // With no warning signs, ask only for what any real recruiter can confirm in one reply;
+  // a genuine invite may already offer the interview.
+  const lines = verdict === 'none'
+    ? [
+        'Thanks for reaching out! Before I share any personal details, could you confirm:',
+        '• the link to this job on your company’s official careers site, and',
+        '• your full name, title, and company email address?',
+      ]
+    : [
+        'Thanks for reaching out. Before we go further, could you send:',
+        '• the link to this job on your company’s official careers site,',
+        '• your full name, title, and company email address, and',
+        '• a time for a video interview with the hiring manager.',
+      ];
   const tail: Record<PlaybookId | 'none', string> = {
     fake_check: 'I don’t deposit checks or buy equipment for an employer. Please ship any equipment directly.',
     task: 'I don’t pay deposits to unlock work or withdraw earnings.',

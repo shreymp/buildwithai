@@ -184,7 +184,7 @@ export function CheckPage() {
           See a job scam’s next move before it happens
         </h1>
         <p className="lede">
-          Paste a recruiter’s text, DM or email, or the whole conversation. Tipoff shows which job-scam script it follows, where you are in it, and what they’ll likely ask next.
+          Paste a recruiter’s text, DM or email, or the whole conversation. Tipoff shows which job-scam script it follows, where you are in it, and what they’ll likely do next.
         </p>
 
         <form onSubmit={onSubmit} noValidate>
@@ -262,7 +262,7 @@ export function CheckPage() {
               </li>
             ))}
           </ul>
-          <p className="samples__fine">Examples are fictional, written from the FTC’s descriptions of real job scams.</p>
+          <p className="samples__fine">Examples are fictional. The scam examples follow the FTC’s descriptions of real job scams.</p>
       </section>
 
       <div className="check__results" aria-live="off">
