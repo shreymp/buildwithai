@@ -1,0 +1,11 @@
+0:00  empty check page
+0:06  message 1: "Worth a closer look", step 2; signs: An offer you didn’t apply for | Pay that’s too good for the work | “No experience needed” | Moving you to a chat app
+0:14  next move: WHAT THEY’LL LIKELY DO NEXT
+0:20  message 3: Telegram interview shown
+0:27  message 4: Likely scam; reason: Verdict: Likely scam This follows a known job-scam script: 6 warning signs across 3 steps of the script. They haven’t asked for money or personal details yet, b
+0:39  message 5: check for equipment, step 4
+0:45  message 6: step 5, Stop here
+1:00  highlight "mail you a company check" opened card "A check is coming your way"
+1:10  failure case: Verdict: No known scam pattern found None of Tipoff’s job-scam patterns matched this text. That isn’t proof it’s safe: scammers change their wording.
+1:19  accuracy section: How accurate it is 34 of 40 test scams flagged (85%) 2 of 40 genuine messages flagged by mistake 0 of 40 genuine messages called “likely scam” 28 of 34 flagged scams matched to the right script What this test is: Written
+1:33  end
