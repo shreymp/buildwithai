@@ -1,0 +1,451 @@
+[
+  {
+    "id": "s01",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Interview invitation - Senior Data Analyst, Harbor & Pine Analytics\n\nHi Maya,\n\nThanks for applying. We'd like to set up a 45-minute video interview with our analytics lead, Tomas Reyes. Our calendar is filling up quickly this week, so please pick a slot here: https://scheduling.harborpine-example.com/maya-k before Thursday 5pm. The link goes to a Zoom room; no software install is needed.\n\nThe posted range for this role is $118,000 - $134,000 plus bonus, fully remote within the US.\n\nBest,\nKeiko Anand\nTalent Acquisition, Harbor & Pine Analytics"},
+      {"from": "me", "text": "Hi Keiko, thanks! I booked Wednesday at 2:30pm ET. Should I prepare a case study or just walk through past work?"},
+      {"from": "them", "text": "Wednesday 2:30 is confirmed. Just walk through one project you're proud of, about 10 minutes. No prep beyond that. See you then!"}
+    ]
+  },
+  {
+    "id": "s02",
+    "label": "scam",
+    "playbook": "task",
+    "channel": "whatsapp",
+    "messages": [
+      {"from": "them", "text": "Hi, this is Mia from Brightlane Digital 😊 We came across your resume online. We have a part-time opening, 30-60 min a day from your phone, daily pay $200-$400, no experience needed. Are you interested? Reply YES and I will send the details"}
+    ]
+  },
+  {
+    "id": "s03",
+    "label": "scam",
+    "playbook": "fake_check_equipment",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Welcome aboard - Remote Data Entry Clerk\n\nDear Jordan,\n\nWe are delighted to offer you the position of Remote Data Entry Clerk at Valmont Ridge Services. Your pay is $38/hour, 20 hours weekly.\n\nAs part of our work-from-home program, we provide a home office allowance. A cashier's check for $2,850 will be mailed to your home address by overnight courier. Please deposit it right away and let me know when funds show in your account.\n\nRegards,\nPatricia Lund\nHR Coordinator"},
+      {"from": "me", "text": "Thank you Patricia, I'm excited. Where do I buy the equipment from?"},
+      {"from": "them", "text": "Our IT procurement team uses a preferred supplier for the ergonomic desk setup and the secure software license, so everything is compatible with our systems. Once the check is in your account, please send $2,300 to the vendor by Zelle and keep the rest for your first week's wages. I will email the vendor contact."},
+      {"from": "me", "text": "Ok the check is deposited, the app says the funds are available."},
+      {"from": "them", "text": "Perfect. Please send the Zelle today so the equipment ships before the weekend, our training starts Monday. Send me the confirmation screenshot."}
+    ]
+  },
+  {
+    "id": "s04",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "them", "text": "Hi Andre, I'm a technical recruiter at Cobalt Meridian Software. Your work on distributed queues caught my eye. We're hiring a Staff Backend Engineer, remote (US/Canada), base $185-215k + equity. Would you be open to a quick intro call this week?"},
+      {"from": "me", "text": "Thanks Sasha. Possibly. Can you tell me more about the team and whether the equity is RSUs or options?"},
+      {"from": "them", "text": "Sure. It's the platform team of 8, and the equity is RSUs on a 4-year vest. I'll send a job description via your LinkedIn email. If you want to talk, here's my calendar: https://cal.cobaltmeridian-example.com/sasha. Honestly the slots go quick, our hiring manager is only available for first-rounds through next Friday."},
+      {"from": "me", "text": "Booked Tuesday 11am PT. Thanks."}
+    ]
+  },
+  {
+    "id": "s05",
+    "label": "scam",
+    "playbook": "reshipping",
+    "channel": "whatsapp",
+    "messages": [
+      {"from": "them", "text": "Good day. We need a local person to receive parcels at your home address and forward them to our warehouse overseas. We pay $50 per parcel plus a monthly salary of $2,400. No fee, no experience. Send your full name and address if you can start this week"}
+    ]
+  },
+  {
+    "id": "s06",
+    "label": "scam",
+    "playbook": "upfront_fee",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Congratulations! You have been selected\n\nDear Candidate,\n\nWe are pleased to inform you that after reviewing your application you have been selected for the position of Customer Care Specialist at Norvane Health Solutions (starting salary $29/hr, remote).\n\nBefore your onboarding can be completed, all new hires must obtain the Norvane Certified Associate credential. The certification fee is $149 and is payable through our approved processing partner. Your position will be released to the next applicant if payment is not received within 48 hours.\n\nPay here: norvane-certify-example.net/pay\n\nHuman Resources Dept."},
+      {"from": "me", "text": "I never had an interview. Is the fee reimbursed?"},
+      {"from": "them", "text": "Yes, you will be reimbursed on your first paycheck. The interview was waived since your resume was excellent. Please complete the payment today to secure your place."}
+    ]
+  },
+  {
+    "id": "s07",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Your application to Willowbrook Logistics\n\nHi Carlos,\n\nThank you for taking the time to interview with us for the Operations Coordinator role. After careful consideration we have decided to move forward with another candidate whose experience more closely matches our current needs.\n\nWe were impressed by your background in warehouse planning and would love to keep your resume on file for future openings. We'll reach out if something suitable comes up.\n\nWishing you the best,\nDenise Okafor\nPeople Team, Willowbrook Logistics"}
+    ]
+  },
+  {
+    "id": "s08",
+    "label": "scam",
+    "playbook": "identity_harvest",
+    "channel": "whatsapp",
+    "messages": [
+      {"from": "them", "text": "Hello Rachel, I'm Gerald Whitmore, hiring manager for Eastgate Home Care Partners. We do our interviews by text, easier for everyone 😊 First question: are you available full time?"},
+      {"from": "me", "text": "Yes I am. I have 4 years of experience as a caregiver."},
+      {"from": "them", "text": "Excellent, you are a strong fit. You are hired at $27/hr. To start I need to set up payroll and your I-9 so please send your SSN and date of birth here."},
+      {"from": "me", "text": "Should I get an offer letter first? I haven't seen anything in writing"},
+      {"from": "them", "text": "The offer letter is generated automatically after the payroll registration is done, that is our system. I also need a clear selfie holding your ID (front of driver license) for the verification and your bank routing and account number for direct deposit. We have 3 other candidates so please do it in the next hour to hold the spot"}
+    ]
+  },
+  {
+    "id": "s09",
+    "label": "scam",
+    "playbook": "task",
+    "channel": "telegram",
+    "messages": [
+      {"from": "them", "text": "Welcome to the team! I'm Lina, your onboarding mentor at ClickCrest Optimization. Your job: boost product listings so merchants rank higher. Each task takes about 2 min. You get a commission per set."},
+      {"from": "me", "text": "How much do I earn?"},
+      {"from": "them", "text": "Level 1 earns 0.8% per task, 40 tasks per set. Your first set is free, let me activate your account. Done! Go to the dashboard and start."},
+      {"from": "me", "text": "I finished set 1. It says I earned $34.20?"},
+      {"from": "them", "text": "Great job! Set 2 has a combo task, a premium listing. Your balance went negative -$212 because the premium merchant needs the order funded first. You need to top up 212 USDT to continue, it will be returned to you with the commission after the set."},
+      {"from": "me", "text": "I don't have crypto. Can I just withdraw what I made?"},
+      {"from": "them", "text": "Withdrawals are only available after completing all 3 sets, otherwise the account freezes and the earnings are lost. You can buy USDT from the app I sent, it only takes 5 minutes. Don't miss out, you are so close 🙏"},
+      {"from": "me", "text": "Ok sending 212."},
+      {"from": "them", "text": "Received. Next combo is bigger: system needs 640 USDT, but the return is 1,900. Trust me, it's the last one."}
+    ]
+  },
+  {
+    "id": "s10",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Hi Tasha, this is Ben at Calder Staffing. Your shift at the Maple Ridge distribution center is confirmed for Mon 10/27, 6am-2:30pm. Please bring two forms of ID for the I-9 on your first day (e.g. license + SS card or passport). Steel toe boots are required. Reply C to confirm."},
+      {"from": "me", "text": "C. Thanks Ben! Is there parking onsite?"},
+      {"from": "them", "text": "Yes, Lot B. Check in with the front desk and ask for Marcus. Pay is weekly by direct deposit; you'll get an email from our payroll portal to set it up."}
+    ]
+  },
+  {
+    "id": "s11",
+    "label": "scam",
+    "playbook": "fake_check_equipment",
+    "channel": "telegram",
+    "messages": [
+      {"from": "them", "text": "Your equipment stipend of $1,900 is being sent to you by check. When it clears just forward $1,400 to our approved vendor for your laptop and headset, I'll message the details. You keep the difference as a sign on bonus 👍"}
+    ]
+  },
+  {
+    "id": "s12",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "whatsapp",
+    "messages": [
+      {"from": "them", "text": "Hi Lena, this is Joris from Fenwick & Dray Studios. You mentioned on the call that WhatsApp is easier for you, so I'm texting here. Can you do Thursday 3pm CET for the second round with our creative director? It would be on Zoom."},
+      {"from": "me", "text": "Thursday 3pm works. Should I have the portfolio link ready?"},
+      {"from": "them", "text": "Yes please, and the same link you sent in your application is fine. I'll send the Zoom invite to your email in a minute. Official comms will always come from the fenwickdray-example.com domain, so check that."},
+      {"from": "me", "text": "Got it, thanks!"}
+    ]
+  },
+  {
+    "id": "s13",
+    "label": "scam",
+    "playbook": "reshipping",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Logistics Assistant (work from home) - Aldermoor Trade Group\n\nHello,\n\nAldermoor Trade Group is expanding in North America and is looking for Quality Control & Logistics Assistants. Duties: receive packages sent to your home, inspect the contents, repackage them using the new shipping labels we email you, and drop them at your local carrier. Salary $3,200/month + $40 per package handled. Paid weekly. Flexible hours.\n\nIf interested reply with your full name, home address and phone number."},
+      {"from": "me", "text": "What kind of items are they? Why are they shipped to individuals first?"},
+      {"from": "them", "text": "Mostly electronics and cosmetics from our suppliers. Shipping to home assistants lets us avoid customs delays and handle repackaging cheaply in-country. Your first parcel will arrive in 3-5 days. Please do not discard any original packing slips, and ship within 24 hours of delivery."},
+      {"from": "me", "text": "Sounds fine. Which address do I use?"},
+      {"from": "them", "text": "Great! You can start immediately. Just send your address and a photo of your ID so we can add you to the delivery registry."}
+    ]
+  },
+  {
+    "id": "s14",
+    "label": "scam",
+    "playbook": "identity_harvest",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: URGENT onboarding documents - Summit Crest Financial\n\nHi,\n\nWe reviewed your resume and would like to move you directly to onboarding for the Loan Processing Assistant role, $31/hr, remote. No interview is required.\n\nTo hold your position, reply to this email by 9am tomorrow with:\n1) Photo of your driver's license (front and back)\n2) Social Security number\n3) Voided check or bank routing and account number for direct deposit\n4) Mother's maiden name (security verification)\n\nThanks,\nBrandon Hale, Recruiting"}
+    ]
+  },
+  {
+    "id": "s15",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Background check authorization - Larkspur Health Group\n\nHi Imani,\n\nCongratulations again on accepting our offer for Patient Services Coordinator. As discussed, the offer is contingent on a standard background check and employment verification. Larkspur Health Group pays for this in full; there is no cost to you.\n\nYou will get an email from our screening vendor, ClearPath Screening (sender: no-reply@clearpathscreen-example.com), with a secure link to review and authorize. Please complete it within 3 business days so we can keep your June 2 start date. If you have questions, reply here or call me at the office.\n\nWarmly,\nRuth Teller\nHR Business Partner"}
+    ]
+  },
+  {
+    "id": "s16",
+    "label": "scam",
+    "playbook": "upfront_fee",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Hi Sam, you passed screening for Oakhurst Support Services. A $65 background check fee is required before your start date. Pay by Cash App to $OakhurstHR-Fees and text screenshot. Positions fill fast!"}
+    ]
+  },
+  {
+    "id": "s17",
+    "label": "scam",
+    "playbook": "task",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Your profile was shortlisted for a Product Boost Associate role at Quillmark Commerce. Pay is per order batch, earn daily. Add our coordinator on Telegram @quillmark_desk to start today."}
+    ]
+  },
+  {
+    "id": "s18",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Welcome to Tidewater Robotics - your first-day checklist\n\nHi Noor,\n\nWe're thrilled you accepted! Here's what to expect before your start date of Nov 3:\n\n1. Check your personal email for an invite to our HR portal (workday-style, hosted at people.tidewaterrobotics-example.com). Log in there to complete your I-9 section 1, W-4, and direct deposit details. Please never send SSN or bank info by email; only enter it in the portal.\n2. Your company laptop (a 14-inch notebook) will ship by courier to your home on Oct 28. You'll get a tracking number. Setup instructions are included, and our IT team will join you on Zoom on day one to help.\n3. You'll also receive a $600 home office stipend, reimbursed on your first expense report once you submit receipts.\n\nLooking forward to seeing you!\nHannah Brightwater\nPeople Operations"}
+    ]
+  },
+  {
+    "id": "s19",
+    "label": "scam",
+    "playbook": "fake_check_equipment",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Hi Daniel, your offer for the Remote Admin Assistant job at Pellham Group has been approved! Your starter funds arrive by courier tomorrow, a check for $3,400."},
+      {"from": "me", "text": "Nice. what is it for?"},
+      {"from": "them", "text": "Its for your office setup. Our approved vendor Hollis Office Supply provides the laptop, printer and software already configured. You deposit the check then pay the vendor $2,750 by Zelle or wire, I'll send you the details."},
+      {"from": "me", "text": "Why cant the company just pay the vendor directly?"},
+      {"from": "them", "text": "Company policy, employees have to purchase so assets are assigned in their name for tax purposes. We have done this with all our new staff. The check is certified so it clears instantly, bank will show available balance same day"},
+      {"from": "me", "text": "Hmm ok. Deposited it now."},
+      {"from": "them", "text": "Perfect. Send the payment by 4pm so the equipment ships today, then your training starts Monday!!"}
+    ]
+  },
+  {
+    "id": "s20",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Summer Internship Offer - Greywell Biosciences\n\nDear Elliot,\n\nOn behalf of Greywell Biosciences, I'm pleased to offer you a Summer 2027 Research Intern position in our Cambridge lab. The internship runs June 7 - Aug 20, paid at $26.50/hour, 40 hours per week, with a relocation stipend of $1,500 paid with your first paycheck.\n\nThe formal offer letter is attached. To accept, please sign and return it through the DocuSign envelope sent separately by Friday, Nov 7. After you accept, you'll receive onboarding paperwork through our HR system, including I-9 information and direct deposit setup. Greywell covers your background check and drug screening.\n\nIf you have questions, call or email me anytime.\n\nSincerely,\nDr. Anita Voss\nUniversity Programs"},
+      {"from": "me", "text": "Dr. Voss, thank you so much. I'll sign it this week."}
+    ]
+  },
+  {
+    "id": "s21",
+    "label": "scam",
+    "playbook": "identity_harvest",
+    "channel": "telegram",
+    "messages": [
+      {"from": "them", "text": "Hello! Quick verification step for new hires at Lumenfield Careers: please send a photo of your passport or ID and a selfie holding it, so we can add you to payroll today."}
+    ]
+  },
+  {
+    "id": "s22",
+    "label": "scam",
+    "playbook": "reshipping",
+    "channel": "telegram",
+    "messages": [
+      {"from": "them", "text": "Hey, I saw you're open to side income. I run a small import business, customers abroad can't order from some US shops so I need a US contact to receive and forward the orders. Pretty easy"},
+      {"from": "me", "text": "Forward how? And what do I get?"},
+      {"from": "them", "text": "I email you a prepaid label (or a label you print), you tape it on and drop at the post office. Takes 10 minutes. I pay $30 per package, paid every Friday. Usually 5-8 packages a week."},
+      {"from": "me", "text": "Is it legal? Why not ship directly to you?"},
+      {"from": "them", "text": "Of course legal, it's just that stores block foreign addresses. Same thing as freight forwarding companies do. You'd never pay anything. If a label can't be prepaid you cover the postage first and I send it back to you with your payment, like $40 or so"},
+      {"from": "me", "text": "ok. what do I need to do first"},
+      {"from": "them", "text": "Send me your address so I can set up your first order. Also your PayPal so I can pay you 🙂 The first package should arrive tomorrow or the day after."}
+    ]
+  },
+  {
+    "id": "s23",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Finish your Hopdrop driver sign-up\n\nHi Marcus,\n\nThanks for signing up to deliver with Hopdrop. You're almost ready to start earning. To finish, please complete these steps in the Hopdrop Driver app:\n\n- Upload your driver's license and proof of insurance\n- Accept the background check consent. Hopdrop pays for the check; there is no fee.\n- Add your bank account for weekly direct deposit\n\nMost checks finish in 3-5 days. We'll notify you in the app, and you never need to send documents by email or text. Questions? Visit help.hopdrop-example.com.\n\nThe Hopdrop Driver Team"}
+    ]
+  },
+  {
+    "id": "s24",
+    "label": "scam",
+    "playbook": "upfront_fee",
+    "channel": "whatsapp",
+    "messages": [
+      {"from": "them", "text": "Hi Priya! I'm Colleen with Redwater Online Learning. We'd like to hire you as a remote Course Moderator, $4,200 monthly. Interview went great."},
+      {"from": "me", "text": "Thank you! What's next?"},
+      {"from": "them", "text": "You need to complete our certified training before the first day. The training kit and exam materials cost $320, purchased from our partner site. It's 100% refundable after your first paycheck 😊"},
+      {"from": "me", "text": "I'm a bit short on cash right now. Can the company deduct it from my pay?"},
+      {"from": "them", "text": "Sorry, system doesn't allow that. But I can hold your position until Friday if you send half now ($160) and the rest later. Gift cards are fine too if easier."},
+      {"from": "me", "text": "Gift cards? That seems odd"},
+      {"from": "them", "text": "Many of our staff did it, nothing to worry about. Let me know and I'll send the payment link."}
+    ]
+  },
+  {
+    "id": "s25",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "me", "text": "Hi Priyanka, thanks for reaching out. Before I commit time, is the Customer Success role paid training? And what's the comp?"},
+      {"from": "them", "text": "Good questions! Yes: the first 3 weeks are paid onboarding training at your full rate, no cost to you. Base is $72k + 10% variable, hybrid in Austin 2 days a week, or fully remote if you're outside Texas. We provide your laptop and headset."},
+      {"from": "me", "text": "Great. I'm free Wed or Thu afternoon for a call."},
+      {"from": "them", "text": "Perfect, I'll send an invite for Wed at 3pm CT via Teams. You'll also get an email from our ATS to submit a formal application, it takes about 5 minutes. No documents beyond your resume at this stage."}
+    ]
+  },
+  {
+    "id": "s26",
+    "label": "scam",
+    "playbook": "task",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "them", "text": "Hi Tyler, I'm recruiting for Nexabridge AI Partners. We need remote data labeling contributors, flexible hours. You review short clips and rate them. $90-$150 for each day of work."},
+      {"from": "me", "text": "Is this a real company? What's the website?"},
+      {"from": "them", "text": "Yes of course, nexabridge-example.io. I'll set you up an account on the contributor portal. Just complete the 3 starter tasks today and you get paid the next morning."},
+      {"from": "me", "text": "Done with 3. The portal shows $66."},
+      {"from": "them", "text": "Congratulations! To withdraw you need to complete the daily quota of 12 tasks. Task 9 is a sponsored task, which means your account shows a negative balance of -$350 until you fund it. After that your total payout will be $780."},
+      {"from": "me", "text": "So I have to pay to get paid?"},
+      {"from": "them", "text": "It's refundable collateral, not a fee. Most contributors send it via Bitcoin or USDT with the wallet in the portal's Deposit tab. The platform returns it with your earnings in 24h."}
+    ]
+  },
+  {
+    "id": "s27",
+    "label": "scam",
+    "playbook": "fake_check_equipment",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "them", "text": "Hello Alicia. I'm an executive at Corvane Holdings and I'm searching for a remote personal assistant, 10 hours weekly, $450/week. Your profile looks great."},
+      {"from": "me", "text": "I might be interested. What does it involve?"},
+      {"from": "them", "text": "Mostly errands, scheduling, ordering supplies and gifts for clients. I travel a lot so we'll chat by text. What's your number?"},
+      {"from": "me", "text": "555-0142. Thanks"},
+      {"from": "them", "text": "Thank you. I'm in meetings all day, but I'll send you a check for the first week of supplies plus your salary: $2,450. Deposit it and buy the gift cards and the computer accessories from the vendor I'll link, I'll reimburse anything extra."},
+      {"from": "me", "text": "Wait, I buy things with my own money first?"},
+      {"from": "them", "text": "No no, the check covers it, deposit then use the funds. Your bank will release it quickly. Please keep this confidential for now since it's for a client surprise."}
+    ]
+  },
+  {
+    "id": "s28",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Your Kestrel Labs laptop has shipped\n\nHi Wen,\n\nGood news: your new-hire equipment shipped today via CourierPoint (tracking 4417-2290-X). It includes a notebook computer, charger, and a security key. A signature is required on delivery.\n\nWhen it arrives, follow the quick-start card to log in with the temp password in the sealed envelope, then join the IT setup Zoom at 9:00am PT on Monday: https://zoom.kestrellabs-example.com/setup. If you ever leave the company, we'll send a prepaid return box; you will not be charged for any of this.\n\nThanks,\nIT Support, Kestrel Labs"}
+    ]
+  },
+  {
+    "id": "s29",
+    "label": "scam",
+    "playbook": "identity_harvest",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Hi Jess, Kara from Redfern Group. Loved your resume! We can skip the interview rounds for you. Just text me your date of birth and SSN so I can get you in the system and I'll send your start date."},
+      {"from": "me", "text": "Can I get the job description first?"},
+      {"from": "them", "text": "Of course, it's a remote claims intake role, $26/hr. I will send it with the contract once the SSN is verified. I need it for the HR file, they won't generate the paperwork without it 😊"},
+      {"from": "me", "text": "I'd rather talk on the phone first."},
+      {"from": "them", "text": "I'm travelling, can't call. Just the SSN and a photo of the front/back of your license and we are good!"}
+    ]
+  },
+  {
+    "id": "s30",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Reminder: your interview with Pinecrest Family Clinic is tomorrow, Oct 23 at 10:00am at 214 Alder St, Suite 3. Please arrive 10 min early and bring a photo ID. Reply R to reschedule or call 555-0177."}
+    ]
+  },
+  {
+    "id": "s31",
+    "label": "scam",
+    "playbook": "reshipping",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "them", "text": "Hi Greg, Anselm Freight Solutions is hiring Freight Coordinators (remote). You'd manage inbound shipments and coordinate outbound ones from home. $4,000/month. Interested?"},
+      {"from": "me", "text": "Yes, tell me more."},
+      {"from": "them", "text": "Great! Your duties: receive shipments of equipment at your address, verify serial numbers and condition, then forward them to our clients using the labels we provide. We will run a pilot with one shipment."},
+      {"from": "me", "text": "A package arrived, a laptop. What now?"},
+      {"from": "them", "text": "Excellent. Re-ship it today to the address I send you now. Ship it in a new box. Our label system had an issue, so please buy the postage yourself ($47), we will reimburse in your salary. Also don't open any bonus packages, just forward."}
+    ]
+  },
+  {
+    "id": "s32",
+    "label": "scam",
+    "playbook": "upfront_fee",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "them", "text": "Hi Naomi, thanks for your interest in the Care Coordinator role at Brightwell Senior Living (remote). We'd like to move you to onboarding. Our HR partner will run your fingerprint processing and compliance registration, a one time fee of $89. Here is the link to pay and schedule it."},
+      {"from": "me", "text": "I thought the employer covers the background check."},
+      {"from": "them", "text": "The $89 covers the compliance registration only, not the check itself. It is deducted from your first pay. Let me know when it's paid so I can issue your start date."}
+    ]
+  },
+  {
+    "id": "s33",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "telegram",
+    "messages": [
+      {"from": "them", "text": "Hey Odette, thanks for taking on the logo project! Quick one: the brief is in the shared folder. Budget as agreed is $900, 50% upfront on the invoice and 50% on delivery."},
+      {"from": "me", "text": "Sounds good Nils. I'll send the invoice via my invoicing tool today. Do you prefer bank transfer or card?"},
+      {"from": "them", "text": "Card is fine. I'll pay it as soon as I get the link. Can we do a quick Zoom on Thursday to go over the first sketches?"},
+      {"from": "me", "text": "Yes! 4pm works for me. Invoice sent just now, you should see it in your email."},
+      {"from": "them", "text": "Got it, paid. Talk Thursday!"}
+    ]
+  },
+  {
+    "id": "s34",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Details about your paid training period at Marlowe Tech Services\n\nHi Gabriel,\n\nBelow is what to expect from our two-week training program starting Nov 10. Training is paid at your regular hourly rate ($24.50) and takes place over Zoom, 9am-4pm ET, with a one-hour lunch. We'll ship your headset and a laptop to your address via courier, no cost to you. There is no certification fee or materials fee; all courses are covered by Marlowe.\n\nIf you do not have a quiet workspace, let us know and we can discuss options.\n\nSee you soon,\nCathy Yoon\nLearning & Development, Marlowe Tech Services"}
+    ]
+  },
+  {
+    "id": "s35",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Offer of Employment - Product Designer, Ironleaf Software\n\nDear Hana,\n\nWe're delighted to extend an offer for the Product Designer position. Base salary: $128,000; target start date Nov 17. Please review the attached offer letter. We'd appreciate your signature by end of day this Friday, Oct 24, as the offer expires then so we can extend it to our alternate finalist if needed. If you need more time, just let me know, we can usually accommodate a short extension.\n\nAfter you sign, our HR system will email you a link to complete the I-9 and benefits enrollment. Happy to hop on a call to answer any questions before then.\n\nBest,\nDylan Park\nHead of Design"},
+      {"from": "me", "text": "Thank you Dylan! Could I get until Monday to review the equity terms with my partner?"},
+      {"from": "them", "text": "Of course, Monday EOD is fine. Let me know if any questions come up."}
+    ]
+  },
+  {
+    "id": "s36",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "sms",
+    "messages": [
+      {"from": "them", "text": "Hi Priscilla, Tom from Calder Staffing. Your timesheet for the week of Oct 13 is approved. Pay hits your account Friday via direct deposit. Thanks for the great work at Brookfield!"}
+    ]
+  },
+  {
+    "id": "s37",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "whatsapp",
+    "messages": [
+      {"from": "them", "text": "hey!! my cousin's company is hiring a junior accountant, remote, pays decent I think like 60k?? you should apply"},
+      {"from": "me", "text": "omg thanks. where do I apply?"},
+      {"from": "them", "text": "their careers page, it's called Ashgrove Partners. I'll text her your name so she can look for your resume. they do a background check after the offer but the company pays I think"},
+      {"from": "me", "text": "perfect, applying tonight 🙏"},
+      {"from": "them", "text": "good luck!! 🍀"}
+    ]
+  },
+  {
+    "id": "s38",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Action needed: new hire paperwork (Stonebridge Dental Group)\n\nHi Kofi,\n\nWelcome! Before your first day on Monday, please log in to the HR portal (link in your offer email, do not use links from other messages) and finish:\n\n- Form W-4\n- Direct deposit authorization\n- I-9 section 1. On day one, please bring your original ID documents so I can complete section 2 in person.\n\nFor your security, we never ask for your Social Security number or bank details via email, text, or WhatsApp. If you receive such a request purporting to be from us, please let me know.\n\nThanks,\nBeth Alvarado\nOffice Manager"}
+    ]
+  },
+  {
+    "id": "s39",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "linkedin",
+    "messages": [
+      {"from": "them", "text": "Hi Rohan, I'm with Tallis & Boone Staffing. We have an urgent 6-month contract for a Senior QA Automation Engineer with a fintech client. $70-$85/hr W2 or C2C, remote, start ASAP. The client is interviewing this week only. Are you available?"},
+      {"from": "me", "text": "Possibly. Can you share the client name and the exact tech stack?"},
+      {"from": "them", "text": "Client name I can share after you're submitted (that's agency protocol). Stack: Playwright, TypeScript, AWS, some Postman. Can you send an updated resume to my email, jared.m@tallisboone-example.com? I can also give you a call, my number is on my profile."},
+      {"from": "me", "text": "Sent just now. Call tomorrow after 1 would be good."}
+    ]
+  },
+  {
+    "id": "s40",
+    "label": "legit",
+    "playbook": "legit",
+    "channel": "email",
+    "messages": [
+      {"from": "them", "text": "Subject: Reference request for Leila Haddad\n\nDear Mr. Imai,\n\nLeila Haddad listed you as a professional reference in her application for Project Manager at Orchard Bay Consulting. Would you be available for a 15-minute phone call this week? Alternatively you can fill out a short online form here: https://references.orchardbay-example.com/r/8831. The form doesn't ask for any personal identifiers about you beyond your name and title.\n\nThank you for your time.\n\nJulie Marchetti\nRecruiting Coordinator, Orchard Bay Consulting"}
+    ]
+  }
+]
