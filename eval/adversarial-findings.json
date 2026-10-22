@@ -1,0 +1,852 @@
+[
+  {
+    "id": "labels_drop_body",
+    "category": "robustness",
+    "severity": "high",
+    "realistic_because": "Scam offer emails very often end with a block of 'Job Type: / Pay Rate: / Working Hours:' lines. The same text without that block scores 'likely' (fake_check, score 16); see the 'labels_same_without_labels' run.",
+    "input": "Hello,\n\nWe reviewed your resume on Indeed and would like to offer you the Remote Administrative Assistant position. You will receive a check to purchase your home-office equipment from our approved vendor. Once the check clears, send the remaining funds to the vendor via Zelle.\n\nJob Type: Full-time, remote\nPay Rate: $32/hr\nWorking Hours: 9am - 5pm EST\n\nKindly reply to this email to proceed.",
+    "expected": "likely, fake_check, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "thread.ts NAMED transcript detection: 'Job Type', 'Pay Rate' and 'Working Hours' pass looksLikeName (capitalized, not in LABELS), and two distinct names are enough to switch to transcript mode. build() then silently drops every line before the first 'speaker', which here is the whole scam paragraph. Fix: require a real alternation pattern, keep leading unattributed text as a message, and/or treat any 'Capitalized Label:' that appears only once as a label."
+  },
+  {
+    "id": "fn_next_steps_labels",
+    "category": "robustness",
+    "severity": "high",
+    "realistic_because": "Same parser bug with different label lines ('Next Steps:', 'Important Note:') that scam emails use all the time. The whole fake-check script (cashier's check, Zelle to the vendor) is dropped and only the closing secrecy line is read.",
+    "input": "Dear Jordan,\n\nFollowing your interview on Teams chat, you have been selected for the Remote Payroll Assistant role. A cashier's check for $4,280 will be mailed to you for your home office setup. After depositing it, send $3,900 to our equipment vendor using Zelle.\n\nNext Steps: Kindly confirm your mailing address.\nImportant Note: Do not discuss this with your bank as it may delay processing.",
+    "expected": "likely, fake_check, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "secrecy"
+      ]
+    },
+    "root_cause_guess": "Same as labels_drop_body: two capitalized 'X Y:' lines make thread.ts treat the email as a two-speaker chat, and the body before the first one is discarded. The report is also inconsistent: verdict 'none' but playbook fake_check and currentStep 5."
+  },
+  {
+    "id": "outlook_chain_sent",
+    "category": "robustness",
+    "severity": "high",
+    "realistic_because": "Outlook reply chains put the newest message on top and repeat 'From:/Sent:/To:/Subject:' header blocks. The newest message, which asks for the money, is dropped.",
+    "input": "Once the check clears in your account, please send the remaining balance to our equipment vendor through Zelle today. Let me know when done.\n\nFrom: Daniel Moore <daniel.moore.hr@outlook.com>\nSent: Monday, October 19, 2026 9:14 AM\nTo: Jordan Lee\nSubject: RE: Onboarding\n\nThe check is on the way via FedEx. Please confirm your address.\n\nFrom: Jordan Lee\nSent: Sunday, October 18, 2026 6:02 PM\nTo: Daniel Moore\nSubject: Onboarding\n\nThanks, I'm excited to start.",
+    "expected": "likely, fake_check, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "'Sent' is not in LABELS, so the repeated 'Sent:' header lines count as a speaker named 'Sent'. That triggers transcript mode and drops the top (newest) message. Add Sent/Received/Cc/Bcc/Importance to LABELS and detect email header blocks."
+  },
+  {
+    "id": "fp_labels_drop_workday",
+    "category": "false_positive",
+    "severity": "medium",
+    "realistic_because": "A real HR onboarding email with a 'Start Date: / Report To: / Direct Deposit: / Dress Code:' block. The sentence that mentions Workday (the legit signal) sits above the block and gets dropped. What's left is a bare 'account and routing numbers' request, which then gets the 'Stop here' message.",
+    "input": "Hi Jordan, congratulations, you're officially hired! Please complete all of your onboarding tasks in Workday before Monday.\n\nStart Date: Monday, November 3\nReport To: Karen Patel, Billing Supervisor\nDirect Deposit: please have your account and routing numbers ready\nDress Code: business casual\n\nWelcome to the team!",
+    "expected": "none (identity_request dampened by Workday)",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "identity",
+      "currentStep": 5,
+      "ruleIds": [
+        "identity_request"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "Same transcript-mode bug in thread.ts. Dropping the leading text loses legit context as well as scam content."
+  },
+  {
+    "id": "fn_wa_multiline_parse",
+    "category": "robustness",
+    "severity": "high",
+    "realistic_because": "A real WhatsApp iOS export where the scammer sends one long bulleted message. With 3 timestamped lines out of 13, the export falls under the 30% threshold and is treated as one message from 'them'. The user's own question ('Is there a Workday or HR portal...?') then counts as a legit signal and dampens the scammer's SSN, ID and bank-password request. meSpeakers is ignored.",
+    "input": "[10/18/26, 7:42:10 PM] Lisa HR: Hello Jordan, welcome to Northstar Logistics onboarding.\nTo complete your payroll setup we need the following today:\n• Full legal name\n• Home address\n• Date of birth\n• Social Security Number\n• Photo of your driver's license (front and back)\n• Bank name and online banking username and password for direct deposit\nPlease send everything here on WhatsApp.\nThank you,\nLisa\n[10/18/26, 7:50:10 PM] Jordan Lee: Is there a Workday or HR portal where I can upload it instead?\n[10/18/26, 7:52:10 PM] Lisa HR: No, just send it here please, HR is waiting.",
+    "expected": "likely (or at least closer_look), identity, step 5. A control run with the bullets on one line parses correctly and gives closer_look/identity/5.",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "dampenedRuleIds": [
+        "identity_request"
+      ]
+    },
+    "root_cause_guess": "thread.ts: `hits >= nonEmpty.length * 0.3` counts continuation lines against the export, so long multi-line messages break detection. Use a lower threshold or 'starts with a timestamped line' instead. Also, identity_request is one rule, so SSN + ID + bank password together still count as one strong ask and never reach 'likely' without another step.",
+    "options": {
+      "meSpeakers": [
+        "Jordan Lee"
+      ]
+    }
+  },
+  {
+    "id": "terse_sms_not_english",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "A classic terse SMS or Telegram job-spam ad with no function words. It is English, but Tipoff refuses to analyze it.",
+    "input": "Remote Part-Time Position Available. Earn $500 daily. Flexible schedule. No experience required. Contact HR Manager Lisa WhatsApp +1 (555) 201-3344",
+    "expected": "closer_look (too_good_pay + no_experience + move_to_chat)",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "status": "not_english"
+    },
+    "root_cause_guess": "judge.ts looksNonEnglish: the stopword share is under 8% (none of 17 words is in STOPWORDS; 'no' isn't in the list). Telegraphic ad copy fails the check. Fall back to running rules anyway when the text is Latin script, or add ad-copy words to the stopword list."
+  },
+  {
+    "id": "bold_unicode_full",
+    "category": "obfuscation",
+    "severity": "high",
+    "realistic_because": "Facebook-group, LinkedIn and Telegram job posts are often written in Unicode 'bold sans' letters (𝗪𝗼𝗿𝗸 𝗳𝗿𝗼𝗺 𝗵𝗼𝗺𝗲) to stand out and dodge filters.",
+    "input": "𝗛𝗶𝗿𝗶𝗻𝗴 𝗻𝗼𝘄! 𝗪𝗼𝗿𝗸 𝗳𝗿𝗼𝗺 𝘆𝗼𝘂𝗿 𝗽𝗵𝗼𝗻𝗲 𝗮𝗻𝗱 𝗲𝗮𝗿𝗻 $𝟯𝟬𝟬 𝗽𝗲𝗿 𝗱𝗮𝘆. 𝗡𝗼 𝗲𝘅𝗽𝗲𝗿𝗶𝗲𝗻𝗰𝗲 𝗻𝗲𝗲𝗱𝗲𝗱. 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗺𝗲 𝗼𝗻 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 𝗻𝗼𝘄.",
+    "expected": "closer_look or likely",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "status": "not_english"
+    },
+    "root_cause_guess": "normalize.ts doesn't apply NFKC, so Mathematical Alphanumeric letters stay non-ASCII. looksNonEnglish then sees under 60% Latin letters and returns not_english. Fix: run String.prototype.normalize('NFKC') per char (with an offset map) before the confusables pass."
+  },
+  {
+    "id": "bold_unicode_post",
+    "category": "obfuscation",
+    "severity": "medium",
+    "realistic_because": "Same as bold_unicode_full, but only the headline and call to action are bold, which is the most common style. The '$300 per day' pay and 'Contact me on WhatsApp' are both missed.",
+    "input": "𝗪𝗢𝗥𝗞 𝗙𝗥𝗢𝗠 𝗛𝗢𝗠𝗘 - 𝗘𝗮𝗿𝗻 $𝟯𝟬𝟬 𝗽𝗲𝗿 𝗱𝗮𝘆! Simple tasks on your phone, only 1 hour a day. No experience needed. 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗺𝗲 𝗼𝗻 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽 for details.",
+    "expected": "closer_look (too_good_pay + move_to_chat + vague_easy_work)",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 1,
+      "ruleIds": [
+        "vague_easy_work",
+        "no_experience"
+      ]
+    },
+    "root_cause_guess": "No NFKC folding of Mathematical Alphanumeric Symbols in normalize.ts, so rules never see 'earn $300 per day' or 'whatsapp'."
+  },
+  {
+    "id": "neg_dont_forget_id",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "'Please don't forget to send...' is ordinary pushy-recruiter phrasing. The negation filter treats it as 'we will NOT ask', so a direct request for a driver's license photo and SSN scores zero.",
+    "input": "Welcome aboard! To finish your onboarding for payroll, please don't forget to send a clear photo of your driver's license (front and back) and your SSN today. HR needs it before your first shift on Monday. Thanks, Mark - HR Department, Northstar Logistics",
+    "expected": "closer_look or likely, identity, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "judge.ts NEGATION_BEFORE: any 'don't/not/never/without' within 40 chars before a match in the same sentence suppresses it. 'don't forget', 'do not hesitate', 'don't delay', 'without delay' and 'don't worry' are positive in meaning. Add an exception list (don't forget|don't hesitate|don't delay|don't worry|not to worry|without delay) or require the negation to govern the matched verb."
+  },
+  {
+    "id": "neg_dont_hesitate_chat",
+    "category": "wrong_script_step",
+    "severity": "medium",
+    "realistic_because": "'Do not hesitate to contact our hiring manager on Telegram' is a staple scam sign-off. The move_to_chat finding is suppressed. The report then says the user is at step 1 and that 'They'll try to move you to a chat app' next, when the message already did that.",
+    "input": "Hello, I'm Lisa, a recruiter with Apex Talent Group. We found your resume online and you are a great fit for our remote data entry position paying $40/hr, part-time from home. If interested, do not hesitate to contact our hiring manager Mr. David Cole on Telegram @davidcole_hr for your interview.",
+    "expected": "closer_look with move_to_chat, currentStep 2",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": null,
+      "currentStep": 1,
+      "ruleIds": [
+        "unsolicited",
+        "too_good_pay"
+      ],
+      "nextMoveTitle": "They’ll try to move you to a chat app"
+    },
+    "root_cause_guess": "NEGATION_BEFORE matches 'not' in 'do not hesitate' within 40 chars before 'contact ... on telegram'."
+  },
+  {
+    "id": "identity_need_ssn",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "An identity-harvest message asking for SSN and date of birth 'for payroll' after a fake selection. This is the core of the identity playbook.",
+    "input": "Hi Jordan, this is Mark from the HR department of Northstar Logistics. You have been selected for the remote data entry position. To get you set up on payroll, I'll need your full legal name, SSN, date of birth and home address. Please reply here as soon as possible.",
+    "expected": "closer_look or likely, identity, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "identity_request pattern 1 needs one of the verbs send/provide/text/email/share/... before 'ssn'. 'I'll need your ... SSN', 'we need your SSN' and 'what is your SSN' don't match. 'You have been selected' isn't in instant_hire either. Add a pattern for '(need|require)\\w* your [^.]{0,40}(ssn|social security|date of birth)' and a bare SSN mention combined with payroll."
+  },
+  {
+    "id": "fn_phish_onboarding_portal",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "Identity scammers send a lookalike 'onboarding portal' URL to collect ID photos and SSNs. The words 'onboarding portal' are enough to dampen both the instant hire and the ID/SSN request.",
+    "input": "Congratulations, you have been hired as a Remote Data Entry Clerk with Northstar Logistics! To complete your onboarding, please upload a photo of your driver's license (front and back) and your SSN to our onboarding portal: https://northstar-hr-onboard.com/start. Your first training session is tomorrow.",
+    "expected": "likely, identity, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "dampenedRuleIds": [
+        "instant_hire",
+        "identity_request"
+      ]
+    },
+    "root_cause_guess": "LEGIT_CONTEXT hr_portal matches the generic phrase 'onboarding portal' (also 'hr portal', 'candidate portal') in the scammer's own text, and it dampens identity_request and instant_hire. Generic portal words are cheap for a scammer to say. Only named ATS vendors should dampen, and maybe only when the link domain is not a lookalike."
+  },
+  {
+    "id": "fn_no_video_needed",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "Scammers explicitly say 'no need for a video call or phone interview'. That sentence is the main red flag, and the engine reads it as a legit 'video interview' signal.",
+    "input": "Hello Jordan, we got your resume from Indeed. Our hiring manager Mrs. Linda Shaw will interview you today on Telegram. The interview is conducted by chat only, there is no need for a video call or phone interview. Kindly add her on Telegram @lindashaw_hr to begin. You will be hired immediately after the interview.",
+    "expected": "likely or closer_look (unsolicited + move_to_chat + chat_interview + instant hire)",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 3,
+      "ruleIds": [
+        "chat_interview"
+      ],
+      "dampenedRuleIds": [
+        "unsolicited",
+        "move_to_chat"
+      ]
+    },
+    "root_cause_guess": "Legit-context patterns don't apply NEGATION_BEFORE, so 'no need for a video call' counts as video_interview and dampens move_to_chat and unsolicited. Legit signals should also be negation-checked. 'You will be hired immediately after the interview' also isn't covered by instant_hire."
+  },
+  {
+    "id": "upfront_program_fee",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "A standard pay-to-get-hired message: a certification 'program fee' of $249, 'reimbursed' later. Every fee phrase misses the rule wording.",
+    "input": "Hi Jordan, thank you for your interest in the Remote Customer Support role at Clearwave. Before you begin, you'll need to complete our certification program. The program fee is $249, which will be reimbursed after your first month. Once payment is received we will send your login details and schedule.",
+    "expected": "closer_look or likely, upfront_fee",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "pay_for_job only lists fixed nouns before 'fee' (training|certification|registration|...). 'program fee', 'the training costs $X' (the \\b after 'cost' fails on 'costs'), '$75 fee for your background check' and 'make a payment of $X' are all missed. Add a generic '(fee|payment|cost)s? (of|is) \\$\\d' near training/certification/kit/program/onboarding words."
+  },
+  {
+    "id": "reshipping_logistics",
+    "category": "false_negative",
+    "severity": "high",
+    "realistic_because": "Reshipping ads usually say 'Logistics Coordinator' and 'ship them to the addresses provided', with no 'home' or 'labels'. FTC reshipping alerts describe this wording.",
+    "input": "Hello! We are an international e-commerce company looking for a Logistics Coordinator to work from home. You will receive packages from our clients, inspect them, take photos, and ship them to the addresses provided in our online system. Pay is $2,800 per month plus $30 for each processed item.",
+    "expected": "closer_look, reshipping",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "receive_packages pattern 1 needs home/address within 50 chars after 'packages' (here it's about 70 chars away), and the job-title pattern only covers package/parcel/quality control/merchandise titles. Add 'ship (them|the items|it) to (the|our|new) (address|customers)' and 'logistics (coordinator|assistant)' plus 'from home'."
+  },
+  {
+    "id": "task_short_ask",
+    "category": "false_negative",
+    "severity": "medium",
+    "realistic_because": "The task-scam 'turn' message: the account shows -$356.20 after a 'special order', and the user must 'send the shortfall' to continue tasks and withdraw.",
+    "input": "Your account balance is now -$356.20 because you received a special order. Please send the shortfall to the platform so you can continue your tasks and withdraw your $1,140 earnings.",
+    "expected": "closer_look or likely, task, step 5",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": []
+    },
+    "root_cause_guess": "deposit_to_unlock only knows 'negative|minus balance', recharge/top-up/deposit, and combo/lucky/merge orders. A numeric negative balance ('-$356'), 'shortfall', 'special order' and 'insufficient balance' aren't covered."
+  },
+  {
+    "id": "pass_reshipping",
+    "category": "false_negative",
+    "severity": "medium",
+    "realistic_because": "Explicitly describes the full reshipping mechanism (Package Inspector, receive at home, reship with prepaid labels, $30 per package, send your address), but only gets 'closer_look'. The step also stays at 4 even though 'reship them using the prepaid labels' is the playbook's step 5 ('Relabel and ship out').",
+    "input": "Thank you for accepting the Package Inspector position. You will receive packages at your home address, inspect them, and reship them using the prepaid labels we email you. You'll earn $30 per package. Please send your full address for your first delivery.",
+    "expected": "likely, reshipping, step 5",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "reshipping",
+      "currentStep": 4,
+      "ruleIds": [
+        "receive_packages"
+      ],
+      "nextMoveTitle": "Next: relabel and ship them on"
+    },
+    "root_cause_guess": "Every reshipping pattern is in one step-4 rule (receive_packages), and verdictFor counts each rule only once. So a pure reshipping message tops out at score 3 and one step, and there's no step-5 reshipping rule at all. Split it into receive (step 4) and relabel/reship (step 5) rules."
+  },
+  {
+    "id": "chat_WA_abbrev",
+    "category": "obfuscation",
+    "severity": "medium",
+    "realistic_because": "'Add me on WA' (and 'TG' for Telegram) is how scammers and many real people write these app names in SMS.",
+    "input": "Hi, I'm Emily from TalentHub Staffing. We help merchants boost their app rankings and we're hiring part-time remote staff. You can earn $200 a day. Add me on WA +1 555 201 7788 for details.",
+    "expected": "closer_look (move_to_chat + too_good_pay + task hook)",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 1,
+      "ruleIds": [
+        "too_good_pay"
+      ]
+    },
+    "root_cause_guess": "CHAT_APPS has no abbreviations (wa, whats app spelled 'watsapp' or 'whatsap', tg). 'boost their app rankings' isn't a task_work phrase on its own either."
+  },
+  {
+    "id": "telegram_handle_only",
+    "category": "false_negative",
+    "severity": "medium",
+    "realistic_because": "'Telegram: @handle' on its own line is the most common way scammers give out a contact.",
+    "input": "Good afternoon. Your profile was shortlisted for our remote assistant role. Interview will be conducted by our HR manager. Telegram: @hr_rachel_cole",
+    "expected": "closer_look (unsolicited + move_to_chat)",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 1,
+      "ruleIds": [
+        "unsolicited"
+      ]
+    },
+    "root_cause_guess": "move_to_chat needs a verb + 'on telegram' or 'telegram id/username/number'. A 'Telegram:' label followed by an @handle or phone number doesn't match. Add `${CHAT_APPS}\\s?:?\\s?(@\\w|\\+?\\d)`."
+  },
+  {
+    "id": "personal_email_rule",
+    "category": "robustness",
+    "severity": "medium",
+    "realistic_because": "A 'hiring manager' writing from a gmail address is a textbook red flag. The inspector flags it, but the personal_email rule never fires.",
+    "input": "Hello, I am the hiring manager at Brightpath Analytics. We reviewed your resume and want to move forward. Please email me directly at hiring.daniel@gmail.com to continue the process.",
+    "expected": "personal_email finding (weight 1)",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 1,
+      "ruleIds": [
+        "unsolicited"
+      ]
+    },
+    "root_cause_guess": "normalize.ts pass 3 (leetspeak) rewrites '@' between two letters to 'a', so 'daniel@gmail' becomes 'danielagmail' before rules run. The personal_email regex can't match any address whose local part ends in a letter. Skip leet replacement inside tokens that look like emails, or match personal_email on the original text."
+  },
+  {
+    "id": "upfront_purchase_our_software",
+    "category": "wrong_script_step",
+    "severity": "medium",
+    "realistic_because": "A pay-to-start scam: 'purchase our time tracking software ($180)', refunded with the first paycheck. It's flagged 'likely', but as Fake check and equipment, so the advice says not to deposit a check that was never mentioned.",
+    "input": "Congratulations, you have been hired as a Remote Data Entry Clerk! To start working you need to purchase our time tracking software ($180) from our IT department. The amount will be refunded with your first paycheck. Please confirm when you are ready to pay.",
+    "expected": "likely, upfront_fee",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 4,
+      "ruleIds": [
+        "instant_hire",
+        "buy_from_vendor"
+      ],
+      "nextMoveTitle": "Next: pay their vendor or send back the extra"
+    },
+    "root_cause_guess": "buy_from_vendor (fake_check only) matches 'purchase ... software ... from our', while pay_for_job doesn't match 'purchase our ... software' because the determiner list has no 'our'. A purchase from the employer itself is an upfront fee, not a vendor in a fake-check scheme."
+  },
+  {
+    "id": "upfront_registration_giftcard",
+    "category": "wrong_script_step",
+    "severity": "medium",
+    "realistic_because": "'The registration is $150 and you can pay with Apple gift cards' is a textbook upfront-fee scam. The engine names the Fake check script and says 'Stop here' with fake-check advice.",
+    "input": "Good news, your application was approved! The registration is $150 and you can pay with Apple gift cards. After that your work account will be activated and you can start earning right away.",
+    "expected": "closer_look or likely, upfront_fee",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "hard_to_trace_payment"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "pay_for_job misses 'registration is $150' (it needs 'registration fee'). hard_to_trace_payment lists three playbooks with equal scores, so pickPlaybook breaks the tie with PLAYBOOK_ORDER, where fake_check comes first. When hard_to_trace is the only step-4/5 evidence, the playbook should be null (generic)."
+  },
+  {
+    "id": "fp_adp_direct_deposit",
+    "category": "false_positive",
+    "severity": "high",
+    "realistic_because": "A genuine HR welcome email: hired, log in to ADP to set up direct deposit with account and routing numbers, bring ID for the I-9. It gets 'likely' Identity harvest with 'Stop here'.",
+    "input": "Hi Jordan,\n\nCongratulations, you're officially hired! We're excited to have you join the Riverside Medical Group billing team on November 3.\n\nBefore your first day, please log in to ADP Workforce Now and complete your W-4 and direct deposit enrollment. You'll need your account and routing numbers handy. Bring two forms of ID on your first day for I-9 verification.\n\nBest,\nKaren Patel\nHuman Resources, Riverside Medical Group",
+    "expected": "none (or closer_look at most)",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "identity",
+      "currentStep": 5,
+      "ruleIds": [
+        "instant_hire",
+        "identity_request"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "hr_portal only lists ATS names (Workday, Greenhouse, ...). Payroll systems (ADP, Paylocity, Gusto, Rippling, UKG, Paycom, Dayforce, Paychex) are missing. 'account and routing numbers' (identity_request, weight 3) plus 'you're officially hired' (instant_hire) gives two steps and score 5, which is 'likely'."
+  },
+  {
+    "id": "fp_signon_bonus_check",
+    "category": "false_positive",
+    "severity": "high",
+    "realistic_because": "A real hospital offer: 'Your $5,000 sign-on bonus will be paid via check with your first payroll.' It gets 'likely' Fake check.",
+    "input": "Congratulations, you're hired! We're thrilled to welcome you to the Lakeview Hospital nursing team. Your $5,000 sign-on bonus will be paid via check with your first payroll, and your orientation starts Monday, November 2 at 8:00 AM. Please reply to confirm you received this email.",
+    "expected": "none",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 4,
+      "ruleIds": [
+        "instant_hire",
+        "check_for_equipment"
+      ],
+      "nextMoveTitle": "Next: pay their vendor or send back the extra"
+    },
+    "root_cause_guess": "check_for_equipment pattern 4 '(paid|sent|...) via check' fires on any check payment, not only checks for equipment or purchases. Together with instant_hire that gives two steps and score 5, which is 'likely'. Require an equipment/vendor/deposit-and-send context for the generic check patterns."
+  },
+  {
+    "id": "fp_fraud_footer",
+    "category": "false_positive",
+    "severity": "high",
+    "realistic_because": "Many real recruiters (Northwind-style 'Recruitment Fraud Alert' footers) list scam tactics. A genuine interview invite with that footer gets 'likely' Pay for the job, even though video_interview and applied_role legit signals are present.",
+    "input": "Hi Jordan,\n\nThanks for applying to the Product Analyst role (Req #48213). I'd like to schedule a 30-minute video interview with the hiring manager next week. Please choose a time using the scheduling link in this email.\n\nBest,\nMaya Chen, Talent Acquisition, Northwind Corp\n\nRecruitment Fraud Alert: Northwind will never ask candidates for money during the hiring process. Be cautious of anyone requesting a training fee, a check deposit, your bank login, or payment by gift card, Zelle or cryptocurrency. If you receive a suspicious message, report it to security@northwind.com.",
+    "expected": "none",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "upfront_fee",
+      "currentStep": 5,
+      "ruleIds": [
+        "pay_for_job",
+        "identity_request"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "Negation only looks 40 chars back in the same sentence. 'Be cautious of anyone requesting a training fee... your bank login' has no negation word, so pay_for_job and identity_request fire. Two strong asks (score 6) make it 'likely'. Legit signals don't dampen pay_for_job or identity_request. Also detect warning frames (beware of, be cautious of, will never ask, fraud alert) and suppress matches inside them."
+  },
+  {
+    "id": "fp_fraud_footer2",
+    "category": "false_positive",
+    "severity": "high",
+    "realistic_because": "A real interview invitation with a standard 'we will never, under any circumstances, ask you to ... pay a training fee, or share bank login details' disclaimer. It gets 'likely' with three strong asks.",
+    "input": "Hello Jordan, thank you for your application to the Accounts Payable Specialist position. We would like to invite you to an in-person interview on Tuesday at 10 AM at our Denver office.\n\nPlease note: Acme Corp will never, under any circumstances, ask candidates to send money, purchase equipment from a vendor, pay a training fee, or share bank login details. Offers are only made after an interview.",
+    "expected": "none",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "buy_from_vendor",
+        "pay_for_job",
+        "identity_request"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "NEGATION_BEFORE's 40-char window doesn't reach list items after the first ('never ... ask candidates to send money, purchase equipment from a vendor, pay a training fee, or share bank login details'). The safety_warning legit context is recorded but dampens nothing. It should dampen every rule whose match falls inside the warning sentence."
+  },
+  {
+    "id": "gmail_quoted_reply",
+    "category": "false_positive",
+    "severity": "high",
+    "realistic_because": "The user copies a whole Gmail thread. The recruiter's reply is benign (laptop shipped by FedEx, manager on Teams), but the user's own quoted earlier email asks whether this is a fake-check scheme. That question is scored as if the recruiter wrote it.",
+    "input": "Hi Jordan,\n\nThanks for getting back to me. Your laptop will be shipped via FedEx and should arrive Thursday. Your manager will reach out on Teams on Monday morning.\n\nBest,\nPriya\n\nOn Mon, Oct 19, 2026 at 9:14 AM Jordan Lee <jordan.lee@gmail.com> wrote:\n> Hi Priya, a friend told me some companies send a check to buy equipment from an approved vendor and ask you to send the remaining balance back. Is that how it works here? I want to be careful.",
+    "expected": "none",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "check_for_equipment",
+        "buy_from_vendor",
+        "send_back_extra"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "thread.ts has no email support: no 'On <date> <name> wrote:' splitting, and '> ' quoted lines aren't attributed to the other party. The whole paste becomes one 'them' message. Split on 'wrote:' and quoted-line prefixes, and default quoted text to the user's side or exclude it."
+  },
+  {
+    "id": "wa_copy_time_first",
+    "category": "robustness",
+    "severity": "medium",
+    "realistic_because": "WhatsApp Desktop/Web copy-paste uses '[7:42 PM, 10/18/2026] Name: text' (time first), unlike the export format. The parser falls back to one message, so the user's own question 'Do I need to deposit the check...?' is scored. The same thread in iOS export format gives 'none' (see wa_ios_same_thread).",
+    "input": "[7:42 PM, 10/18/2026] Lisa HR: Hello Jordan, thanks for your interest in the remote assistant job.\n[7:43 PM, 10/18/2026] Jordan Lee: Hi! I got the onboarding email. Do I need to deposit the check for equipment or will you ship it?\n[7:45 PM, 10/18/2026] Lisa HR: We will ship your laptop and monitor directly to your home at no cost to you. Your hiring manager will set up a video call on Monday.",
+    "expected": "none (as with the iOS export of the same thread)",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "fake_check",
+      "currentStep": 4,
+      "ruleIds": [
+        "check_for_equipment"
+      ],
+      "nextMoveTitle": "Next: pay their vendor or send back the extra"
+    },
+    "root_cause_guess": "thread.ts IOS regex requires '[DATE, TIME]'. It doesn't accept '[TIME, DATE]' (WhatsApp Desktop/Web copy) or Telegram Desktop's 'Name, [dd.mm.yyyy hh:mm]' header lines, so speaker attribution and meSpeakers are lost."
+  },
+  {
+    "id": "truncation_email_newest_on_top",
+    "category": "robustness",
+    "severity": "medium",
+    "realistic_because": "The 20k cap keeps the tail of the paste. That works for chat exports (newest at the bottom) but drops the newest message of an email chain, which sits on top. Here the top message is a full fake-check ask (Zelle to the vendor, don't tell your bank) above about 21.6k chars of quoted history.",
+    "input": "Once the check clears, send the remaining $3,900 to our equipment vendor via Zelle today, and do not tell your bank what it is for.\n\n-----Original Message-----\n> Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. > Thanks for the update, I will review the attached documents and get back to you shortly. Regards, Jordan. ",
+    "expected": "likely, fake_check",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "truncated": true
+    },
+    "root_cause_guess": "judge.ts slices the last MAX_INPUT chars regardless of format. When the paste looks like an email (no chat timestamps, has '-----Original Message-----' or 'wrote:'), keep the head instead, or analyze head and tail."
+  },
+  {
+    "id": "fp_confidential_search",
+    "category": "false_positive",
+    "severity": "medium",
+    "realistic_because": "Executive recruiters routinely ask candidates to keep a confidential search confidential. It's flagged closer_look and placed at step 5 with 'This is the end of the script. Stop here'.",
+    "input": "Hi Alex, I came across your profile on LinkedIn and wanted to reach out about a confidential VP of Engineering search I'm running for a public fintech company. Since the incumbent hasn't been notified yet, please keep this confidential. Would you be open to a quick conversation next week?",
+    "expected": "none",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "unsolicited",
+        "secrecy"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "The secrecy rule's 'keep this confidential' pattern fires without any bank or money context, and secrecy is step 5. Together with unsolicited (score 3) that gives closer_look, and currentStep takes the max step, so the report jumps to 'Stop here'. Limit secrecy to bank/teller/family contexts, or require a money rule to also be present."
+  },
+  {
+    "id": "fp_small_biz_zelle",
+    "category": "false_positive",
+    "severity": "medium",
+    "realistic_because": "Small local employers (cleaning, landscaping, restaurants) really do pay staff via Zelle or Venmo. A real 'come work with us' text gets closer_look, the Fake check playbook, and 'Stop here'.",
+    "input": "Hi Maria, thanks for coming in yesterday! We'd love to have you join Sparkle Home Cleaning. Shifts are Tuesday to Saturday, 9 to 3, and we pay every Friday via Zelle or Venmo. Let me know if you can start next week.",
+    "expected": "none",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "hard_to_trace_payment"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "hard_to_trace_payment pattern 7 '(via|through|using|by) (zelle|...)' fires on any mention, including the employer paying the worker. It's weight 3 and step 5, so strongAsk is true, which means closer_look plus a step-5 'Stop here'. The tie between three playbooks resolves to fake_check. The rule should require the user to be the payer."
+  },
+  {
+    "id": "fp_it_vendor",
+    "category": "false_positive",
+    "severity": "medium",
+    "realistic_because": "A real IT onboarding note: 'your laptop will be shipped directly to your home by our equipment vendor, CDW'. It gets 'likely' Fake check.",
+    "input": "Congratulations, you're hired! Welcome to Acme Insurance. Your laptop and monitor will be shipped directly to your home by our equipment vendor, CDW, within three business days. Your manager will reach out on your first day.",
+    "expected": "none",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 4,
+      "ruleIds": [
+        "instant_hire",
+        "buy_from_vendor"
+      ],
+      "nextMoveTitle": "Next: pay their vendor or send back the extra"
+    },
+    "root_cause_guess": "buy_from_vendor pattern 1 fires on the bare noun phrase 'our equipment vendor' with no purchase by the user. employer_pays only recognizes 'we'll ship you a laptop', not the passive 'will be shipped ... by our vendor'."
+  },
+  {
+    "id": "fp_contract_rate",
+    "category": "false_positive",
+    "severity": "low",
+    "realistic_because": "A normal LinkedIn contract-recruiter InMail ($95/hr W2, fully remote) gets closer_look.",
+    "input": "Hi Alex, I came across your profile on LinkedIn and wanted to reach out about a 6-month Senior Salesforce Architect contract with a healthcare client. The rate is $95/hr on W2, fully remote. Would you be open to a quick call this week to discuss?",
+    "expected": "none",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": null,
+      "currentStep": 1,
+      "ruleIds": [
+        "unsolicited",
+        "too_good_pay"
+      ],
+      "nextMoveTitle": "They’ll try to move you to a chat app"
+    },
+    "root_cause_guess": "too_good_pay pattern 5 treats any $40-$999/hr rate followed by 'remote' as too-good pay, regardless of role. unsolicited isn't dampened by 'quick call' (video_interview needs 'phone call/screen')."
+  },
+  {
+    "id": "fp_olivia_chatbot",
+    "category": "false_positive",
+    "severity": "low",
+    "realistic_because": "Large hourly employers (McDonald's, CVS and others) use SMS recruiting bots (Paradox 'Olivia') that literally offer a 'chat-based screening'. It gets closer_look at step 3.",
+    "input": "Hi Jordan! This is Olivia, the virtual recruiting assistant for McDonald's. Thanks for applying to the Crew Member position at our Elm Street restaurant! Reply YES to start a quick chat-based screening, or STOP to opt out.",
+    "expected": "none",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": null,
+      "currentStep": 3,
+      "ruleIds": [
+        "pressure",
+        "chat_interview"
+      ],
+      "nextMoveTitle": "Next, they’ll ask for something"
+    },
+    "root_cause_guess": "chat_interview plus pressure ('Reply YES to') gives score 3. applied_role ('Thanks for applying') isn't in dampenedBy for chat_interview or pressure."
+  },
+  {
+    "id": "fp_mailroom_post",
+    "category": "false_positive",
+    "severity": "low",
+    "realistic_because": "A real on-site mailroom/shipping clerk job post ('forwarding packages to the correct departments', 'print shipping labels') gets closer_look Reshipping.",
+    "input": "Mailroom and Shipping Clerk - Full-time, on-site at our Columbus HQ. Responsibilities include sorting incoming mail, logging deliveries, and forwarding packages to the correct departments. You will also print shipping labels for outgoing items. Pay starts at $18.50/hr with benefits.",
+    "expected": "none",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": "reshipping",
+      "currentStep": 4,
+      "ruleIds": [
+        "receive_packages"
+      ],
+      "nextMoveTitle": "Next: relabel and ship them on"
+    },
+    "root_cause_guess": "receive_packages patterns 2 and 3 ('forward... packages', 'print... shipping labels') don't require a home or residence context. Weight 3 makes it a strong ask by itself."
+  },
+  {
+    "id": "wa_ios_export",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "WhatsApp iOS export with an encryption notice, an attachment line and meSpeakers set. Sides are attributed correctly and the fake-check script is found.",
+    "input": "[10/18/26, 7:40:01 PM] Recruiter Lisa: ‎Messages and calls are end-to-end encrypted.\n[10/18/26, 7:42:10 PM] Recruiter Lisa: Hello Jordan, we got your resume. You have been approved for the position of remote data entry clerk.\n[10/18/26, 7:43:55 PM] Jordan: Great, what are the next steps?\n[10/18/26, 7:45:02 PM] Recruiter Lisa: We will send you a check to buy your equipment from our approved vendor. Deposit the check using mobile deposit.\n[10/18/26, 7:46:30 PM] Recruiter Lisa: ‎<attached: 00000012-PHOTO-2026-10-18-19-46-30.jpg>",
+    "expected": "likely, fake_check",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 4,
+      "ruleIds": [
+        "unsolicited",
+        "instant_hire",
+        "check_for_equipment",
+        "buy_from_vendor"
+      ],
+      "nextMoveTitle": "Next: pay their vendor or send back the extra"
+    },
+    "root_cause_guess": "n/a: passes",
+    "options": {
+      "meSpeakers": [
+        "Jordan"
+      ]
+    }
+  },
+  {
+    "id": "android_export_24h",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "Android export with a DD/MM/YYYY 24h date, a system line, and a 'Me' reply. The task-scam 'combo task / recharge USDT' turn is found at step 5.",
+    "input": "18/10/2026, 19:42 - Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them. Tap to learn more.\n18/10/2026, 19:42 - Emily Mentor: Welcome! Today you will complete 40 tasks a day of product rating and earn commission for each order.\n18/10/2026, 19:50 - Me: ok\n18/10/2026, 20:10 - Emily Mentor: You got a combo task! Your account is negative, please recharge your account with 300 USDT to unlock withdrawal.",
+    "expected": "likely, task, step 5",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "task",
+      "currentStep": 5,
+      "ruleIds": [
+        "task_work",
+        "deposit_to_unlock",
+        "hard_to_trace_payment"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "n/a: passes"
+  },
+  {
+    "id": "pass_wa_ios_u202f",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "Newer iOS exports put U+202F (narrow no-break space) before PM. I expected the TIME regex to break, but it parses (JS \\s matches U+202F).",
+    "input": "[10/18/26, 7:42:10 PM] Lisa HR: Hello Jordan, congratulations you have been hired for the remote position.\n[10/18/26, 7:43:10 PM] Jordan: thank you!\n[10/18/26, 7:45:10 PM] Lisa HR: Please send a photo of your driver's license front and back and your SSN for payroll.",
+    "expected": "likely, identity",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "identity",
+      "currentStep": 5,
+      "ruleIds": [
+        "instant_hire",
+        "identity_request"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "n/a: passes",
+    "options": {
+      "meSpeakers": [
+        "Jordan"
+      ]
+    }
+  },
+  {
+    "id": "obf_spaced_whatsapp",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "'W h a t s A p p' spaced-letter evasion is collapsed and highlighted with correct offsets.",
+    "input": "Hi, we came across your profile and want to offer you a part time online job. You only need 30 minutes a day and can earn $300 per day. Please contact me on W h a t s A p p: +1 555 201 7788",
+    "expected": "closer_look with move_to_chat",
+    "actual": {
+      "verdict": "closer_look",
+      "playbook": null,
+      "currentStep": 2,
+      "ruleIds": [
+        "unsolicited",
+        "vague_easy_work",
+        "too_good_pay",
+        "move_to_chat"
+      ],
+      "nextMoveTitle": "Next: a “hire” after a chat-only interview"
+    },
+    "root_cause_guess": "n/a: passes"
+  },
+  {
+    "id": "obf_zero_width",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "Zero-width spaces inside 'SSN', 'photo' and 'Telegram' are removed before matching. Highlights still cover the original characters.",
+    "input": "Congratulations, you have been hired! Please send your S​S​N and a pho​to of your driver's license front and back. Also add me on Tele​gram for the training.",
+    "expected": "likely, identity",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "identity",
+      "currentStep": 5,
+      "ruleIds": [
+        "instant_hire",
+        "identity_request",
+        "move_to_chat"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "n/a: passes"
+  },
+  {
+    "id": "obf_leet_mixed",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "Mixed leetspeak ('Y0u have been h1red', 'P@y the tra1ning fee', 'Ca$hApp', 'T3legram') is fully decoded without breaking the '$95' price.",
+    "input": "Y0u have been h1red! P@y the tra1ning fee of $95 v1a Ca$hApp to start t0day. Contact us on T3legram.",
+    "expected": "likely, upfront_fee",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "upfront_fee",
+      "currentStep": 5,
+      "ruleIds": [
+        "instant_hire",
+        "hard_to_trace_payment",
+        "pay_for_job",
+        "rushed_start",
+        "move_to_chat"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "n/a: passes"
+  },
+  {
+    "id": "obf_emoji_linebreak",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "Emoji between words and line breaks inside 'Whats\\nApp' don't stop detection.",
+    "input": "🎉 Congrats!! You're hired 🎉\nPlease send 💵 the remaining bal-\nance to our ven\ndor via Cash App 💸 once the check clears. Contact me on Whats\nApp.",
+    "expected": "likely",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "instant_hire",
+        "send_back_extra",
+        "hard_to_trace_payment",
+        "move_to_chat"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "n/a: passes. Note: the hyphenated break in 'bal-\\nance' and 'ven\\ndor' did NOT match pay_the_vendor; it was only caught via send_back_extra and hard_to_trace."
+  },
+  {
+    "id": "pass_partial_cyrillic",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "A few Cyrillic look-alikes swapped in ('chеck', 'vеndor', 'Zеlle'), the way real evasions do it, are folded correctly. (Note: a message where every letter is Cyrillic is classed not_english, but that is contrived.)",
+    "input": "Hеllo, we reviewed your resume. Our company will send you a chеck to buy equipment from our approved vеndor. After depositing it, send the remaining balance via Zеlle.",
+    "expected": "likely, fake_check",
+    "actual": {
+      "verdict": "likely",
+      "playbook": "fake_check",
+      "currentStep": 5,
+      "ruleIds": [
+        "unsolicited",
+        "check_for_equipment",
+        "buy_from_vendor",
+        "hard_to_trace_payment",
+        "send_back_extra"
+      ],
+      "nextMoveTitle": "This is the end of the script. Stop here"
+    },
+    "root_cause_guess": "n/a: passes"
+  },
+  {
+    "id": "pass_legit_workday_onboarding",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "A real Workday onboarding email that asks for account and routing numbers is correctly dampened to none.",
+    "input": "Congratulations, you're hired! Welcome to Contoso. Please log in to Workday to complete your I-9, W-4 and direct deposit (you'll need your account and routing numbers). Your manager will meet you on Zoom Monday at 9 AM.",
+    "expected": "none",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "dampenedRuleIds": [
+        "instant_hire",
+        "identity_request"
+      ]
+    },
+    "root_cause_guess": "n/a: passes (contrast with fp_adp_direct_deposit)"
+  },
+  {
+    "id": "pass_legit_recruiter_li",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "An unsolicited but genuine LinkedIn recruiter message with a high salary range ($190k-$230k) and a phone screen. It's correctly none.",
+    "input": "Hi Jordan, I'm a recruiter at Datadog. I came across your profile and think you'd be a great fit for our Senior SRE role in NYC. The base range is $190k-$230k plus equity. Would you be open to a 30-minute phone screen next week? Here's the job posting on our careers site.",
+    "expected": "none",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "dampenedRuleIds": [
+        "unsolicited"
+      ]
+    },
+    "root_cause_guess": "n/a: passes"
+  },
+  {
+    "id": "perf_named_eng",
+    "category": "passed",
+    "severity": "low",
+    "realistic_because": "Performance: a 20k-char 'Name: text' transcript with 3,000 messages took about 34 ms warm (113 ms cold, first call). Other worst cases: 20k no-punctuation rule-bait text, a 20k spaced-letter run, 20k of '$500 per day' repeats, a 990-finding single message, and a 900-message iOS export, all 15-30 ms warm in Node. No input got near 300 ms. A fuzz of 4,000 Unicode-mutated scam messages (ZWJ emoji, CRLF, U+2028, combining marks, lone surrogates, full-width letters, soft hyphens) found 0 crashes and 0 highlight/offset mismatches.",
+    "input": "Array.from({length:3000},(_,i)=>`${i%2?'Me':'Lisa'}: it is the job for you`).join('\\n').slice(0,20000)",
+    "expected": "< 300 ms, no crash",
+    "actual": {
+      "verdict": "none",
+      "playbook": null,
+      "currentStep": 0,
+      "ruleIds": [],
+      "warm_ms": 34.4
+    },
+    "root_cause_guess": "n/a: passes"
+  }
+]

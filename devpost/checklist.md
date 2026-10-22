@@ -9,7 +9,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
 
 ## Slices
 
-- [ ] **1. Paste a message and see which phrases look like a job scam, and why**
+- [x] **1. Paste a message and see which phrases look like a job scam, and why**
   Becomes usable: A running app where pasting text and pressing Check shows highlighted phrases with explanation cards and a verdict band.
   Why now: Proves the riskiest path end to end, from parse and normalize to rules, offset mapping and highlights, on the first slice. Offset mapping is where bugs hide.
   PRD ref: `prd.md > The Core Journey` (steps 1–4), `prd.md > Reading the message (the engine)`, `prd.md > Verdict`, `prd.md > Explanations`
@@ -19,7 +19,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
   Learner check: Open the app, tap a sample, and confirm the highlights and cards make sense.
   Commit: `Check a message: rules, highlights, verdict`
 
-- [ ] **2. See the scam's script, where you are on it, and what comes next**
+- [x] **2. See the scam's script, where you are on it, and what comes next**
   Becomes usable: The timeline and next-move card appear above the findings, and checking again with more of the thread moves the timeline forward.
   Why now: This is the unique kernel, so it comes immediately after the first working path.
   PRD ref: `prd.md > Script timeline and next move (the kernel)`
@@ -29,7 +29,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
   Learner check: Check the first message of the demo thread, then the full thread, and watch the prediction come true.
   Commit: `Script timeline and next-move prediction`
 
-- [ ] **3. Paste a whole conversation and get it split by who said what**
+- [x] **3. Paste a whole conversation and get it split by who said what**
   Becomes usable: WhatsApp exports and "Name: text" threads split into speaker-labeled messages, with a "This is me" toggle.
   Why now: Threads are how scams unfold, and the kernel needs them to show progression.
   PRD ref: `prd.md > Input and samples`
@@ -39,7 +39,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
   Learner check: Paste a WhatsApp-style thread and confirm the split looks right.
   Commit: `Thread parsing and speaker toggle`
 
-- [ ] **4. Know exactly what to do next**
+- [x] **4. Know exactly what to do next**
   Becomes usable: The action plan, the copyable "Verify them" reply, sender and link notes, and signals pointing the other way.
   Why now: Turns the diagnosis into action. That's the impact story.
   PRD ref: `prd.md > Action plan and reply`, `prd.md > Sender and link notes`
@@ -49,7 +49,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
   Learner check: Check a scam sample and copy the reply.
   Commit: `Action plan, verify-them reply, sender and link notes`
 
-- [ ] **5. Every edge state is designed, and it never freezes**
+- [x] **5. Every edge state is designed, and it never freezes**
   Becomes usable: Empty, too-short, non-English, truncated, error and timeout states. The worker runs off the main thread.
   Why now: Judges will try odd input. These states protect the demo.
   PRD ref: `prd.md > States and Boundaries`
@@ -59,7 +59,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
   Learner check: Paste nonsense, a single word, and Spanish text, and see a helpful state each time.
   Commit: `Edge states, worker, input cap`
 
-- [ ] **6. Learn how it works and how accurate it is**
+- [x] **6. Learn how it works and how accurate it is**
   Becomes usable: The How it works page with scripts, every rule, privacy, sources, and measured accuracy from the held-out corpus.
   Why now: Credibility for judges, and it needs the frozen rulebook from slices 1–5.
   PRD ref: `prd.md > How it works`
@@ -69,7 +69,7 @@ Build mode: fast. The learner approved an unattended build ("Approved, run it…
   Learner check: Open How it works and read the accuracy section.
   Commit: `How it works page with measured accuracy`
 
-- [ ] **7. Ship it: accessible, private, deployed**
+- [x] **7. Ship it: accessible, private, deployed**
   Becomes usable: The public URL on GitHub Pages, with verified zero network requests, axe-clean pages and keyboard-only flow.
   Why now: Final integration of the proof.
   PRD ref: `prd.md > States and Boundaries` (Privacy), `prd.md > What We're Building`
@@ -103,3 +103,8 @@ Activity mode:
 ## Revisions
 
 - "Likely scam" rule widened to accept two different strong requests at the same step as corroboration — the dev set showed a task scam ("deposit to unlock" + "pay in USDT") that sits entirely at step 5 being under-called.
+- PRD "blank-line blocks become separate messages" changed to "stay one message". Splitting made an email's greeting, body and signature look like three messages, and it doesn't change scoring, because every block is from "them". Test: `thread.test.ts > keeps a multi-paragraph email… as one message`.
+- Free-webmail notes appear on any message from the other person, not only ones that claim to be from a company. This is broader than the PRD wording and was kept, because a recruiter writing from a personal address is worth noting either way.
+- The slices were built and committed in fewer, larger commits than the per-slice commit names above (`9f4e76b` engine, `36668f8` UI, `258f513` e2e and deploy, `53e8272` v1.0).
+- Learner checks were run by independent critic agents (unattended build, see top). Their findings are in `PROGRESS.md`.
+- Mechanical checks added late, when the verification pass found them missing: the accuracy numbers on the page are compared with `accuracy.json`, and the action plan shows official links (`journey.spec.ts`).

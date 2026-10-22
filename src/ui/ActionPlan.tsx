@@ -51,12 +51,18 @@ export function ReplyTemplate({ report }: { report: Report }) {
     }
   }
 
+  // At "likely scam" the plan says stop replying, so the reply is framed as optional rather than a next step.
+  const likely = report.verdict === 'likely';
   return (
     <section className="reply" aria-labelledby="reply-title" data-testid="reply">
       <h2 id="reply-title" className="section-title">
-        Ask them to verify
+        {likely ? 'Only if you need proof first' : 'Ask them to verify'}
       </h2>
-      <p className="reply__intro">A polite reply a real recruiter can answer easily, and a scammer usually can’t.</p>
+      <p className="reply__intro">
+        {likely
+          ? 'The safest move is to stop replying. If you want certainty before you do, this asks for things a real recruiter can show easily and a scammer can’t. Send nothing else.'
+          : 'A polite reply a real recruiter can answer easily, and a scammer usually can’t.'}
+      </p>
       <pre className="reply__text" ref={textRef} tabIndex={0} aria-label="Reply text">
         {report.reply}
       </pre>

@@ -18,6 +18,10 @@ test('no network requests while checking messages', async ({ page, baseURL }) =>
   await page.getByLabel('Message or conversation').fill('Text me on WhatsApp, my email is hr.desk@gmail.com, see bit.ly/abc123 for the onboarding form.');
   await page.getByTestId('check').click();
   await expect(page.getByTestId('inspector')).toBeVisible();
+  // Letters such as Ł live in a separate font subset (latin-ext) that browsers fetch lazily.
+  await page.getByLabel('Message or conversation').fill('Hola José and Łukasz, the café coordinator role pays $45/hr with no experience needed. Message me on Telegram for the interview, señor.');
+  await page.getByTestId('check').click();
+  await expect(page.getByTestId('verdict')).toBeVisible();
 
   expect(requests, `unexpected requests: ${requests.join(', ')}`).toEqual([]);
   expect(baseURL).toBeTruthy();

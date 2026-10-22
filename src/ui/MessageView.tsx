@@ -41,19 +41,22 @@ export function MessageView({ messages, findings, selectedRule, onSelect, speake
         <h2 id="messages-title" className="section-title">
           In the messages
         </h2>
-        {active.length > 0 && <p className="messages__hint">Tap a highlighted phrase to see why it was flagged.</p>}
+        {active.length > 0 && (
+          <p className="messages__hint">
+            Tap a highlighted phrase to see why it was flagged. <span className="legend legend--high">Strong sign</span>{' '}
+            <span className="legend legend--medium">Weaker sign</span>
+          </p>
+        )}
       </div>
 
       {speakers.length >= 2 && (
         <fieldset className="speakers">
-          <legend className="speakers__legend">Which of these is you? Your own messages aren’t scored.</legend>
+          <legend className="speakers__legend">Tick the names that are you. Your own messages aren’t scored.</legend>
           <div className="speakers__list">
             {speakers.map((s) => (
               <label key={s} className="speaker-toggle">
                 <input type="checkbox" checked={meSpeakers.includes(s)} onChange={() => onToggleMe(s)} />
-                <span>
-                  This is me: <strong>{s}</strong>
-                </span>
+                <span>{s}</span>
               </label>
             ))}
           </div>
@@ -91,7 +94,7 @@ export function MessageView({ messages, findings, selectedRule, onSelect, speake
           if (pos < m.text.length) parts.push(m.text.slice(pos));
           return (
             <li key={m.id} className={`bubble bubble--${m.side}`} data-testid="message">
-              <span className="bubble__who">{m.side === 'me' ? `You${m.speaker ? ` (${m.speaker})` : ''}` : m.speaker ?? 'Message'}</span>
+              <span className="bubble__who">{m.side === 'me' ? (m.speaker && !/^(?:me|you|myself)$/i.test(m.speaker) ? `You (${m.speaker})` : 'You') : m.speaker ?? 'Message'}</span>
               <p className="bubble__text">{parts}</p>
             </li>
           );

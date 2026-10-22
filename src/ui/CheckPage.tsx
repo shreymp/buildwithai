@@ -1,14 +1,14 @@
-import { lowerFirst } from '../lib/text';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SAMPLES, sampleText, type Sample } from '../data/samples';
 import { MAX_INPUT } from '../engine/judge';
-import { SHARED_STEPS, GENERIC_LATE_STEPS, PLAYBOOKS, PLAYBOOK_ORDER } from '../engine/playbooks';
+import { SHARED_STEPS, GENERIC_LATE_STEPS, PLAYBOOKS, PLAYBOOK_ORDER, SOURCES } from '../engine/playbooks';
 import { speakersOf } from '../engine/thread';
 import type { Report } from '../engine/types';
 import { runCheck } from '../lib/runCheck';
+import { lowerFirst } from '../lib/text';
 import { ActionPlan, ReplyTemplate } from './ActionPlan';
 import { FindingList } from './FindingList';
-import { IconClipboard, IconLock, IconNext } from './icons';
+import { IconClipboard, IconExternal, IconLock, IconNext } from './icons';
 import { MessageView } from './MessageView';
 import { InspectorNotes, LegitNotes } from './Notes';
 import { NextMoveCard, ScriptTimeline } from './ScriptTimeline';
@@ -309,6 +309,15 @@ export function CheckPage() {
           <div className="notice" role="status" tabIndex={-1} ref={noticeRef} data-testid="notice">
             <h2 className="notice__title">{report.status === 'not_english' ? 'Tipoff reads English job messages' : 'Not enough to go on'}</h2>
             <p>{report.reason}</p>
+            {report.status === 'not_english' && (
+              <p>
+                If this is a job offer you didn’t apply for, the FTC’s guide lists the warning signs:{' '}
+                <a href={SOURCES.jobScams.href} target="_blank" rel="noopener noreferrer">
+                  {SOURCES.jobScams.label} <IconExternal width={14} height={14} />
+                  <span className="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              </p>
+            )}
           </div>
         )}
 
@@ -322,6 +331,10 @@ export function CheckPage() {
                 <NextMoveCard report={report} />
               </div>
             )}
+            <div className="act">
+              <ActionPlan report={report} />
+              <ReplyTemplate report={report} />
+            </div>
             <MessageView
               messages={report.messages}
               findings={report.findings}
@@ -332,10 +345,6 @@ export function CheckPage() {
               onToggleMe={toggleMe}
             />
             <FindingList findings={report.findings} playbook={report.playbook} selectedRule={selectedRule} selectTick={selectTick} onShowInMessage={showInMessage} />
-            <div className="act">
-              <ActionPlan report={report} />
-              <ReplyTemplate report={report} />
-            </div>
             <InspectorNotes report={report} />
             <LegitNotes report={report} />
           </div>
@@ -371,7 +380,7 @@ function EmptyPreview() {
         ))}
       </ol>
       <p className="preview__scripts">
-        Scripts it knows: {PLAYBOOK_ORDER.map((id) => lowerFirst(PLAYBOOKS[id].name)).join(', ')}.
+        Scam scripts it knows: {PLAYBOOK_ORDER.map((id) => lowerFirst(PLAYBOOKS[id].name)).join(', ')}.
       </p>
     </section>
   );

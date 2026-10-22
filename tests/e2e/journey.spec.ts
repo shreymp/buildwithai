@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 test.describe('core journey', () => {
@@ -71,9 +72,17 @@ test.describe('core journey', () => {
     await page.getByTestId('check').click();
     await expect(page.locator('.speakers')).toBeVisible();
     const samMarks = () => page.locator('[data-testid="message"]').nth(1).locator('.mark');
-    await page.getByLabel(/This is me: Sam/).check();
+    await page.getByRole('checkbox', { name: 'Sam', exact: true }).check();
     await expect(page.locator('[data-testid="message"]').nth(1)).toContainText('You (Sam)');
     expect(await samMarks().count()).toBe(0);
+  });
+
+  test('the action plan links to official help', async ({ page }) => {
+    await page.goto('/');
+    await page.click('[data-sample="identity-form"]');
+    const plan = page.getByTestId('action-plan');
+    await expect(plan.locator('a[href^="https://www.identitytheft.gov"]').first()).toBeVisible();
+    await expect(plan.locator('a[href^="https://reportfraud.ftc.gov"]').first()).toBeVisible();
   });
 
   test('copying the verify-them reply', async ({ page, context, browserName }) => {
@@ -140,6 +149,12 @@ test.describe('how it works', () => {
     const { RULES } = await import('../../src/engine/rules');
     await expect(page.getByTestId('rule')).toHaveCount(RULES.length);
     await expect(page.getByTestId('accuracy')).toBeVisible();
+    // The numbers come from `npm run eval`, not typed by hand.
+    const acc = JSON.parse(readFileSync('src/data/accuracy.json', 'utf8')) as { measured: boolean; scamsCaught?: number; scamsTotal?: number; legitFlagged?: number; legitTotal?: number };
+    if (acc.measured) {
+      await expect(page.getByTestId('accuracy')).toContainText(`${acc.scamsCaught} of ${acc.scamsTotal}`);
+      await expect(page.getByTestId('accuracy')).toContainText(`${acc.legitFlagged} of ${acc.legitTotal}`);
+    }
   });
 
   test('table-of-contents links scroll to their section', async ({ page }) => {

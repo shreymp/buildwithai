@@ -1,7 +1,7 @@
-import { lowerFirst } from '../lib/text';
 import accuracyData from '../data/accuracy.json';
 import { PLAYBOOKS, PLAYBOOK_ORDER, SHARED_STEPS, SOURCES } from '../engine/playbooks';
 import { LEGIT_CONTEXT, RULES } from '../engine/rules';
+import { lowerFirst } from '../lib/text';
 import { IconExternal } from './icons';
 
 export interface Accuracy {

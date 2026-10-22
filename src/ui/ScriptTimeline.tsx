@@ -1,5 +1,5 @@
-import { lowerFirst } from '../lib/text';
 import type { Report } from '../engine/types';
+import { lowerFirst } from '../lib/text';
 import { IconArrowRight } from './icons';
 
 interface Props {
@@ -16,8 +16,8 @@ function stateOf(step: number, current: number, seen: boolean): 'here' | 'next' 
 const STATE_TEXT = {
   here: 'You are here',
   next: 'Likely next',
-  seen: 'Already happened',
-  past: 'Not seen (scams can skip steps)',
+  seen: 'Happened',
+  past: 'Not seen',
   ahead: '',
 };
 
@@ -62,6 +62,9 @@ export function ScriptTimeline({ report }: Props) {
           );
         })}
       </ol>
+      {report.steps.some((s) => stateOf(s.step, current, s.seen) === 'past') && (
+        <p className="script__note">“Not seen” steps weren’t in what you pasted. Scams can skip steps, or they happened somewhere else.</p>
+      )}
     </section>
   );
 }

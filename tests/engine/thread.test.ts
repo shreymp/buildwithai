@@ -8,6 +8,13 @@ describe('parseThread', () => {
     expect(m.text).toBe('Hello there, we have a job for you.');
     expect(input.slice(m.start, m.end)).toBe(m.text);
   });
+  it('keeps a multi-paragraph email without speaker names as one message', () => {
+    const input = 'Hello Sam,\n\nThanks for applying to the analyst role.\n\nBest,\nPriya, Talent Team';
+    const msgs = parseThread(input);
+    expect(msgs).toHaveLength(1);
+    expect(msgs[0].side).toBe('them');
+    expect(input.slice(msgs[0].start, msgs[0].end)).toBe(msgs[0].text);
+  });
   it('splits an iOS WhatsApp export, including hidden marks and continuation lines', () => {
     const input = '[10/18/26, 7:42:10 PM] Dana Reyes: Hi Maya!\nWe have a role for you.\n‎[10/18/26, 7:43:01 PM] Maya: Sounds good\n[10/18/26, 7:44:30 PM] Dana Reyes: Add me on Telegram';
     const msgs = parseThread(input);

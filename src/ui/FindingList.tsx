@@ -1,8 +1,8 @@
-import { lowerFirst } from '../lib/text';
 import { useEffect, useRef } from 'react';
 import { LEGIT_CONTEXT, RULES } from '../engine/rules';
 import { stepCopy } from '../engine/playbooks';
 import type { Finding, PlaybookId } from '../engine/types';
+import { lowerFirst } from '../lib/text';
 
 interface Props {
   findings: Finding[];
@@ -52,7 +52,7 @@ export function FindingList({ findings, playbook, selectedRule, selectTick, onSh
   return (
     <section className="findings" aria-labelledby="findings-title">
       <h2 id="findings-title" className="section-title">
-        Why we flagged this
+        {active.length === 0 ? 'What Tipoff looked for' : 'Why we flagged this'}
       </h2>
       {active.length === 0 ? (
         <p className="empty-note">No phrases matched Tipoff’s job-scam rules.</p>
@@ -78,7 +78,7 @@ export function FindingList({ findings, playbook, selectedRule, selectTick, onSh
                   <span className="card__step">
                     Step {g.step} · {step.label}
                   </span>
-                  <span className="card__strength">{g.weight >= 3 ? 'Strong sign' : g.weight === 2 ? 'Clear sign' : 'Weak sign'}</span>
+                  <span className={`card__strength card__strength--${g.weight >= 3 ? 'high' : 'medium'}`}>{g.weight >= 3 ? 'Strong sign' : g.weight === 2 ? 'Clear sign' : 'Weak sign'}</span>
                 </p>
                 <h3 className="card__title">{g.title}</h3>
                 <ul className="card__quotes">

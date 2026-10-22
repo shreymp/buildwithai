@@ -28,5 +28,12 @@ Commit `bd8ee66`. See `docs/phase1/` and `DECISIONS.md` §0–4. The user approv
 7. Held-out corpus written by an independent sub-agent (80 items, validated: 8 per script, 40 genuine, unique ids). The three background agents (corpus, adversarial tester, design critic) hit the session usage limit; the corpus file had been written in full before that and was validated before use. The adversarial and design critiques did **not** run and are re-run in Phase 3.
 8. Blind eval on the frozen rules → `src/data/accuracy.json`. Title-casing fix (`lowerFirst`, so "HR portal" keeps its capitals). 60 unit + 40 e2e pass. Tag **v1.0**.
 
+### Tags
+Pushing tags fails from this session: `git push origin v1.0` gets "the remote end hung up unexpectedly" every time (tried 4 times with backoff), while branch pushes succeed. This looks like the session's git proxy policy. Tags exist **locally**; the authoritative mapping is this table. The user can push them later with `git push origin --tags`.
+
+| Tag | Commit | What |
+|---|---|---|
+| v1.0 | `53e8272` | First complete build. Blind held-out eval. Deployed (Pages run 39757132208, success). |
+
 ## Next candidates
 - Phase 3 round 1: adversarial white-box test + design critic on v1.0 screenshots; triage and fix.

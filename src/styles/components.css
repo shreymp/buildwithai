@@ -274,6 +274,23 @@
   container-name: results;
 }
 
+@media (max-width: 959px) {
+  .check.has-results .check__input .lede {
+    display: none;
+  }
+
+  .check.has-results .textarea {
+    min-height: calc(4 * var(--lh-base) + 2 * var(--space-3));
+  }
+}
+
+.script__note {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  line-height: var(--lh-xs);
+  color: var(--text-muted);
+}
+
 /* ── Input ─────────────────────────────────────────────────────────────── */
 form {
   margin-top: var(--space-5);
@@ -330,7 +347,13 @@ form {
 }
 
 .textarea.has-error {
-  border: 2px solid var(--danger-border);
+  border-color: var(--danger-border);
+  box-shadow: inset 0 0 0 1px var(--danger-border);
+}
+
+.textarea.has-error:focus-visible {
+  outline-color: var(--danger-border);
+  border-color: var(--danger-border);
 }
 
 .actions {
@@ -595,6 +618,7 @@ form {
 
 .step {
   display: grid;
+  align-content: start;
   grid-template-columns: 32px 1fr;
   gap: var(--space-3);
   padding-bottom: var(--space-4);
@@ -747,12 +771,12 @@ form {
   border-radius: var(--radius-md);
   padding: var(--space-4) var(--space-5);
   background: var(--accent-subtle);
-  border-left: 4px solid var(--accent);
+  border: 1px solid var(--accent);
 }
 
 .next--final {
   background: var(--danger-subtle);
-  border-left-color: var(--danger-border);
+  border-color: var(--danger-border);
 }
 
 .next__eyebrow {
@@ -819,6 +843,9 @@ form {
 }
 
 .speakers__legend {
+  float: left;
+  width: 100%;
+  margin-bottom: var(--space-1);
   font-size: var(--text-sm);
   line-height: var(--lh-sm);
   font-weight: 700;
@@ -826,6 +853,7 @@ form {
 }
 
 .speakers__list {
+  clear: both;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-4);
@@ -918,7 +946,7 @@ form {
 }
 
 .mark.is-selected {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--accent);
   outline-offset: 1px;
 }
 
@@ -945,16 +973,12 @@ form {
 .card {
   padding: var(--space-4);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--caution-border);
   border-radius: var(--radius-md);
   background: var(--surface);
   scroll-margin: var(--space-6);
   transition: box-shadow var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
 }
 
-.card--high {
-  border-left-color: var(--danger-border);
-}
 
 .card.is-selected {
   outline: 2px solid var(--accent);
@@ -979,6 +1003,39 @@ form {
 
 .card__strength {
   font-weight: 700;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  border: 1px solid;
+}
+
+.card__strength--high {
+  color: var(--danger-text);
+  background: var(--danger-subtle);
+  border-color: var(--danger-border);
+}
+
+.card__strength--medium {
+  color: var(--caution-text);
+  background: var(--caution-subtle);
+  border-color: var(--caution-border);
+}
+
+/* Legend for the two highlight styles, drawn the same way as the marks. */
+.legend {
+  display: inline-block;
+  padding: 0 0.25em;
+  border-radius: 3px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.legend--high {
+  background: var(--mark-danger);
+  box-shadow: inset 0 -2px 0 var(--danger-border);
+}
+
+.legend--medium {
+  background: linear-gradient(to right, var(--caution-border) 50%, transparent 50%) left bottom / 6px 2px repeat-x, var(--mark-caution);
 }
 
 .card__title {
@@ -1029,10 +1086,15 @@ form {
 .softened summary {
   cursor: pointer;
   min-height: var(--control-h);
-  display: flex;
-  align-items: center;
+  display: list-item;
+  list-style: disclosure-closed inside;
+  padding-top: var(--space-2);
   font-weight: 700;
   color: var(--text);
+}
+
+.softened[open] summary {
+  list-style-type: disclosure-open;
 }
 
 .softened ul {
@@ -1095,6 +1157,7 @@ form {
 }
 
 .reply__text {
+  font-family: var(--font-sans);
   margin: var(--space-3) 0 0;
   padding: var(--space-3);
   white-space: pre-wrap;

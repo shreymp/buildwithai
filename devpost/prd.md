@@ -46,7 +46,7 @@ Source: `scope.md > The Core Loop`, `scope.md > What "Working" Looks Like`.
 - As Maya, I want to paste the whole conversation so Tipoff sees the full story.
   - [ ] Pasting a WhatsApp export (iOS `[date, time] Name: text` or Android `date, time - Name: text`) splits it into messages with speakers.
   - [ ] "Name: text" lines become speakers only when the name repeats or looks like a person's name, so "Salary: $40k" stays message text.
-  - [ ] Blank-line-separated blocks without names become separate messages from "them".
+  - [ ] Blank-line-separated blocks without names stay together as one message from "them" (revised during the build: an email's paragraphs aren't separate messages; see `checklist.md > Revisions`).
   - [ ] When there are two or more speakers, each has a "This is me" toggle. Messages from "me" are shown but never scored.
 - As a first-time visitor, I want to try it without having a scam message on hand.
   - [ ] Six labeled fictional samples: four scams covering at least three playbooks, and two legitimate recruiter messages. Tapping one fills the box and checks it.

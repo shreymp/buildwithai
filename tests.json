@@ -81,7 +81,8 @@
       "tests": [
         "GitHub API: pages build and deployment workflow run conclusion = success for latest gh-pages commit"
       ],
-      "status": "pending"
+      "status": "pass",
+      "result": "gh-pages commit 726d9a6 (\"Deploy 53e8272\"): GitHub Actions run 39757132208 \"pages build and deployment\" completed with conclusion success, 2026-10-22T09:40Z. github.io itself cannot be fetched from the build sandbox."
     },
     {
       "id": "C10",
