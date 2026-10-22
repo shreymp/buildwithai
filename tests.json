@@ -84,7 +84,7 @@
         "GitHub API: pages build and deployment workflow run conclusion = success for latest gh-pages commit"
       ],
       "status": "pass",
-      "result": "gh-pages commit 2060b15 (\"Deploy 6a06bb1\"): GitHub Actions run 39801492120 \"pages build and deployment\" completed with conclusion success (2026-10-22T15:06Z). Earlier: 726d9a6 (\"Deploy 53e8272\"), run 39757132208. The live URL can't be loaded from the build sandbox (the proxy returns 403), so the page load itself is unverified from here."
+      "result": "gh-pages commit a3befd1 (\"Deploy 35a15ba\", v1.3): GitHub Actions run 39809908338 \"pages build and deployment\" completed with conclusion success (2026-10-22T15:59Z). Earlier: 2060b15 (\"Deploy 6a06bb1\"), run 39801492120; 726d9a6 (\"Deploy 53e8272\"), run 39757132208. The live URL can't be loaded from the build sandbox (the proxy returns 403), so the page load itself is unverified from here."
     },
     {
       "id": "C10",

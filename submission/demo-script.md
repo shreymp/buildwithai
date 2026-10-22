@@ -20,7 +20,7 @@ Record the live site, https://shreymp.github.io/buildwithai/, or a local `npm ru
 Hi Chris, great news: the hiring team approved you for the remote Claims Assistant role. Before your start date, every new associate joins our staffing network. The annual membership is $95, charged to a debit card, and it covers your placement for the year. Reply to this email when it is done.
 ```
 
-This was checked against v1.1 on 2026-10-22: no match ("None of Tipoff's job-scam patterns matched this text. That isn't proof it's safe…"). If a later rule change catches it, swap in another miss, or say "this used to be missed". Don't edit the rules to make the demo look better, and don't tune them so this message stays missed.
+This was checked against v1.3 on 2026-10-22 (the backup-video run log): no match ("None of Tipoff's job-scam patterns matched this text. That isn't proof it's safe…"). If a later rule change catches it, swap in another miss, or say "this used to be missed". Don't edit the rules to make the demo look better, and don't tune them so this message stays missed.
 
 ## Before recording
 

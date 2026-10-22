@@ -11,7 +11,7 @@ The agent built, tested, deployed and drafted everything it could. It did **not*
 | Default branch is the work branch `claude/gifted-hypatia-gz8ol7`, so judges see the latest code | GitHub API: `default_branch` |
 | `devpost/scope.md`, `prd.md`, `spec.md` present with `status: approved` | `tests.json` C10 |
 | Setup instructions in README, followed by a fresh agent from a clean clone | `tests.json` C1 |
-| Live app deployed on GitHub Pages | Actions run 39801492120 succeeded for commit 6a06bb1. The agent's sandbox can't open github.io, so **open https://shreymp.github.io/buildwithai/ yourself** and click one example |
+| Live app deployed on GitHub Pages | Actions run 39809908338 succeeded for commit 35a15ba (v1.3). The agent's sandbox can't open github.io, so **open https://shreymp.github.io/buildwithai/ yourself** and click one example |
 
 ## Your steps, in order
 
@@ -23,7 +23,7 @@ The agent built, tested, deployed and drafted everything it could. It did **not*
 3. **Record the demo video** (under 3 minutes) with `submission/demo-script.md`.
    - Time it with a stopwatch. The script runs about 2:45; if you're over 2:50, cut the highlight segment.
    - Check that no personal tabs, bookmarks or notifications are visible.
-   - If a live take keeps failing, `submission/backup-video/tipoff-demo-silent.webm` is a captioned silent fallback (about 1:35). A narrated video is better.
+   - If a live take keeps failing, `submission/backup-video/tipoff-demo-silent.webm` is a captioned silent fallback (about 1:40). A narrated video is better.
 4. **Upload the video** to YouTube or Vimeo (public or unlisted, as the form allows), and copy the link into `devpost-text.md` → Links.
 5. **Fill in the Devpost form**:
    - project name **Tipoff**
@@ -36,7 +36,7 @@ The agent built, tested, deployed and drafted everything it could. It did **not*
 8. **Optional: recreate the version tags on GitHub.** The agent's version tags exist only in its temporary sandbox, because it can't push tags from there. The commits they point to are pushed and listed in `PROGRESS.md` → Tags. From your own clone:
    ```bash
    git fetch origin
-   git tag v1.0 53e8272 && git tag v1.1 a4598c4 && git tag v1.2 6a06bb1
+   git tag v1.0 53e8272 && git tag v1.1 a4598c4 && git tag v1.2 6a06bb1 && git tag v1.3 35a15ba
    git push origin --tags
    ```
    Add any later tags listed in `PROGRESS.md` the same way. They're nice to have, not required.

@@ -46,7 +46,8 @@ Pushing tags fails from this session: `git push origin v1.0` gets "the remote en
 |---|---|---|
 | v1.0 | `53e8272` | First complete build. Blind held-out eval. Deployed (Pages run 39757132208, success). |
 | v1.1 | `a4598c4` | Round 1: design-critic UI fixes and adversarial engine fixes. Blind A/B preferred over v1.0 in 9 of 9 pairs. |
-| v1.2 | 6a06bb1 | Round 2: fixes from the blind reviewer's remaining problems. |
+| v1.2 | `6a06bb1` | Round 2: fixes from the blind reviewer's remaining problems. |
+| v1.3 | `35a15ba` | Round 3: fixes from a judge-perspective critic. Blind A/B preferred over v1.2 in 7 of 7 pairs. Deployed (Pages run 39809908338). |
 
 ## Next candidates
 - Round 3 done. Owner steps remain: the narrated video, the FTC figure check, the Devpost form and submitting.
